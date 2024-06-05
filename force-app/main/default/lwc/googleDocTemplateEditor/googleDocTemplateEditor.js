@@ -2,11 +2,12 @@ import { LightningElement, track, wire ,api} from 'lwc';
 import getAllDocs from '@salesforce/apex/GoogleDocTemplateEditorController.getAllDocs'
 import getTemplate from '@salesforce/apex/GoogleDocTemplateEditorController.getTemplate'
 import getUsernameAndEmail from '@salesforce/apex/GoogleDocTemplateEditorController.getUsernameAndEmail'
+import saveTemplateData from '@salesforce/apex/GoogleDocTemplateEditorController.saveTemplateData'
 import new_template_bg from '@salesforce/resourceUrl/new_template_bg';
 
 
 export default class GoogleDocTemplateEditor extends LightningElement {
-    // @api templateId = "a09F300000DMIOmIAP"
+    
     @api templateId 
     @api objectName
 
@@ -20,10 +21,6 @@ export default class GoogleDocTemplateEditor extends LightningElement {
     @track profile
     templateBg = new_template_bg
     
-
-   
-    
-   
     connectedCallback(){
         try {
             this.getProfile()
@@ -116,6 +113,7 @@ export default class GoogleDocTemplateEditor extends LightningElement {
             if (this.selectedTemplate) {
                 this.webViewLink = this.selectedTemplate.webViewLink
                 this.closePopup()
+                this.save()
             }else{
                 const errorToast = this.template.querySelector('c-message-popup')
                 errorToast.showMessagePopup({
@@ -177,6 +175,18 @@ export default class GoogleDocTemplateEditor extends LightningElement {
         } catch (error) {
             console.error(error);
         } 
+    }
+
+    save(){
+        saveTemplateData({
+            "templateId" : this.templateId,
+            "googleDocId" : this.selectedTemplate.id,
+            "webViewLink" : this.selectedTemplate.webViewLink
+        }).then(response=>{
+            console.log("Template Data Saved");
+        }).catch(error=>{
+            console.log("Error saving template data ==> ",error);
+        })
     }
 
 }

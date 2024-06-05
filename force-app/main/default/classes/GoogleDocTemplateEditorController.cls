@@ -148,5 +148,19 @@ public with sharing class GoogleDocTemplateEditorController {
         }
     }
 
+    @AuraEnabled
+    public static void saveTemplateData(String templateId,String googleDocId,String webViewLink){
+        try {
+            Template_Data__c templateData = new Template_Data__c();
+            templateData.Google_Doc_Template_Id__c	= googleDocId;
+            templateData.Google_Doc_WebViewLink__c = webViewLink;
+            templateData.Template__c = templateId;
+            insert templateData;
+        } catch (Exception e) {
+            System.debug('Error In saveTemplateData ==> '+e.getMessage());
+            Log_Handler.store_Exception(e,'GoogleDriveTemplatesController','saveTemplateData');
+        }
+    }
+
 
 }

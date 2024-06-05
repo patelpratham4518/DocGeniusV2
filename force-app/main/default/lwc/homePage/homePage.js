@@ -722,7 +722,6 @@ export default class HomePage extends NavigationMixin(LightningElement) {
             if(event.currentTarget.dataset.type == 'Simple Template'){
                 // this.isEditSimpleTemplate = true;
                 this.navigateToComp(navigationComps.simpleTemplateBuilder, paramToPass);
-
             }
             else if(event.currentTarget.dataset.type == 'CSV Template'){
                 // this.isEditCSVTemplate = true;
