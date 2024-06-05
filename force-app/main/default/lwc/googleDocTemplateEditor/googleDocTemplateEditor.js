@@ -4,9 +4,9 @@ import getTemplate from '@salesforce/apex/GoogleDocTemplateEditorController.getT
 import getUsernameAndEmail from '@salesforce/apex/GoogleDocTemplateEditorController.getUsernameAndEmail'
 import saveTemplateData from '@salesforce/apex/GoogleDocTemplateEditorController.saveTemplateData'
 import new_template_bg from '@salesforce/resourceUrl/new_template_bg';
+import { NavigationMixin } from 'lightning/navigation';
 
-
-export default class GoogleDocTemplateEditor extends LightningElement {
+export default class GoogleDocTemplateEditor extends NavigationMixin(LightningElement) {
     
     @api templateId 
     @api objectName
@@ -62,6 +62,7 @@ export default class GoogleDocTemplateEditor extends LightningElement {
     closePopup(){
         this.showPopup = false
     }
+
     openPopup(){
         this.showPopup = true
     }
@@ -127,6 +128,11 @@ export default class GoogleDocTemplateEditor extends LightningElement {
 
     }
 
+    cancel(){
+        this.closePopup()
+        this.navigateToComp("homePage",{})
+    }
+
     setDateAndSize(){
         try {
             this.allTemplates = this.allTemplates.map(template => {
@@ -187,6 +193,37 @@ export default class GoogleDocTemplateEditor extends LightningElement {
         }).catch(error=>{
             console.log("Error saving template data ==> ",error);
         })
+    }
+
+    // -=-=- Used to navigate to the other Components -=-=-
+    navigateToComp(componentName, paramToPass){
+        
+        try {
+            var nameSpace = 'c';
+            var cmpDef;
+            if(paramToPass && Object.keys(paramToPass).length > 0){
+                cmpDef = {
+                    componentDef: `${nameSpace}:${componentName}`,
+                    attributes: paramToPass,
+                };
+            }
+            else{
+                cmpDef = {
+                    componentDef: `${nameSpace}:${componentName}`,
+                };
+            }
+            
+            let encodedDef = btoa(JSON.stringify(cmpDef));
+            console.log('encodedDef : ', encodedDef);
+            this[NavigationMixin.Navigate]({
+                type: "standard__webPage",
+                attributes: {
+                url:  "/one/one.app#" + encodedDef
+                }
+            });
+        } catch (error) {
+            console.log('error in navigateToComp : ', error.stack);
+        }
     }
 
 }
