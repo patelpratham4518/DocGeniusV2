@@ -1,0 +1,63 @@
+section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.main-div {
+    border-radius: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+    height: fit-content;
+    background-color: white;
+    padding: 50px 40px 30px 40px;
+    gap: 20px;
+    position: relative;
+}
+
+.close-div{
+    position: absolute;
+    top : 20px;
+    right : 20px;
+}
+
+.title-div{
+    font-size: 20px;
+    font-weight: 700;
+    text-align: center;
+    color: #00AEFF;
+    border-bottom: 2px solid #00AEFF;
+    padding-bottom: 10px;
+}
+
+.input-div{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.template-selection-div{
+    width: 100%;
+}
+
+.btn-div{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.generate-btn{
+    display: flex;
+    justify-content: center;
+    font-size: 16px;
+    background-color: #00AEFF;
+    width: 150px;
+    height: 40px;
+    border-radius: 8px;
+    border: none;
+    align-items: center;
+    color: white;
+}

@@ -1,0 +1,272 @@
+<template>
+    <div class="mainDiv_Home" data-name="toastSelector" onload={intialRender} style={loadStyle}>
+      <div class="outerDiv">
+        <div class="topSection">
+          <div class="topSection_Sub">
+            <img src={DocGeniusLogo} />
+          </div>
+        </div>
+          <div class="contentSection version2">
+            <div class="upperSection">
+              <div class="createSection" name="createBtn" onclick={handleCreateTemplate}>
+                <div class="createTemplateBorder">
+                  <img class="createTemplateImg" src={createTemplateImg} />
+                </div>
+              </div>
+              <div class="optionSection">
+                <div class="optionBtn" onclick={toggleOptions}>
+                  <template lwc:if={isDisplayOption}>
+                    <svg class="optionCloseBtn" viewBox="0 0 22 22" >
+                      <path stroke-width="2" fill-rule="evenodd" clip-rule="evenodd" d="M20.7334 2.5537C20.8179 2.46918 20.885 2.36885 20.9307 2.25843C20.9765 2.14801 21 2.02966 21 1.91013C21 1.79061 20.9765 1.67226 20.9307 1.56184C20.885 1.45142 20.8179 1.35109 20.7334 1.26657C20.6489 1.18206 20.5486 1.11502 20.4382 1.06928C20.3277 1.02354 20.2094 1 20.0899 1C19.9703 1 19.852 1.02354 19.7416 1.06928C19.6311 1.11502 19.5308 1.18206 19.4463 1.26657L11 9.71469L2.5537 1.26657C2.46918 1.18206 2.36885 1.11502 2.25843 1.06928C2.14801 1.02354 2.02966 1 1.91013 1C1.79061 1 1.67226 1.02354 1.56184 1.06928C1.45142 1.11502 1.35109 1.18206 1.26657 1.26657C1.18206 1.35109 1.11502 1.45142 1.06928 1.56184C1.02354 1.67226 1 1.79061 1 1.91013C1 2.02966 1.02354 2.14801 1.06928 2.25843C1.11502 2.36885 1.18206 2.46918 1.26657 2.5537L9.71469 11L1.26657 19.4463C1.09589 19.617 1 19.8485 1 20.0899C1 20.3312 1.09589 20.5627 1.26657 20.7334C1.43726 20.9041 1.66875 21 1.91013 21C2.15152 21 2.38301 20.9041 2.5537 20.7334L11 12.2853L19.4463 20.7334C19.617 20.9041 19.8485 21 20.0899 21C20.3312 21 20.5627 20.9041 20.7334 20.7334C20.9041 20.5627 21 20.3312 21 20.0899C21 19.8485 20.9041 19.617 20.7334 19.4463L12.2853 11L20.7334 2.5537Z"/>
+                    </svg>
+                    <!-- <svg class="optionCloseBtn" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24"><path d="M15.375 5.25 8.625 12l6.75 6.75"></path></svg> -->
+                  </template>
+                  <template lwc:else>
+                    <svg class="optionOpeneBtn" viewBox="0 0 50 50" fill="none"><path d="M43.7498 8.3335H29.1665"  stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M20.8333 8.3335H6.25" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M43.75 25H25" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M16.6667 25H6.25" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M43.7502 41.6665H33.3335" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M25 41.6665H6.25" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M29.1665 4.1665V12.4998" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M16.6665 20.8335V29.1668" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M33.3335 37.5V45.8333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </template>
+                </div>
+                <template lwc:if={dataLoaded}>
+                  <!-- <div class="optionContainer"> -->
+                    <div class="optionContainer">
+                    <div class="optionContainer_Sub">
+                      <div class="sortOption">
+                        <div class="lableBox">
+                          <div class="lableText">Sort By</div>
+                        </div>
+                        <div class="sortSection">
+                          <div class="sortFieldDrop">
+                              <c-custome-combo-box
+                                  label="Select Field To Sort"
+                                  options={sortingFiledList}
+                                  placeholder="Select Field To Sort"
+                                  onselect={handleSortSelect}
+                                  value={selectedFieldToSort}
+                                  multiselect="false"
+                                  searchable="false"
+                                  dropdown-position="right"
+                              ></c-custome-combo-box>
+                          </div>
+                          <div class="asc_desc_section">
+                            <input type="radio" id="ascBtn" data-value="asc" onchange={handleSortAsChange} name="sortas" style="display: none;" checked />
+                            <label for="ascBtn">
+                              <div class="asc_descBtn">
+                                <svg class="asc_desc_SVG" viewBox="0 0 13 14" ><path d="M0.513428 9.625L3.79616 9.625V9.82715L0.92377 12.4122V12.625H4.20651" stroke-miterlimit="4.25735"/><path d="M9.54112 13L9.54112 1M9.54112 1L12.0032 3.25M9.54112 1L7.07907 3.25" /><path fill-rule="evenodd" clip-rule="evenodd" d="M0 4.75L1.55647 1H2.89888L4.28616 4.75H3.21992L2.21274 2.02745L1.08272 4.75H0Z" /><path d="M1.00879 3.625H3.47084" /></svg>
+                                <div class="asc_descText">ASC.</div>
+                              </div>
+                            </label>
+                            <input type="radio" id="descBtn" data-value="desc" onchange={handleSortAsChange} name="sortas" style="display: none;" />
+                            <label for="descBtn">
+                              <div class="asc_descBtn">
+                                <svg class="asc_desc_SVG" viewBox="0 0 13 14"><path fill-rule="evenodd" clip-rule="evenodd" d="M1.55663 9.25L0 13H1.08273L1.34217 12.375H2.98862L3.21985 13H4.2861L2.89869 9.25H1.55663ZM2.61864 11.375L2.21271 10.2778L1.75727 11.375H2.61864Z"/><path d="M0.513184 1.375L3.79624 1.375V1.57715L0.923566 4.16215V4.375H4.20663" stroke-miterlimit="4.25735"/><path d="M9.5414 1L9.5414 13M9.5414 13L7.0791 10.75M9.5414 13L12.0037 10.75"/></svg>
+                                <div class="asc_descText">DESC.</div>
+                              </div>
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="filertOptions">
+                        <div class="filertOptions_Sub">
+                          <div class="lableBox">
+                            <div class="lableText">Filter By</div>
+                          </div>
+                        </div>
+                        <div class="filertOptions_Sub2">
+                          <div class="objectFilterSection">
+                            <c-custome-combo-box
+                                label="Select the Object"
+                                options={objectList}
+                                placeholder="Objects..."
+                                onselect={handleObjectSelect}
+                                multiselect="true"
+                                searchable="true"
+                                dropdown-position="right"
+                                data-combox="object"
+                            ></c-custome-combo-box>
+                            <!-- <div class="objectPills">
+                              <template for:each={selectedObjects} for:item="obj" for:index="index">
+                                <div class="objPill" key={obj}>
+                                  <p>{obj.label}</p>
+                                  <svg width="15" height="15" onclick={removeSelctedObj} data-id="searchBox" data-value={obj.value} fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24">
+                                    <path d="M17.25 17.25 6.75 6.75"></path>
+                                    <path d="m17.25 6.75-10.5 10.5"></path>
+                                  </svg>
+                                </div>
+                              </template>
+                            </div> -->
+                          </div>
+                          <div class="tempFilterSection">
+                            <label class="slds-form-element__label" style="width: 100%; padding-left: 4px; color:black;">Select the Template</label>
+                            <template for:each={templateTypeList} for:item="temp" for:index="index">
+                              <lightning-input type="checkbox" label={temp.label} name="input1" key={temp.label}
+                                                data-value={temp.value} data-index={index} onchange={handleSelectTemplate}></lightning-input>
+                            </template>
+                          </div>
+                          <div class="dateFilterSection">
+                            <div class="dateSection">
+                              <div class="rangeSelection">
+                                <label class="slds-form-element__label" data-label="date" style="width: 100%; padding-left: 4px; color:black;">Select Date Field</label>
+                                <c-custome-combo-box
+                                    class="dateCombo"
+                                    options={filterDateTypeList}
+                                    placeholder="Date Field..."
+                                    onselect={handleDateSelect}
+                                    multiselect="false"
+                                    searchable="false"
+                                    dropdown-position="right"
+                                    required="false"
+                                    data-combox="date"
+                                ></c-custome-combo-box>
+                              </div>
+                              <div class="rangeSelection">
+                                <label class="slds-form-element__label" data-label="fromDate" style="width: 100%; padding-left: 4px; color:black;">From</label>
+                                <div class="fromTo">
+                                  <lightning-input type="date" name="fromDate" data-name="fromDate" value={selectedRange.fromDate} variant="label-hidden" date-style="short" placeholder="From..." onchange={handleDateChange}></lightning-input>
+                                </div>
+                              </div>
+                              <div class="rangeSelection">
+                                <label class="slds-form-element__label" data-label="toDate" style="width: 100%; padding-left: 4px; color:black;">To</label>
+                                <div class="fromTo">
+                                  <lightning-input type="date" name="toDate" data-name="toDate" value={selectedRange.toDate} variant="label-hidden" date-style="short" placeholder="To..." onchange={handleDateChange}></lightning-input>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="refrenceTimeSection">
+                              <template for:each={refrenceTimeList} for:item="refrenceTime" for:index="index">
+                                <input type="radio" id={refrenceTime.value} data-value={refrenceTime.value} name="refrenceTime" data-name="refrenceTime" onchange={handleRefrecePillClick} style="display: none;" key={refrenceTime}/>
+                                <label for={refrenceTime.value} key={refrenceTime}>
+                                  <div class="refrencePill">
+                                    {refrenceTime.label}
+                                  </div>
+                                </label>
+                              </template>
+                              <template lwc:if={clearRangeDates}>
+                                <div class="clear_refrencePills" onclick={hanldeRangeDates}>
+                                  <svg viewBox="0 0 24 24">
+                                    <path d="m18.75 6.82-1.57-1.57L12 10.43 6.82 5.25 5.25 6.82 10.43 12l-5.18 5.18 1.57 1.57L12 13.57l5.18 5.18 1.57-1.57L13.57 12l5.18-5.18Z"></path>
+                                  </svg>
+                                </div>
+                              </template>
+                            </div>
+                          </div>
+                          <div class="saveSection">
+                            <lightning-button variant="Neutral" label="Close" title="Close" onclick={toggleOptions} disable-animation></lightning-button>
+                            <lightning-button variant="brand" label="Apply" title="Save" onclick={handleFilterApply} disable-animation></lightning-button>
+                          </div>
+                          <!-- <div class="emptyDiv"></div> -->
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </template>
+              </div>
+              <div class="searchSection searchSection_Variables">
+                <div class="seachContainer">
+                  <svg class="iconSection" viewBox="0 0 44 44" fill="none">
+                    <path d="M21 29C25.4183 29 29 25.4183 29 21C29 16.5817 25.4183 13 21 13C16.5817 13 13 16.5817 13 21C13 25.4183 16.5817 29 21 29Z" stroke="#ABB7C2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M31 31.0002L26.7 26.7002" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                  <input class="searchInput" placeholder="Search..." type="text" onchange={hanldeTemplateSearch} />
+                </div>
+              </div>
+            </div>
+            <div class="templateListSection">
+              <template lwc:if={isTemplates}>
+                <div class="template_Sub">
+                  <template for:each={dispalyedTemplateList} for:item="template" for:index="index">
+                    <div class="templateCardContainer" key={template.Id}>
+                      <div class="tempNumerSec">
+                        <div class="curveDesign">{template.srNo}</div>
+                      </div>
+                      <div class="tempDetailSection">
+                        <div class="tempName">
+                          <h1>{template.Template_Name__c}</h1>
+                        </div>
+                        <div class="tempDeatilFields">
+                          <div class="tempObj tempField">
+                            <h5 class="fieldLable">Object Name:</h5>
+                            <p class="fieldValue">{template.Object_API_Name__c}</p>
+                          </div>
+                          <div class="tempType tempField">
+                            <h5 class="fieldLable">Template Type:</h5>
+                            <p class="fieldValue">{template.Template_Type__c}</p>
+                          </div>
+                          <div class="tempDecription tempField">
+                            <h5 class="fieldLable">Description:</h5>
+                            <p class="fieldValue">{template.Description__c}</p>
+                          </div>
+                          <div class="tempCreDate tempField">
+                            <h5 class="fieldLable">Created Date:</h5>
+                            <p class="fieldValue">{template.CreateDate_Only}</p>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="tempBtnSection">
+                        <div class="tempToggle">
+                          <template lwc:if={template.Template_Status__c}>
+                            <input class="checkBox checked" type="checkbox" data-status="checked" id={template.Id} data-id={template.Id} data-toggel={template.Id} onchange={handleChangeActiveness} style="display: none;" checked/>
+                          </template>
+                          <template lwc:else>
+                            <input class="checkBox" type="checkbox" data-status="unchecked" id={template.Id} data-id={template.Id} data-toggel={template.Id} onchange={handleChangeActiveness} style="display: none;"/>
+                          </template>
+                          <label for={template.Id}> 
+                            <div class="toggleDiv">
+                              <div class="toggleBtnBg">
+                                <div class="StatusText">
+                                  <span>Active</span>
+                                  <span>Inactive</span>
+                                </div>
+                              </div>
+                            </div>
+                          </label>
+                        </div>
+                        <div class="tempActionBtnSection">
+                            <img src={privewBtnIcon} class="previewBtn" data-id={template.Id} data-type={template.Template_Type__c} data-objapi={template.Object_API_Name__c} onclick={handlePreviewTemplate} />
+                            <svg class="editBtn" viewBox="0 0 24 24" fill="none" data-id={template.Id} data-type={template.Template_Type__c} data-objapi={template.Object_API_Name__c} onclick={handleTemplateEdit}>
+                              <path fill-rule="evenodd" clip-rule="evenodd" d="M13.7318 4.72055L16.545 1.92087C17.8118 0.660237 18.4452 0.029921 19.2278 0.00133292C19.2765 -0.000444308 19.3252 -0.000444308 19.3738 0.00133292C20.1565 0.029921 20.7898 0.660237 22.0566 1.92087L22.0566 1.92088C23.3346 3.19269 23.9736 3.8286 24.0025 4.61657C24.0043 4.66553 24.0043 4.71453 24.0025 4.76349C23.9736 5.55146 23.3346 6.18737 22.0566 7.45919L19.3006 10.2018C16.9968 8.8806 15.0807 6.98788 13.7318 4.72055ZM12.2753 6.16999L2.16182 16.2346C1.7346 16.6598 1.52099 16.8723 1.38046 17.1339C1.23993 17.3954 1.18055 17.6909 1.0618 18.2818L0.064242 23.2454C-0.00259064 23.578 -0.036007 23.7443 0.0585132 23.839C0.15303 23.9337 0.319357 23.9006 0.652004 23.8344L0.652026 23.8343L0.652043 23.8343L5.65484 22.8386C6.24284 22.7216 6.53684 22.6631 6.79749 22.5241C7.05815 22.3852 7.27063 22.1737 7.69559 21.7508L17.8371 11.6583C15.5852 10.2711 13.6846 8.39055 12.2753 6.16999Z"/>
+                            </svg>
+                            <svg viewBox="0 0 19 24" class="DeleteBtn" fill="none" data-id={template.Id} data-objapi={template.Object_API_Name__c} onclick={handleDeleteTemplate}>
+                              <path d="M19 8.80042L17.6778 10.9754L1.63953 2.17496L2.96173 0L6.98121 2.2001L8.7794 1.73494L14.5045 4.87795L14.9937 6.60031L19 8.80042ZM0 21.4856V6.39916H6.70355L15.8664 11.428V21.4856C15.8664 22.1525 15.5878 22.792 15.0919 23.2635C14.5959 23.7351 13.9233 24 13.222 24H2.6444C1.94306 24 1.27045 23.7351 0.774526 23.2635C0.278605 22.792 0 22.1525 0 21.4856ZM2.6444 21.4856H13.222V12.9366L5.89701 8.91357H2.6444V21.4856Z"/>
+                            </svg>
+                        </div>
+                      </div>
+                    </div>
+                  </template>
+                </div>
+              </template>
+              <template lwc:else>
+                <div class="emptyStateDiv">
+                  <img class="emptyStateImg" src={emptyStateImg} />
+                  <div class="emptyStateText">
+                    It's time to create your first Template
+                  </div>
+                </div>
+              </template>
+            </div>
+          </div>
+      </div>
+    </div>
+
+    <template lwc:if={isCreateTemplate}>
+      <c-new-template-creation onaftersave={handleAfterSave} onclosemodal={closeCreateTemplate}></c-new-template-creation>
+    </template>
+    
+    <template lwc:if={isEditSimpleTemplate}>
+      <c-template-builder template-id={selectedTemplateId} sourceobjapi={selectedObjectName} oncloseedittemplate={closeSimpleEditTemplate}></c-template-builder>
+    </template>
+
+    <template lwc:if={isEditDnDTemplate}>
+      <c-edit-drag-drop-template template-id={selectedTemplateId} oncloseedittemplate={closeDandDEditTemplate}></c-edit-drag-drop-template>
+    </template>
+
+    <template lwc:if={isEditCSVTemplate}>
+      <c-edit-c-s-v-template object-name={selectedObjectName} template-id={selectedTemplateId} onclosemodal={closeCSVEditTemplate}></c-edit-c-s-v-template>
+    </template>
+    
+    <c-message-popup onconfirmation={handleConfimation}></c-message-popup>
+    
+    <template lwc:if={isSpinner}>
+      <c-spinner></c-spinner>
+    </template>
+
+
+</template>

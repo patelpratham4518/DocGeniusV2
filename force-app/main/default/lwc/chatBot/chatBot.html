@@ -1,0 +1,102 @@
+<template>
+    <div class="container">
+        <template if:false={popupOpen}>
+        <div class="circle">
+            <lightning-icon icon-name="utility:chat" class="slds-icon test" alternative-text="Chat Icon" ></lightning-icon>
+        </div>
+        </template>
+        
+        <template if:true={popupOpen}>
+            
+                <div class="content" style="background-color: rgb(255, 255, 255); height: 570px; width: 370px; border-radius: 8px;">
+                    <template if:false={isChatStarted}>
+                        <div class="closebar" style="height: 62px; background-color: white">
+                            <div class="left-bar"></div>
+                            <div class="right-bar">
+                                <button class="slds-button slds-button_icon" title="Close" onclick={togglePopupClose}>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 22 22" fill="none">
+                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M20.7334 2.5537C20.8179 2.46918 20.885 2.36885 20.9307 2.25843C20.9765 2.14801 21 2.02966 21 1.91013C21 1.79061 20.9765 1.67226 20.9307 1.56184C20.885 1.45142 20.8179 1.35109 20.7334 1.26657C20.6489 1.18206 20.5486 1.11502 20.4382 1.06928C20.3277 1.02354 20.2094 1 20.0899 1C19.9703 1 19.852 1.02354 19.7416 1.06928C19.6311 1.11502 19.5308 1.18206 19.4463 1.26657L11 9.71469L2.5537 1.26657C2.46918 1.18206 2.36885 1.11502 2.25843 1.06928C2.14801 1.02354 2.02966 1 1.91013 1C1.79061 1 1.67226 1.02354 1.56184 1.06928C1.45142 1.11502 1.35109 1.18206 1.26657 1.26657C1.18206 1.35109 1.11502 1.45142 1.06928 1.56184C1.02354 1.67226 1 1.79061 1 1.91013C1 2.02966 1.02354 2.14801 1.06928 2.25843C1.11502 2.36885 1.18206 2.46918 1.26657 2.5537L9.71469 11L1.26657 19.4463C1.09589 19.617 1 19.8485 1 20.0899C1 20.3312 1.09589 20.5627 1.26657 20.7334C1.43726 20.9041 1.66875 21 1.91013 21C2.15152 21 2.38301 20.9041 2.5537 20.7334L11 12.2853L19.4463 20.7334C19.617 20.9041 19.8485 21 20.0899 21C20.3312 21 20.5627 20.9041 20.7334 20.7334C20.9041 20.5627 21 20.3312 21 20.0899C21 19.8485 20.9041 19.617 20.7334 19.4463L12.2853 11L20.7334 2.5537Z" fill=#0498DC stroke=#0498DC/>
+                                        </svg>
+                                    <span class="slds-assistive-text">Close</span>
+                                 </button>
+                            </div>
+                        </div>
+                    </template>
+                    <template if:true={isChatStarted}>
+                        <div class="closebar top-bar" style="background-color: #0498DC;">
+                            <div class="left-bar"><p>Bot Genius</p></div>
+                            <div class="right-bar">
+                                <button class="slds-button slds-button_icon" title="Close" onclick={togglePopupClose}>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 22 22" fill="none">
+                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M20.7334 2.5537C20.8179 2.46918 20.885 2.36885 20.9307 2.25843C20.9765 2.14801 21 2.02966 21 1.91013C21 1.79061 20.9765 1.67226 20.9307 1.56184C20.885 1.45142 20.8179 1.35109 20.7334 1.26657C20.6489 1.18206 20.5486 1.11502 20.4382 1.06928C20.3277 1.02354 20.2094 1 20.0899 1C19.9703 1 19.852 1.02354 19.7416 1.06928C19.6311 1.11502 19.5308 1.18206 19.4463 1.26657L11 9.71469L2.5537 1.26657C2.46918 1.18206 2.36885 1.11502 2.25843 1.06928C2.14801 1.02354 2.02966 1 1.91013 1C1.79061 1 1.67226 1.02354 1.56184 1.06928C1.45142 1.11502 1.35109 1.18206 1.26657 1.26657C1.18206 1.35109 1.11502 1.45142 1.06928 1.56184C1.02354 1.67226 1 1.79061 1 1.91013C1 2.02966 1.02354 2.14801 1.06928 2.25843C1.11502 2.36885 1.18206 2.46918 1.26657 2.5537L9.71469 11L1.26657 19.4463C1.09589 19.617 1 19.8485 1 20.0899C1 20.3312 1.09589 20.5627 1.26657 20.7334C1.43726 20.9041 1.66875 21 1.91013 21C2.15152 21 2.38301 20.9041 2.5537 20.7334L11 12.2853L19.4463 20.7334C19.617 20.9041 19.8485 21 20.0899 21C20.3312 21 20.5627 20.9041 20.7334 20.7334C20.9041 20.5627 21 20.3312 21 20.0899C21 19.8485 20.9041 19.617 20.7334 19.4463L12.2853 11L20.7334 2.5537Z" fill="White" stroke="White"/>
+                                        </svg>
+                                    <span class="slds-assistive-text">Close</span>
+                                 </button>
+                            </div>
+                        </div>
+                    </template>
+                    
+                    <div class={popupClass}>
+                        <template if:false={isChatStarted}>
+                        <div class="welcome">
+                            <p>Hello</p>
+                            <p>I'm BotGenius</p>
+                            <img src={chatBot} alt="bot genius">
+                            <p>What is your Question?</p>
+                        </div>
+                        </template>
+                        <div class="message">
+                            <!-- <div class="bot-message">
+                                <div class="bot-icon"><img src={chatBot} alt="chatBot" height="35px" width="35px"></div>
+                                <p class="left-message">How can I help you?</p>
+                            </div> -->
+                            <!-- <p class="left-message">Hello this is your assistant Bot Genius,<br> How may I help you?</p> -->
+                            <template if:true={messages} for:each={messages} for:item="message">
+                                <p key={message} class="right-message">{message}</p>
+                            </template>
+                            <div if:true={isIssue} style="display: flex; float: left; width: 100%" >
+                                <div class="bot-icon"><img src={chatBot} alt="chatBot" height="35px" width="35px"></div>
+                                <div class="issue-options" if:true={isIssue}>
+                                    <p class="question">{question}</p>
+                                    <template if:true={issues} for:each={issues} for:item="option">
+                                        <div key={option} class="options" onclick={handleClick} data-key={option} data-value={option}>
+                                            <p>{option}</p>
+                                        </div>
+                                    </template>
+                                </div>
+                            </div>
+
+                            <template if:true={isSol}>
+                                <div class="bot-message">
+                                    <div class="bot-icon"><img src={chatBot} alt="chatBot" height="35px" width="35px"></div>
+                                    <p class="left-message">{solution}</p>
+                                </div>
+                                <!-- <p class="left-message"></p> -->
+                                <!-- <p class="new-chat" onclick={handleChat}>Start new chat</p> -->
+                            </template>
+
+                            <template if:true={isSpinner}>
+                                <div class="bot-message" >
+                                    <div class="bot-icon"><img src={chatBot} alt="chatBot" height="35px" width="35px"></div>
+                                    <div class="spinner-text">
+                                        <div class="dot"></div>
+                                        <div class="dot"></div>
+                                        <div class="dot"></div>
+                                    </div>
+                                </div>
+                            </template>
+
+                        </div>
+                    </div>
+                    <div class="footer">
+                        <template if:false={isSol}>
+                            <p class="end-chat" onclick={handleChat}>End chat</p>
+                        </template>
+                        <template if:true={isSol}>
+                            <p class="new-chat" onclick={handleChat}>Start new chat</p>
+                        </template>
+                    </div>
+                </div>
+            </template>
+    </div>
+</template>

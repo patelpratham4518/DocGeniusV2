@@ -1,0 +1,119 @@
+.body {
+    display: flex;
+    gap: 1rem;
+}
+
+iframe {
+    height: 70vh;
+    width: -webkit-fill-available;
+    margin: 2vh;
+    padding: 1vh;
+}
+
+.left {
+    display: grid;
+    width: -webkit-fill-available;
+}
+
+.tabSection {
+    height: 2rem;
+    width: 100%;
+    background-color: #FFFFFF;
+    margin: 2vh;
+    padding: 1vh;
+    border-radius: 1vh;
+}
+
+.fieldMappingContainer {
+    width: 30rem;
+    background-color: #FFFFFF;
+    margin: 2vh;
+    padding: 1vh;
+    border-radius: 1vh;
+}
+
+
+.header {
+    color: #00AEFF;
+    font-family: Inter;
+    font-size: 26px;
+    font-weight: 700;
+    line-height: 35px;
+    text-align: center;
+}
+
+.popup {
+    background: #FFFFFF;
+    padding: 1rem;
+    border-radius: 1vh;
+}
+
+.profile {
+    width: 160px;
+    height: 50px;
+    top: 13px;
+    left: 750px;
+    gap: 0px;
+    border-radius: 8px 0px 0px 0px;
+    opacity: 0px;
+    background: #FFFFFF;
+    box-shadow: 0px 0px 4px 0px #00000040;
+    justify-self: right;
+}
+
+.firstRow {
+    display: flex;
+    display: flex;
+    justify-content: space-between;
+}
+
+.serarch {
+    width: 35vh;
+    height: 40px;
+    top: 85px;
+    left: 40px;
+    margin: 1vh;
+    padding: 0px 8px 0px 8px;
+    gap: 6px;
+    border-radius: 1vh;
+
+    opacity: 0px;
+    background: #FFFFFF;
+    box-shadow: 0px 0px 25px 0px #00000033;
+}
+
+.docs{
+    width:100%;
+    display: grid;
+    grid: auto / 20% 20% 20% 20%;
+    grid-column-gap: 4vh;
+    grid-row-gap: 2vh;
+    margin: 1vh;
+    padding: 2vh;
+    border-radius: 1vh;
+    align-items: center;
+}
+.doc{
+    background-color: #00AEFF;
+    box-shadow: 0px 0px 5px 0px #00000040;
+    border-radius: 1vh;
+    height:20vh;
+    width:17vh;
+}
+.footer{
+    margin-left: 60vh;
+    height: 5vh;
+    width:5vh;
+    display: flex;
+    justify-items: center;
+    justify-content: center;
+    gap: 1vh;
+}
+.footer button{
+    background-color: #00AEFF;
+    border-radius: 1vh;
+    box-shadow: 0px 3px 12px 0px #4A3AFF2E;
+    border: none;
+    height:5vh;
+    width:10vh;
+}

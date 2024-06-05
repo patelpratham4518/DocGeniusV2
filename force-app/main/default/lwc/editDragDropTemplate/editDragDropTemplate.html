@@ -1,0 +1,48 @@
+<template>
+    <div class="main-div">
+        <div class="fieldsection-body">
+            <div class="obj-Name"> Object Name: </div>
+            <div class="fielddiv" id="field">
+                <template for:each={fieldLable} for:item="data" for:index="index">
+                    <div key={data.apiName} draggable="true" id={data.apiName} data-id={data.label} data-name={data.apiName}
+                        ondragstart={taskDragStart} ondragend={taskDragEnd} field-id={data.apiName}
+                        class="fields">
+                        {data.label}
+                    </div>
+                </template>
+            </div>
+            <div class="btn-div">
+                <button class="cancel-button" onclick={handleCancel}>Cancel</button>
+                <!-- <button class="reset-button" onclick={handleReset}>Reset</button>
+                <button class="save-button" onclick={handleSave}>Save</button> -->
+            </div>
+        </div>
+        <div class="dropzone-body">
+            <div class="main-page">
+                <!-- <template for:each={rows} for:item="row">templatedata -->
+                <template for:each={templatedata} for:item="row">
+                    <div class="row" key={row.rowId}>
+                        <template for:each={row.columns} for:item="column">
+                            <div class="column" key={column.columnId} data-id={column.columnId} data-name={row.rowId} ondrop={taskDrop} ondragover={allowDrop}>
+                                <div class="showNum">Section {column.columnId},{row.rowId}</div>
+                                <div style="width: 100%;" >
+                                    <template for:each={column.fields} for:item="field">
+                                        <div class="fieldCover" key={field.api}>
+                                            <div class="fieldDiv">{field.label}</div>
+                                        </div>
+                                    </template>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </template>
+            </div>
+            
+        </div>
+    </div>
+    <c-message-popup onconfirmation={handleConfimation}></c-message-popup>
+    <template lwc:if={isSpinner}>
+        <c-spinner></c-spinner>
+    </template>
+    
+</template>

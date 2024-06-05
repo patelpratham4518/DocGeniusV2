@@ -1,0 +1,41 @@
+<template>
+      <c-message-popup></c-message-popup>
+      <div class="spinner-div" if:true={showSpinner}>
+          <c-spinner></c-spinner>
+      </div>
+      <div class="main-div">
+        <div class="title-div">
+          <span class="title-text">CSV Generator</span>
+        </div>
+        <div class="input-div">
+          <div class="template-selection-div">
+            <lightning-combobox
+              name="Templates"
+              label="Select Template"
+              value={templateId}
+              placeholder="Select template..."
+              options={allTemplates}
+              onchange={handleTemplateIdChange}
+            ></lightning-combobox>
+          </div>
+          <lightning-input 
+            type="text"
+            label="Enter File Name"
+            value={csvFileName}
+            placeholder="Enter a file name..."
+            onchange={handleFileNameChange}
+            title="If you don't provide any name, By default the file will be names as the template name."
+          ></lightning-input>
+          <lightning-input 
+            type="checkbox"
+            label="Add Template Details in CSV"
+            onchange={handleTemplateDetailsToggle}
+            title="If checked, the CSV will contain details like template name, template description and creation time of the CSV."
+          ></lightning-input>
+        </div>
+
+        <div class="btn-div">
+          <button class="generate-btn" onclick={handleGenerateCSV}>Generate CSV</button>
+        </div>
+      </div>
+</template>

@@ -1,0 +1,462 @@
+template{
+    position: relative;
+}
+
+.main-div{
+    position: absolute;
+    top: 0%;
+    left: 0%;
+    width: calc(100% + 1.5rem);
+    height: calc(100% + 1.5rem);
+    margin-left: -0.75rem;
+    margin-top: -0.75rem;
+    background-color: white;
+    padding: 1rem;
+    overflow-y:scroll;
+    border-radius: 0.5rem;
+    scrollbar-width: none;
+    overflow-x: hidden;
+}
+
+.main-flex-div{
+    display: flex;
+    flex-direction: row;
+    height: calc(100% - 5rem);
+}
+
+.header{
+    border-radius: 0.5rem;
+    margin-bottom: 1rem;
+    height: 4rem;
+    display: flex;
+    background-color: white;
+    background: linear-gradient(90.18deg, rgba(0, 255, 186, 0.3) 0%,rgba(0, 174, 255, 0.3) 100%);
+    color: black;
+}
+
+.heading{
+    font-size: 1.125rem;
+    font-weight: 700;
+}
+
+.main-fields-div{
+    width: 40%;
+    padding: 1.25rem;
+    height: calc( 100% - 2rem );
+}
+
+.selected-count{
+    min-width: 6rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.vertical-line{
+    width: 0.125rem;
+    background: linear-gradient(0deg, rgba(255, 255, 255, 0) 0%, rgb(175 175 175) 18%, rgb(106 106 106) 50%, rgb(175 175 175) 82%, rgba(255, 255, 255, 0) 100%);
+    border-radius: 0.5rem;
+    height: 100%;
+}
+
+.main-config-div{
+    width: 60%;
+    height: calc( 100% - 5rem );
+    overflow-y: scroll;
+}
+
+.fields-div{
+    min-width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+}
+
+.labels{
+    color: #444444;
+    width: 100%;
+    text-align: center;
+    font-size: 0.875rem;
+    font-weight: 500;
+    padding: 0.313rem;
+}
+
+
+/* .available-div{
+    height: 45%;
+} */
+/* 
+.selected-div{
+    height: 45%;
+} */
+
+
+.selection-div{
+    height: 13.125rem !important;
+    /* height: calc( 100% - 5rem); */
+    width: 100%;
+    overflow-y: scroll;
+    border-radius: 0.5rem;
+    text-align: center;
+    background-color: white;
+    background: #c2e2ff9e;
+    -webkit-box-shadow: 0 0 0.313rem 0.125rem #00000030;
+    -moz-box-shadow: 0 0 0.313rem 0.125rem #00000030;
+    box-shadow: 0 0 0.313rem 0.125rem #00000030;
+}
+
+.selection-div-full-height{
+    height: 100% ;
+}
+
+.selection-include-btn-div{
+    height: 13.125rem !important;
+    margin-top: 0.625rem;
+    display: flex;
+    overflow-y: hidden;
+    border-radius: 0.5rem;
+    text-align: center;
+    background-color: white;
+    background: #72c2ff12;
+    -webkit-box-shadow: 0 0 0.313rem 0.125rem #00000030;
+    -moz-box-shadow: 0 0 0.313rem 0.125rem #00000030;
+    box-shadow: 0 0 0.313rem 0.125rem #00000030;
+}
+
+.search-field-div{
+    padding: 0 0 0.625rem 0;
+}
+
+.field-search-input{
+    width: 100%;
+    height: 2.5rem;
+    border-radius: 0.5rem;
+    border: none;
+    padding-left: 3.125rem;
+    -webkit-box-shadow: 0 0 0.313rem 0.125rem #00000030;
+    -moz-box-shadow: 0 0 0.313rem 0.125rem #00000030;
+    box-shadow: 0 0 0.313rem 0.125rem #00000030;
+}
+
+.field-search-input:focus{
+    border: #00AEFF 0.063rem solid;
+}
+
+.field-search-input:focus-visible{
+    outline: none;
+}
+
+.search-img{
+    position: absolute;
+    background-color: #00AEFF;
+    border-radius: 0.5rem 0 0 0.5rem;
+    width: 2.5rem;
+    height: 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+li{
+    margin: 0.625rem;
+    border-radius: 0.5rem;
+    padding: 0.625rem;
+    cursor: pointer;
+    background-color: white;
+    transition: all 0.1s ease-in-out;
+    height: 40px;
+}
+
+li:hover{
+    background: #00aeff2b;
+}
+
+.selected-item {
+    background: #00aeff94 !important;
+    color: black;
+}
+
+.buttons{
+    display: flex;
+    flex-direction: row;
+    /* margin-top: 0.625rem; */
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.813rem;
+    margin-top: 1.5rem;
+}
+
+.column-buttons{
+    flex-direction: column;
+    gap: 0;
+    padding: 0.313rem 1rem;
+    margin: 0;
+    justify-content: space-around;
+}
+
+.arrow-btn {
+    width: 3rem;
+    height: 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.5rem;
+    background-color: #00AEFF;
+    /* padding: 0.5rem; */
+    cursor: pointer;
+}
+
+.bold-text{
+    font-weight: 700;
+    font-size: 1rem;
+}
+
+.title-div{
+    width: 100%;
+    background: #00aeff94;
+    text-align: center;
+    border-radius: 0.5rem;
+    padding: 0.313rem;
+    font-weight: 700;
+    font-size: 1rem;
+}
+
+.btn-div{
+    position: absolute;
+    width: 60%;
+    bottom: 1.25rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 2.5rem;
+}
+
+.save-button, .cancel-button, .reset-button, .validate-button{
+    display: flex;
+    justify-content: center;
+    font-size: 1rem;
+    background-color: #00AEFF;
+    width: 9.375rem;
+    height: 2.5rem;
+    border-radius: 0.5rem;
+    border: none;
+    align-items: center;
+    color: white;
+}
+button:hover{
+    background-color: #008eed;
+}
+
+.delete-btn, .add-btn {
+    min-height: 2.5rem;
+    min-width: 2.5rem;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 0.5rem;
+    display: flex;
+    justify-content: center;
+    /* background-color: #c9c9c9; */
+    align-items: center;
+    cursor: pointer;
+}
+
+.add-btn{
+    background-color: #e8e8e8;
+    width: 100%;
+}
+
+.delete-btn:hover{
+    background-color: #ff9d9dc6;
+}
+.add-btn:hover{
+    background-color: #c2e2ff9e;
+}
+
+.filter-div, .sort-div, .limit-main-div, .filter-logic-div{
+    padding: 1.25rem 1.25rem 0 1.25rem;
+    width: 100%;
+}
+
+.filter-row, .sort-row, .logic-div, .limit-div{
+    display: flex;
+    margin: 0.625rem auto;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 1.25rem;
+    background: #c2e2ff9e;
+    padding: 0.313rem;
+    border-radius: 0.5rem;
+}
+
+.all-filters-rows, .all-sorts-rows {
+    background: #c2e2ff9e;
+    padding: 0.313rem;
+    border-radius: 0.5rem;
+    margin: 0.625rem 0;
+}
+
+.filter-row, .sort-row{
+    background: transparent;
+    margin: 0;
+}
+
+.logic-div, .limit-div{
+    padding: 0.625rem;
+}
+
+.logic-div{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0;
+}
+
+.logic-flex-1{
+    display: flex;
+    width: 100%;
+    flex-direction: row;
+    gap: 0.625rem;
+}
+
+.error-div{
+    color: red;
+    padding-top: 0.625rem;
+}
+
+.sort-order{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    gap: 1.25rem;
+}
+
+.selected-sort-order{
+    border:0.063rem solid rgb(0, 174, 255) !important;
+    background-color: white !important;
+}
+
+.sort-btn{
+    background-color: white;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    border: 0.063rem transparent solid;
+}
+
+.sort-btn:hover {
+    background-color: #00aeff2b;
+}
+
+.filter-index-div, .sort-index-div{
+    min-height: 2.5rem;
+    min-width: 2.5rem;
+    width: 2.5rem;
+    height: 2.5rem;
+    text-align: center;
+    background-color: #00aeff6b;
+    border-radius: 0.5rem;
+    line-height: 2.5rem;
+}
+
+.error-in-row{
+    background-color: #ff9d9d !important;
+}
+
+.error-in-input{
+    --slds-c-input-color-border : #ff9d9d !important;
+}
+
+.error-in-input:focus{
+    --slds-c-input-color-border : #ff9d9d !important;
+}
+
+.sort-btn svg{
+    margin: 0.438rem;
+}
+
+.field-select, .logic-select-div{
+    width: calc( 30% - 3.75rem );
+}
+
+.logic-select-div{
+    width: calc(30% - 0.625rem);
+}
+
+.field-select-full-width{
+    width: 100%;
+}
+
+.limit-toggle-div{
+    position: relative;
+    /* width: 10%; */
+}
+
+.toggle-label{
+    position: absolute;
+    font-size: 0.813rem;
+    color: #00AEFF;
+    z-index: 1;
+    text-wrap: nowrap;
+    top: -0.813rem;
+    left: 0;
+}
+/* .toggle-limit{
+    margin-top: 0.313rem;
+} */
+
+/* .limit-input-div{
+    width: 10%
+} */
+
+
+.operator-select{
+    width: 20%;
+}
+
+.custom-logic-div{
+    display: flex;
+    /* flex-direction: row;
+    justify-content: center;
+    gap: 1.25rem; */
+    width: 70%;
+}
+
+.logic-string-input{
+    width: 100%;
+}
+
+.value-select{
+    width: 40%;
+}
+
+.picklist-input-div, .simple-input-div{
+    display: relative;
+    width: 40%;
+}
+
+.dont-display-div{
+    display: none;
+}
+
+
+@media only screen and (min-width: 48rem) and (max-width: 64rem) {
+    
+
+    .heading{
+        font-size: 1rem;
+    }
+    
+    .header{
+        padding: 0.875rem;
+    }
+
+    .bold-text{
+        font-size: 0.875rem;
+    }
+
+    .save-button{
+        font-size: 0.875rem;
+    }
+}

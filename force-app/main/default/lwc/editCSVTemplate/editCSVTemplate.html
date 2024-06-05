@@ -1,0 +1,254 @@
+<template>
+    <div class="main-div">
+        <c-message-popup onconfirmation={handleConfirmation}></c-message-popup>
+        <div class="spinner-div" if:true={showSpinner}>
+            <c-spinner></c-spinner>
+        </div>
+        <div class="header">
+        <h1 class=" heading slds-align_absolute-center slds-text-heading_large"> <b> CSV Template Builder </b></h1>
+        </div>
+
+        <div class="main-flex-div">
+            <div class="main-fields-div">
+                <div class="title-div">Template Fields Selection</div>
+                <!-- <label class="bold-text">Select the fields you want in your template</label> -->
+                <div class="fields-div">
+                    <div class="available-div">
+                        <div class="labels">Available fields</div>
+                        <div class="search-field-div">
+                            <div class="search-img">
+                                <svg xmlns="http://www.w3.org/2000/svg" height="15" width="15" viewBox="0 0 512 512"><path fill="#ffffff" d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"/></svg>                             
+                            </div>
+                            <input class="field-search-input" type="search" placeholder="Search a field..." onkeyup={handleFieldSearch}></input>
+                        </div>
+                        <div class="selection-div">
+                            <ul>
+                                <template for:each={fieldOptionsToShow} for:item="option">
+                                    <li class="selected-items field-li-to-select" key={option.fieldName} data-api={option.apiName} data-value={option.fieldName} onclick={handleAvailableClick}>
+                                        {option.fieldName}
+                                    </li>
+                                </template>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="buttons">
+                        <div class="arrow-btn" onclick={handleLeft}>
+                            <svg xmlns="http://www.w3.org/2000/svg" height="20" width="17.5" viewBox="0 0 448 512"><path fill="#ffffff" d="M201.4 137.4c12.5-12.5 32.8-12.5 45.3 0l160 160c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L224 205.3 86.6 342.6c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3l160-160z"/></svg>
+                        </div>
+                        <div class="selected-count">
+                            <span class="bold-text">{selectedAvailableFields} selected</span>
+                        </div>
+                        <div class="arrow-btn" onclick={handleRight}>
+                            <svg xmlns="http://www.w3.org/2000/svg" height="20" width="17.5" viewBox="0 0 448 512"><path fill="#ffffff" d="M201.4 374.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 306.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z"/></svg>
+                        </div>
+                    </div>
+    
+                    <div class="selected-div">
+                        <div class="labels">Selected fields</div>
+                        <div class="selection-include-btn-div">
+                            <div class="selection-div selection-div-full-height">
+                                <ul>
+                                    <template for:each={selectedFields} for:item="option">
+                                        <li key={option.apiName} data-api={option.apiName} data-value={option.fieldName} onclick={handleSelectedClick} >
+                                            {option.fieldName}
+                                        </li>
+                                    </template>
+                                </ul>
+                            </div>
+                            <div class="buttons column-buttons">
+                                <div class="arrow-btn" onclick={handleTop}>
+                                    <svg viewBox="0 0 24 24" fill="none" height="20" xmlns="http://www.w3.org/2000/svg" transform="rotate(180)"><g stroke-width="0"></g><g stroke-linecap="round" stroke-linejoin="round"></g><g> <path d="M3 21H21M12 3V17M12 17L19 10M12 17L5 10" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
+                                </div>
+                                <div class="arrow-btn" onclick={handleUp}>
+                                    <svg xmlns="http://www.w3.org/2000/svg" height="20" width="17.5" viewBox="0 0 448 512"><path fill="#ffffff" d="M246.6 41.4c-12.5-12.5-32.8-12.5-45.3 0l-160 160c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L224 109.3 361.4 246.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-160-160zm160 352l-160-160c-12.5-12.5-32.8-12.5-45.3 0l-160 160c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L224 301.3 361.4 438.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3z"/></svg>
+                                </div>
+                                <div class="arrow-btn" onclick={handleDown}>
+                                    <svg xmlns="http://www.w3.org/2000/svg" height="20" width="17.5" viewBox="0 0 448 512"><path fill="#ffffff" d="M246.6 470.6c-12.5 12.5-32.8 12.5-45.3 0l-160-160c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L224 402.7 361.4 265.4c12.5-12.5 32.8-12.5 45.3 0s12.5 32.8 0 45.3l-160 160zm160-352l-160 160c-12.5 12.5-32.8 12.5-45.3 0l-160-160c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L224 210.7 361.4 73.4c12.5-12.5 32.8-12.5 45.3 0s12.5 32.8 0 45.3z"/></svg>
+                                </div>
+                                <div class="arrow-btn" onclick={handleBottom}>
+                                    <svg viewBox="0 0 24 24" fill="none" height="20" xmlns="http://www.w3.org/2000/svg" transform="matrix(1, 0, 0, 1, 0, 0)"><g stroke-width="0"></g><g stroke-linecap="round" stroke-linejoin="round"></g><g> <path d="M3 21H21M12 3V17M12 17L19 10M12 17L5 10" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
+                                </div>
+                            </div>
+                        </div>
+                        </div>
+                </div>
+            </div>
+            <div class="vertical-line"></div>
+            <div class="main-config-div">
+                <!-- <div class="filter-logic-div">
+                    <div class="title-div">Filter Logic</div>
+                    
+                </div> -->
+                <div class="filter-div">
+                    <div class="title-div">Filters</div>
+                    <div class="logic-div">
+                        <div class="logic-flex-1">
+                            <div class="logic-select-div">
+                                <lightning-combobox
+                                    class="logic-select"
+                                    label="Logic Operator"
+                                    value={selectedLogic}
+                                    options={logicOperators}
+                                    onchange={handleLogicUpdate}>
+                                </lightning-combobox>
+                            </div>
+            
+                            <div class="custom-logic-div" if:true={isCustomLogic}>
+                                <lightning-input 
+                                  class="logic-string-input"
+                                  type="text"
+                                  placeholder="2 OR (1 AND 3)"
+                                  label="Custom Logic"
+                                  value={customLogicString}
+                                  onchange={handleCustomLogicUpdate}
+                                  onblur={validateCustomLogic}
+                                  field-level-help="Use parentheses, AND, OR, and NOT to customize the logic. For example, if you enter “(1 AND 2 AND 3) OR 4”, the flow evaluates whether the first three conditions are true or only the fourth condition is true."
+                                ></lightning-input>
+                                <!-- <button onclick={validateCustomLogic} class="validate-button">Validate Logic</button> -->
+                            </div>
+                        </div>
+                        <div class="error-div" if:true={isCustomLogic}>
+                            <span class="error-text"></span>
+                        </div>
+        
+                    </div>
+                    <!-- <span class="bold-text">Filters</span> -->
+                    <div class="all-filters-rows">
+                        <template for:each={adjustedFilters} for:item="filter" for:index="index">
+
+                            <div key={filter} class="filter-row">
+                                <div class="filter-index-div" data-index={index}>
+                                    <span class="bold-text filter-index">{filter.displayIndex}</span>
+                                </div>
+                                <lightning-combobox
+                                    class="field-select"
+                                    label="Field Name"
+                                    value={filter.fieldName}
+                                    placeholder="Select Field"
+                                    options={fieldsForFilters}
+                                    onchange={handleFieldNameChange}
+                                    variant="label-hidden"
+                                    data-index={index}>
+                                </lightning-combobox>
+                                <lightning-combobox
+                                    class="operator-select"
+                                    label="Operator"
+                                    placeholder="Select Operator"
+                                    value={filter.operator}
+                                    options={filter.operators}
+                                    onchange={handleOperatorChange}
+                                    variant="label-hidden"
+                                    data-index={index}>
+                                </lightning-combobox>
+                                <div class="simple-input-div">
+                                    <lightning-input
+                                        type={filter.inputType}
+                                        label="Value"
+                                        placeholder="Enter Value"
+                                        class="value-select-for-toggle"
+                                        message-toggle-active="True"
+                                        message-toggle-inactive="False"
+                                        value={filter.value}
+                                        onchange={handleValueChange}
+                                        variant="label-hidden"
+                                        data-index={index}>
+                                    </lightning-input>
+                                </div>
+                                <div class="picklist-input-div dont-display-div">
+                                    <lightning-combobox
+                                        value={filter.value}
+                                        placeholder="Select Value"
+                                        onchange={handleValueChange}
+                                        data-index={index}
+                                        variant="label-hidden"
+                                        class="picklist-select"
+                                        label="Value"
+                                        options={filter.inputType}>
+                                    </lightning-combobox>
+                                </div>
+                                <div class="delete-btn" data-index={index} onclick={removeFilter} >
+                                    <svg data-index={index} xmlns="http://www.w3.org/2000/svg" height="25" width="20" viewBox="0 0 448 512"><path data-index={index} fill="#000000" d="M170.5 51.6L151.5 80h145l-19-28.4c-1.5-2.2-4-3.6-6.7-3.6H177.1c-2.7 0-5.2 1.3-6.7 3.6zm147-26.6L354.2 80H368h48 8c13.3 0 24 10.7 24 24s-10.7 24-24 24h-8V432c0 44.2-35.8 80-80 80H112c-44.2 0-80-35.8-80-80V128H24c-13.3 0-24-10.7-24-24S10.7 80 24 80h8H80 93.8l36.7-55.1C140.9 9.4 158.4 0 177.1 0h93.7c18.7 0 36.2 9.4 46.6 24.9zM80 128V432c0 17.7 14.3 32 32 32H336c17.7 0 32-14.3 32-32V128H80zm80 64V400c0 8.8-7.2 16-16 16s-16-7.2-16-16V192c0-8.8 7.2-16 16-16s16 7.2 16 16zm80 0V400c0 8.8-7.2 16-16 16s-16-7.2-16-16V192c0-8.8 7.2-16 16-16s16 7.2 16 16zm80 0V400c0 8.8-7.2 16-16 16s-16-7.2-16-16V192c0-8.8 7.2-16 16-16s16 7.2 16 16z"/></svg>
+                                </div>
+                            </div>
+                            <!-- <hr key={filter}></hr> -->
+                        </template>
+                    </div>
+                    <div class="add-btn" data-index={index} onclick={addFilter}>
+                        <svg xmlns="http://www.w3.org/2000/svg" height="15" width="17.5" viewBox="0 0 448 512"><path  fill="#000000" d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"/></svg>
+                        <span class="bold-text"> &nbsp;ADD</span>
+                    </div>
+                </div>
+                <div class="sort-div">
+                    <div class="title-div">Order By</div>
+                    <!-- <span class="bold-text">Order By</span> -->
+                    <div class="all-sorts-rows">
+                        <template for:each={adjustedSorts} for:item="sort" for:index="index">
+                            <div key={sort} class="sort-row">
+                                <div data-index={index} class="sort-index-div">
+                                    <span data-index={index} class="bold-text sort-index">{sort.displayIndex}</span>
+                                </div>
+                                <lightning-combobox
+                                    class="field-select field-select-full-width"
+                                    variant="label-hidden"
+                                    label="Field Name"
+                                    placeholder="Select field"
+                                    value={sort.field}
+                                    options={fieldsForFilters}
+                                    onchange={handleSortFieldChange}
+                                    data-index={index}>
+                                </lightning-combobox>
+                                <div class="sort-order">
+                                    <div class="sort-btn asc-btn" data-index={index} onclick={handleAscending}>
+                                        <svg data-index={index} xmlns="http://www.w3.org/2000/svg" height="24" width="27" viewBox="0 0 576 512"><path data-index={index} fill="#00AEFF" d="M183.6 469.6C177.5 476.2 169 480 160 480s-17.5-3.8-23.6-10.4l-88-96c-11.9-13-11.1-33.3 2-45.2s33.3-11.1 45.2 2L128 365.7V64c0-17.7 14.3-32 32-32s32 14.3 32 32V365.7l32.4-35.4c11.9-13 32.2-13.9 45.2-2s13.9 32.2 2 45.2l-88 96zM320 320c0-17.7 14.3-32 32-32H480c12.9 0 24.6 7.8 29.6 19.8s2.2 25.7-6.9 34.9L429.3 416H480c17.7 0 32 14.3 32 32s-14.3 32-32 32H352c-12.9 0-24.6-7.8-29.6-19.8s-2.2-25.7 6.9-34.9L402.7 352H352c-17.7 0-32-14.3-32-32zM416 32c12.1 0 23.2 6.8 28.6 17.7l64 128 16 32c7.9 15.8 1.5 35-14.3 42.9s-35 1.5-42.9-14.3L460.2 224H371.8l-7.2 14.3c-7.9 15.8-27.1 22.2-42.9 14.3s-22.2-27.1-14.3-42.9l16-32 64-128C392.8 38.8 403.9 32 416 32zM395.8 176h40.4L416 135.6 395.8 176z"/></svg>
+                                    </div>
+                                    <div class="sort-btn desc-btn" data-index={index} onclick={handleDescending}>
+                                        <svg data-index={index} xmlns="http://www.w3.org/2000/svg" height="24" width="27" viewBox="0 0 576 512"><path data-index={index} fill="#00AEFF" d="M183.6 469.6C177.5 476.2 169 480 160 480s-17.5-3.8-23.6-10.4l-88-96c-11.9-13-11.1-33.3 2-45.2s33.3-11.1 45.2 2L128 365.7V64c0-17.7 14.3-32 32-32s32 14.3 32 32V365.7l32.4-35.4c11.9-13 32.2-13.9 45.2-2s13.9 32.2 2 45.2l-88 96zM320 64c0-17.7 14.3-32 32-32H480c12.9 0 24.6 7.8 29.6 19.8s2.2 25.7-6.9 34.9L429.3 160H480c17.7 0 32 14.3 32 32s-14.3 32-32 32H352c-12.9 0-24.6-7.8-29.6-19.8s-2.2-25.7 6.9-34.9L402.7 96H352c-17.7 0-32-14.3-32-32zm96 192c12.1 0 23.2 6.8 28.6 17.7l64 128 16 32c7.9 15.8 1.5 35-14.3 42.9s-35 1.5-42.9-14.3L460.2 448H371.8l-7.2 14.3c-7.9 15.8-27.1 22.2-42.9 14.3s-22.2-27.1-14.3-42.9l16-32 64-128c5.4-10.8 16.5-17.7 28.6-17.7zM395.8 400h40.4L416 359.6 395.8 400z"/></svg>                               
+                                    </div>
+                                </div>
+                                <div class="delete-btn" data-index={index} onclick={removeSort}>
+                                    <svg data-index={index} xmlns="http://www.w3.org/2000/svg" height="25" width="20" viewBox="0 0 448 512"><path data-index={index} fill="#000000" d="M170.5 51.6L151.5 80h145l-19-28.4c-1.5-2.2-4-3.6-6.7-3.6H177.1c-2.7 0-5.2 1.3-6.7 3.6zm147-26.6L354.2 80H368h48 8c13.3 0 24 10.7 24 24s-10.7 24-24 24h-8V432c0 44.2-35.8 80-80 80H112c-44.2 0-80-35.8-80-80V128H24c-13.3 0-24-10.7-24-24S10.7 80 24 80h8H80 93.8l36.7-55.1C140.9 9.4 158.4 0 177.1 0h93.7c18.7 0 36.2 9.4 46.6 24.9zM80 128V432c0 17.7 14.3 32 32 32H336c17.7 0 32-14.3 32-32V128H80zm80 64V400c0 8.8-7.2 16-16 16s-16-7.2-16-16V192c0-8.8 7.2-16 16-16s16 7.2 16 16zm80 0V400c0 8.8-7.2 16-16 16s-16-7.2-16-16V192c0-8.8 7.2-16 16-16s16 7.2 16 16zm80 0V400c0 8.8-7.2 16-16 16s-16-7.2-16-16V192c0-8.8 7.2-16 16-16s16 7.2 16 16z"/></svg>                          
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                    <div class="add-btn" data-index={index} onclick={addSort}>
+                        <svg xmlns="http://www.w3.org/2000/svg" height="15" width="17.5" viewBox="0 0 448 512"><path fill="#000000" d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"/></svg>                     
+                        <span class="bold-text"> &nbsp;ADD</span>
+                    </div>
+                </div>
+                <div class="limit-main-div">
+                    <div class="title-div">Limit</div>
+                    <div class="limit-div">
+                        <div class="limit-toggle-div">
+                            <label>Set records limit</label>
+                            <lightning-input
+                                class="toggle-limit"
+                                type="toggle"
+                                value={showLimitInput}
+                                message-toggle-active=""
+                                message-toggle-inactive=""
+                                onchange={handleLimitToggleChange}
+                                title="if checked, you can change the no of records you want in CSV. By default only 50000 records at max will be there in CSV."
+                                field-level-help="if checked, you can change the no of records you want in CSV. By default only 50000 records at max will be there in CSV."
+                                ></lightning-input>
+                        </div>
+                        <div class="limit-input-div" if:true={showLimitInput}>
+                            <lightning-input 
+                                class="input-limit"
+                                type="number"
+                                value={limit}
+                                variant="label-hidden"
+                                onchange={handleLimitUpdate}
+                            ></lightning-input>
+                        </div>
+                    </div>
+                </div>
+                <div class="btn-div">
+                    <button class="cancel-button" onclick={handleCancel}>Cancel</button>
+                    <button class="reset-button" onclick={handleReset}>Reset</button>
+                    <button class="save-button" onclick={handleSave}>Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>

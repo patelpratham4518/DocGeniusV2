@@ -1,0 +1,125 @@
+.ql-bubble .ql-tooltip{
+    border-radius: 6px;
+    color: currentColor;
+    background-color: white;
+    box-shadow: 0px 1px 6px 0px #c6c6c6;
+}
+.ql-bubble{
+    .ql-picker{
+        &.ql-size{
+            .ql-picker-label,
+            .ql-picker-item{
+                &::before{
+                    content: attr(data-value) !important;
+                }
+            }
+        }
+    }
+}
+
+.ql-bubble .ql-toolbar .ql-formats:not(:last-child) {
+    margin: 6px 0px;
+    padding-inline: 10px;
+    border-right: 1px solid #b5b5b5;
+}
+.ql-bubble .ql-toolbar button:hover{
+    background: rgba(9, 30, 66, 0.08);
+    text-decoration: inherit;
+    transition-duration: 0s, 0.15s;
+    color: #42526E;
+    border-radius: 6px;
+}
+.ql-bubble .ql-toolbar button:hover .ql-stroke{
+    stroke: currentColor !important;
+}
+.ql-bubble .ql-toolbar .ql-picker .ql-picker-label{
+    border-color: currentColor;
+    border-radius: 4px;
+}
+.ql-bubble .ql-toolbar .ql-picker .ql-picker-label:hover{
+    color: currentColor;
+}
+.ql-bubble .ql-picker{
+    color: currentColor;
+}
+.ql-bubble .ql-picker.ql-expanded .ql-picker-options[id="ql-picker-options-0"]{
+    display: block;
+    margin-top: 1px;
+    top: 100%;
+    z-index: 1;
+    padding: 6px;
+    border-radius: 6px;
+    background: white;
+    color: black;
+    box-shadow: 0px 1px 6px 0px #c6c6c6;
+}
+.ql-bubble .ql-picker.ql-expanded .ql-picker-options[id="ql-picker-options-1"]{
+    /* Header Selection  */
+    display: block;
+    margin-top: 1px;
+    top: 100%;
+    z-index: 1;
+    padding: 6px;
+    border-radius: 6px;
+    background: white;
+    color: black;
+    box-shadow: 0px 1px 6px 0px #c6c6c6;
+}
+.ql-bubble .ql-picker.ql-expanded .ql-picker-options[id="ql-picker-options-5"]{
+    /* text align */
+    display: flex;
+    margin-top: 1px;
+    top: 100%;
+    z-index: 1;
+    padding: 6px;
+    border-radius: 6px;
+    background: white;
+    color: black;
+    box-shadow: 0px 1px 6px 0px #c6c6c6;
+}
+.ql-bubble .ql-picker-options .ql-picker-item{
+    cursor: pointer;
+    display: block;
+    padding: 6px;
+}
+.ql-bubble .ql-picker-options[id="ql-picker-options-5"] .ql-picker-item{
+    cursor: pointer;
+    display: block;
+    padding: 2px;
+}
+.ql-bubble .ql-toolbar .ql-picker-item:hover{
+    background: rgba(9, 30, 66, 0.08);
+    text-decoration: inherit;
+    transition-duration: 0s, 0.15s;
+    color: #42526E;
+    border-radius: 6px;
+}
+.ql-bubble .ql-stroke{
+    stroke: currentColor;
+}
+.ql-bubble .ql-fill, .ql-bubble .ql-stroke.ql-fill{
+    stroke: currentColor;
+    fill: currentColor;
+}
+.customeBtn{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+
+.ql-bubble .ql-picker.ql-expanded .ql-picker-options[id="ql-picker-options-0"]{
+    display: block;
+    margin-top: 1px;
+    top: 100%;
+    z-index: 1;
+    padding: 6px;
+    border-radius: 6px;
+    max-height: 200px;
+    overflow: auto;
+}
+
+.ql-bubble .ql-picker.ql-expanded .ql-picker-options[id="ql-picker-options-0"]::-webkit-scrollbar{
+    display: none;
+}

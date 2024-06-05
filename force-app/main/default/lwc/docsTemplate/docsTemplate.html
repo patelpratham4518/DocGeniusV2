@@ -1,0 +1,98 @@
+<template>
+    <div class="body">
+        <div class="left">
+            <div class="tabSection">
+                TabSection
+            </div>
+            <template lwc:if={webViewLink}>
+                <iframe src={webViewLink}></iframe>
+            </template>
+        </div>
+        <div class="fieldMappingContainer">
+            fieldMappingContainer
+        </div>
+
+        <!-- <template if:true={showPopup}>
+                <section role="dialog" tabindex="-1" aria-modal="true" aria-labelledby="modal-heading-01" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container">
+                    <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse">
+                    <lightning-icon
+                        icon-name="utility:close"
+                        size="medium"
+                        alternative-text="Indicates close"
+                        onclick={closePopup}
+                    >
+                    </lightning-icon>
+                    <span class="slds-assistive-text">Cancel and close</span>
+                    </button>
+                    <div class="slds-modal__header">
+                    <h1 id="modal-heading-01" class="slds-modal__title slds-hyphenate" tabindex="-1">Select Template</h1>
+                    </div>
+                    <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                        <ul class="slds-dropdown__list" role="menu" aria-label="Show More">
+                            <template for:each={templates} for:item="template">
+                                <li class="slds-dropdown__item" role="presentation" key={template.id}>
+                                    <a aria-checked="false" href="#" role="menuitemcheckbox" tabindex="-1">
+                                        <span class="slds-truncate" data-id={template.id} onclick={handleTemplateClick}> {template.name} </span>
+                                    </a>
+                                </li>
+                            </template>
+                        </ul>
+                    </div>
+                </div>
+                </div>
+                </section>
+                <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+        </template> -->
+
+        <template if:true={showPopup}>
+            <section role="dialog" tabindex="-1" aria-modal="true" aria-labelledby="modal-heading-01" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container">
+                    <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse">
+                        <lightning-icon
+                            icon-name="utility:close"
+                            size="medium"
+                            alternative-text="Indicates close"
+                            onclick={closePopup}
+                        >
+                        </lightning-icon>
+                        <span class="slds-assistive-text">Cancel and close</span>
+                    </button>
+
+                    <div class="popup">
+                        <div class="firstRow">
+                            <div class="header">
+                                Select Google Doc
+                            </div>
+                            
+                            <div class="profile">
+                                Profile
+                            </div>
+                        </div>
+                        <div class="serarch">
+                            Search 
+                        </div>
+                        <div class="docs">
+                            <template for:each={templates} for:item="template">
+                                <div class="doc" key={template.id} data-id={template.id} onclick={handleTemplateClick}>
+                                    Name : {template.name} 
+                                    Size : {template.size} 
+                                    Created : {template.createdTime}
+                                </div>
+                            </template>
+                        </div>
+                        <div class="footer">
+                            <button type="button" onclick={closePopup}>Cancel</button>
+                            <button type="button" onclick={next}>Next</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </template>
+
+
+        <template lwc:if={isSpinner}>
+            <c-document-loader></c-document-loader>
+        </template>
+    </div>
+</template>

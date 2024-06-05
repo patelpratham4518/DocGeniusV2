@@ -1,0 +1,110 @@
+<template>
+    <div class="body">
+        <div class="tabSection">Tabsection</div>
+        <div class="main">
+            <template lwc:if={webViewLink}>
+                <iframe src={webViewLink}></iframe>
+            </template>
+            <div class="fieldMappingContainer">
+                fieldMappingContainer
+            </div>
+        </div>
+
+
+        <template if:true={showPopup}>
+        <section role="dialog" tabindex="-1" aria-modal="true" aria-labelledby="modal-heading-01" class="slds-modal slds-fade-in-open">
+            <div class="main">
+                <div class="firstRow">
+                    <div class="title">Select Google Doc.</div>
+                    <div class="profile">
+                        <div class="userData">
+                            {profile.username} 
+                            {profile.email}
+                        </div>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="profileIcon" viewBox="0 0 32 32" fill="none">
+                            <rect width="32" height="32" rx="16" fill="#00AEFF"/>
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M23 20.9584V21.6C23 22.3584 22.3583 23 21.6 23H10.4C9.64167 23 9 22.3584 9 21.6V20.9584C9 19.2667 10.9833 18.2167 12.85 17.4L13.025 17.3125C13.1708 17.2542 13.3167 17.2542 13.4625 17.3417C14.2208 17.8375 15.0667 18.1 15.9708 18.1C16.875 18.1 17.75 17.8084 18.4792 17.3417C18.625 17.2542 18.7708 17.2542 18.9167 17.3125L19.0917 17.4C21.0167 18.2167 23 19.2375 23 20.9584ZM16.0001 9C17.9251 9 19.4709 10.7208 19.4709 12.85C19.4709 14.9792 17.9251 16.7 16.0001 16.7C14.0751 16.7 12.5293 14.9792 12.5293 12.85C12.5293 10.7208 14.0751 9 16.0001 9Z" fill="white"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="search">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="searchIcon" viewBox="0 0 24 24" fill="none">
+                        <path d="M11 19C15.4183 19 19 15.4183 19 11C19 6.58172 15.4183 3 11 3C6.58172 3 3 6.58172 3 11C3 15.4183 6.58172 19 11 19Z" stroke="#ABB7C2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M21 21L16.7 16.7" stroke="#ABB7C2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <input value={serachString} onkeyup={handleSearch}  placeholder="Search..." >
+                    <svg class="refresh" onclick={refreshDocs} xmlns="http://www.w3.org/2000/svg" fill="#1A1A1A" viewBox="0 0 30 30" ><path d="M 15 3 C 12.031398 3 9.3028202 4.0834384 7.2070312 5.875 A 1.0001 1.0001 0 1 0 8.5058594 7.3945312 C 10.25407 5.9000929 12.516602 5 15 5 C 20.19656 5 24.450989 8.9379267 24.951172 14 L 22 14 L 26 20 L 30 14 L 26.949219 14 C 26.437925 7.8516588 21.277839 3 15 3 z M 4 10 L 0 16 L 3.0507812 16 C 3.562075 22.148341 8.7221607 27 15 27 C 17.968602 27 20.69718 25.916562 22.792969 24.125 A 1.0001 1.0001 0 1 0 21.494141 22.605469 C 19.74593 24.099907 17.483398 25 15 25 C 9.80344 25 5.5490109 21.062074 5.0488281 16 L 8 16 L 4 10 z"/></svg>
+                </div>
+               
+                <div class="documents">
+                    <template for:each={templates} for:item="template">
+                        <div class="docs-container" key={template.id} data-id={template.id} onclick={handleTemplateClick}>
+                            <div class="docFirstRow">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 38 51" fill="none" class="small">
+                                    <path d="M3.5625 0C1.59499 0 0 1.55683 0 3.47727V47.5227C0 49.4432 1.59499 51 3.5625 51H34.4375C36.405 51 38 49.4432 38 47.5227V13.9091L23.75 0H3.5625Z" fill="#4E8DF5"/>
+                                    <path d="M3.5625 51.0001C1.59499 51.0001 0 49.4433 0 47.5228V46.9433C0 48.8637 1.59499 50.4206 3.5625 50.4206H34.4375C36.405 50.4206 38 48.8637 38 46.9433V47.5228C38 49.4433 36.405 51.0001 34.4375 51.0001H3.5625Z" fill="#417EE9"/>
+                                    <path d="M3.5625 0C1.59499 0 0 1.55683 0 3.47727V4.05682C0 2.13637 1.59499 0.579545 3.5625 0.579545H24.3438L23.75 0H3.5625Z" fill="#639AF6"/>
+                                    <path d="M38.0001 25.7899V13.9092L35.9219 11.8808H25.9002C25.1068 11.8808 24.7094 12.8172 25.2705 13.3648L38.0001 25.7899Z" fill="url(#paint0_linear_1450_51)"/>
+                                    <path d="M23.75 0L38 13.9091H27.3125C25.345 13.9091 23.75 12.3523 23.75 10.4318V0Z" fill="#A6C5FA"/>
+                                    <path d="M28.5 25.5H9.5V27.8182H28.5V25.5Z" fill="white"/>
+                                    <path d="M28.5 30.1364H9.5V32.4545H28.5V30.1364Z" fill="white"/>
+                                    <path d="M9.5 34.7727H28.5V37.0909H9.5V34.7727Z" fill="white"/>
+                                    <path d="M23.75 39.4091H9.5V41.7273H23.75V39.4091Z" fill="white"/>
+                                    <defs>
+                                    <linearGradient id="paint0_linear_1450_51" x1="30.8751" y1="25.7899" x2="30.8751" y2="11.591" gradientUnits="userSpaceOnUse">
+                                    <stop stop-color="#4E8DF5"/>
+                                    <stop offset="1" stop-color="#3D6ACD"/>
+                                    </linearGradient>
+                                    </defs>
+                                </svg>
+                                <div class="docName">{template.name}</div>
+                            </div>
+                            <div class="docSecondRow">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 38 51" fill="none" class="big">
+                                    <path
+                                        d="M3.5625 0C1.59499 0 0 1.55683 0 3.47727V47.5227C0 49.4432 1.59499 51 3.5625 51H34.4375C36.405 51 38 49.4432 38 47.5227V13.9091L23.75 0H3.5625Z"
+                                        fill="#4E8DF5" />
+                                    <path
+                                        d="M3.5625 51.0001C1.59499 51.0001 0 49.4433 0 47.5228V46.9433C0 48.8637 1.59499 50.4206 3.5625 50.4206H34.4375C36.405 50.4206 38 48.8637 38 46.9433V47.5228C38 49.4433 36.405 51.0001 34.4375 51.0001H3.5625Z"
+                                        fill="#417EE9" />
+                                    <path
+                                        d="M3.5625 0C1.59499 0 0 1.55683 0 3.47727V4.05682C0 2.13637 1.59499 0.579545 3.5625 0.579545H24.3438L23.75 0H3.5625Z"
+                                        fill="#639AF6" />
+                                    <path
+                                        d="M38.0001 25.7899V13.9092L35.9219 11.8808H25.9002C25.1068 11.8808 24.7094 12.8172 25.2705 13.3648L38.0001 25.7899Z"
+                                        fill="url(#paint0_linear_1450_51)" />
+                                    <path d="M23.75 0L38 13.9091H27.3125C25.345 13.9091 23.75 12.3523 23.75 10.4318V0Z" fill="#A6C5FA" />
+                                    <path d="M28.5 25.5H9.5V27.8182H28.5V25.5Z" fill="white" />
+                                    <path d="M28.5 30.1364H9.5V32.4545H28.5V30.1364Z" fill="white" />
+                                    <path d="M9.5 34.7727H28.5V37.0909H9.5V34.7727Z" fill="white" />
+                                    <path d="M23.75 39.4091H9.5V41.7273H23.75V39.4091Z" fill="white" />
+                                    <defs>
+                                        <linearGradient x1="30.8751" y1="25.7899" x2="30.8751" y2="11.591" gradientUnits="userSpaceOnUse">
+                                            <stop stop-color="#4E8DF5" />
+                                            <stop offset="1" stop-color="#3D6ACD" />
+                                        </linearGradient>
+                                    </defs>
+                                </svg>
+                            </div>
+                            <div class="docThirdRow">
+                                <div class="size">{template.size}</div>
+                                <div class="date">Date: {template.createdTime}</div>
+                            </div>
+                        </div>
+                    </template>
+                    
+                </div>
+                <div class="footer">
+                    <div class="button cancel" onclick={closePopup}>Cancel</div>
+                    <div class="button next" onclick={next}>Next</div>
+                </div>
+            </div>
+        </section>
+        </template>
+
+        
+        <template lwc:if={isSpinner}>
+            <c-document-loader></c-document-loader>
+        </template>
+    </div>
+</template>

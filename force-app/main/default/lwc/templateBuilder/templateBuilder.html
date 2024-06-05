@@ -1,0 +1,253 @@
+<template>
+  <div class="templateBuilder_Maindiv" lwc:ref="mainDiv" data-name="mainDiv" style={loadStyle}>
+    <div class="contentSection">
+      <div class="editorSection">
+        <div class="tabSection">
+          <div class="tabSection_sub">
+            <div class="tab" data-name="contentTab" onclick={activeTab}>
+              <svg viewBox="0 0 24 24" ><path d="M1 2V5H3V4H5V9H3.5V11H8.5V9H7V4H9V5H11V2H1ZM21 3H14V5H20V19H4V14H2V20C2 20.5523 2.44772 21 3 21H21C21.5523 21 22 20.5523 22 20V4C22 3.44772 21.5523 3 21 3Z"></path></svg>
+              <!-- <svg viewBox="0 0 24 24" ><path d="M21 6.75736L19 8.75736V4H10V9H5V20H19V17.2426L21 15.2426V21.0082C21 21.556 20.5551 22 20.0066 22H3.9934C3.44476 22 3 21.5501 3 20.9932V8L9.00319 2H19.9978C20.5513 2 21 2.45531 21 2.9918V6.75736ZM21.7782 8.80761L23.1924 10.2218L15.4142 18L13.9979 17.9979L14 16.5858L21.7782 8.80761Z"></path></svg> -->
+              <div>Template Content</div>
+            </div>
+            <div class="tab" data-name="headerFooterTab" onclick={activeTab}>
+              <svg viewBox="0 0 24 24"><path d="M17 21V17H7V21H5V16C5 15.4477 5.44772 15 6 15H18C18.5523 15 19 15.4477 19 16V21H17ZM7 3V7H17V3H19V8C19 8.55228 18.5523 9 18 9H6C5.44772 9 5 8.55228 5 8V3H7ZM2 9L6 12L2 15V9ZM22 9V15L18 12L22 9Z"></path></svg>
+              <div>Header / Footer</div>
+            </div>
+            <div class="tab" data-name="waterMarkTab" onclick={activeTab}>
+              <svg viewBox="0 0 24 24" ><path d="M15 8V4H5V20H19V8H15ZM3 2.9918C3 2.44405 3.44749 2 3.9985 2H16L20.9997 7L21 20.9925C21 21.5489 20.5551 22 20.0066 22H3.9934C3.44476 22 3 21.5447 3 21.0082V2.9918ZM11 9.5C11 10.3284 10.3284 11 9.5 11C8.67157 11 8 10.3284 8 9.5C8 8.67157 8.67157 8 9.5 8C10.3284 8 11 8.67157 11 9.5ZM17.5 17L13.5 10L8 17H17.5Z"></path></svg>
+              <div>Watermark</div>
+            </div>
+            <div class="tab" data-name="basicTab" onclick={activeTab}>
+              <svg viewBox="0 0 24 24" ><path d="M20 22H4C3.44772 22 3 21.5523 3 21V3C3 2.44772 3.44772 2 4 2H20C20.5523 2 21 2.44772 21 3V21C21 21.5523 20.5523 22 20 22ZM19 20V4H5V20H19ZM7 6H11V10H7V6ZM7 12H17V14H7V12ZM7 16H17V18H7V16ZM13 7H17V9H13V7Z"></path></svg>
+              <div>Basic Deatils</div>
+            </div>
+            <div class="TemplateName">
+              <div class="recordSVG" onclick={activeTab} data-name="basicTab">
+                <svg viewBox="0 0 1024 1024"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M714 762.2h-98.2c-16.6 0-30 13.4-30 30s13.4 30 30 30H714c16.6 0 30-13.4 30-30s-13.4-30-30-30zM487.4 762.2H147.1c-16.6 0-30 13.4-30 30s13.4 30 30 30h340.3c16.6 0 30-13.4 30-30s-13.4-30-30-30z" fill="#33CC99"></path><path d="M838.253 130.023l65.548 65.548-57.982 57.983-65.549-65.549z" fill="#6be6ff"></path><path d="M743.7 955.9H195.8c-53.7 0-97.4-43.7-97.4-97.4V174.8c0-53.7 43.7-97.4 97.4-97.4H615c16.6 0 30 13.4 30 30s-13.4 30-30 30H195.8c-20.6 0-37.4 16.8-37.4 37.4v683.7c0 20.6 16.8 37.4 37.4 37.4h547.9c20.6 0 37.4-16.8 37.4-37.4v-395c0-16.6 13.4-30 30-30s30 13.4 30 30v395.1c0 53.6-43.7 97.3-97.4 97.3z" fill="#000000"></path><path d="M907.7 122.1l-39.2-39.2c-24-24-65.1-21.9-91.7 4.7L419.5 445 347 643.6l198.6-72.4L903 213.8c12.1-12.1 19.6-27.7 21.1-44 1.8-18.1-4.3-35.5-16.4-47.7zM512.6 519.3L447.5 543l23.7-65.1 264.7-264.7 40.9 41.7-264.2 264.4z m348-347.9l-41.3 41.3-40.9-41.7 40.9-40.9c3.1-3.1 6.2-3.9 7.6-3.9l37.6 37.6c-0.1 1.3-0.9 4.5-3.9 7.6z" ></path></g></svg>
+              </div>
+              <div class="TemplateNameText">
+                {templateRecord.Template_Name__c}
+              </div>
+            </div>
+            <div class="activeTabBar"></div>
+          </div>
+        </div>
+        <div class="summerNoteEditorSEC">
+            <div class="tabSectionArea" data-section="contentTab">
+              <div data-name="templateContent"></div>
+            </div>
+            <div class="headerFooterSection tabSectionArea deactiveTabs" data-section="headerFooterTab">
+              <div data-name="headerEditor"></div>
+              <div data-name="footerEditor"></div>
+            </div>
+              <div class="fieldMappingContainer desicionContainer">
+                <div class="toggleFieldMapping" onclick={toggleFieldMap}>
+                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.83578 12L11.0429 18.2071L12.4571 16.7929L7.66421 12L12.4571 7.20712L11.0429 5.79291L4.83578 12ZM10.4857 12L16.6928 18.2071L18.107 16.7929L13.3141 12L18.107 7.20712L16.6928 5.79291L10.4857 12Z"></path></svg>
+                  <span>Insert Fields</span>
+                </div>
+                <div class="mappingTitle">
+                  <div class="mappingHeaderTitle">
+                    Field Mapping Keys
+                  </div>
+                  <template lwc:if={isMappingOpen}>
+                    <div class="closeMapping" onclick={toggleFieldMap}>
+                      <svg viewBox="0 0 24 24" ><path d="M19.1642 12L12.9571 5.79291L11.5429 7.20712L16.3358 12L11.5429 16.7929L12.9571 18.2071L19.1642 12ZM13.5143 12L7.30722 5.79291L5.89301 7.20712L10.6859 12L5.89301 16.7929L7.30722 18.2071L13.5143 12Z"></path></svg>
+                    </div>
+                  </template>
+                </div>
+                <div class="fieldMappingSection">
+                  <div class="objectSelection">
+                    <template lwc:if={showcombo}>
+                      <c-custom-combobox
+                        class="souceObjSection"
+                        options={sourceObjectList}
+                        value={selectedSourceObj}
+                        placeholder="Select Source Object..."
+                        onselect={handleSouceObjSelect}
+                        onfocus={handleComboboxFocus}
+                        onblur={handleComboboxFocus}
+                        multiselect="false"
+                        searchable="true"
+                        dropdown-position="center"
+                        required="false"
+                        data-combox="sourceObj"
+                  ></c-custom-combobox>
+                    </template>
+                  </div>
+                  <div class="mappingHeader">
+                    <div class="table_tr header_tr">
+                      <div class="table_td first-td header_td"><div class="textContent">Field Name</div></div>
+                      <div class="table_td last-td header_td">
+                        <span class="textContent fieldMappingHeader" >Mapping Key</span>
+                        <span class="fieldSearchBtn" onclick={toogleFieldSearch} data-action="open">
+                          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.031 16.6168L22.3137 20.8995L20.8995 22.3137L16.6168 18.031C15.0769 19.263 13.124 20 11 20C6.032 20 2 15.968 2 11C2 6.032 6.032 2 11 2C15.968 2 20 6.032 20 11C20 13.124 19.263 15.0769 18.031 16.6168ZM16.0247 15.8748C17.2475 14.6146 18 12.8956 18 11C18 7.1325 14.8675 4 11 4C7.1325 4 4 7.1325 4 11C4 14.8675 7.1325 18 11 18C12.8956 18 14.6146 17.2475 15.8748 16.0247L16.0247 15.8748Z"></path></svg>
+                        </span>
+                      </div>
+                      <div class="fieldSearchContainer">
+                        <div class="fieldSearchContainer_sub">
+                          <span class="fieldSearchBtn">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.031 16.6168L22.3137 20.8995L20.8995 22.3137L16.6168 18.031C15.0769 19.263 13.124 20 11 20C6.032 20 2 15.968 2 11C2 6.032 6.032 2 11 2C15.968 2 20 6.032 20 11C20 13.124 19.263 15.0769 18.031 16.6168ZM16.0247 15.8748C17.2475 14.6146 18 12.8956 18 11C18 7.1325 14.8675 4 11 4C7.1325 4 4 7.1325 4 11C4 14.8675 7.1325 18 11 18C12.8956 18 14.6146 17.2475 15.8748 16.0247L16.0247 15.8748Z"></path></svg>
+                          </span>
+                          <input type="text" class="fieldSearchInput" onkeyup={searchObjFields} placeholder="Search Fields..."/>
+                          <span class="fieldSearchCloseBtn" data-action="close" onclick={toogleFieldSearch} >
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.9997 10.5865L16.9495 5.63672L18.3637 7.05093L13.4139 12.0007L18.3637 16.9504L16.9495 18.3646L11.9997 13.4149L7.04996 18.3646L5.63574 16.9504L10.5855 12.0007L5.63574 7.05093L7.04996 5.63672L11.9997 10.5865Z"></path></svg>
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="mappingFields">
+                    <div class="mappingFields_sub">
+                        <template for:each={field_Vs_KeyList} for:item="field" for:index="index">
+                          <div class="table_tr mappingTableRow" key={field} data-fieldrow={field.name}>
+                            <div class="table_td first-td"><div class="fieldLabel">{field.label}</div></div>
+                            <div class="table_td last-td">
+                              <div class="fiedlKey" data-fieldtd={field.name} data-name="fieldTD">
+                                <span class="fieldKeyText" onclick={handleSetSection}>{field.key}</span>
+                                <span class="fieldKeyText_copyBTN" data-fieldname={field.name} data-fieldkey={field.key} onclick={handleCopyFieldKey}>
+                                  <svg version="1.1" viewBox="0 0 55.699 55.699" xml:space="preserve">
+                                  <g><path d="M51.51,18.001c-0.006-0.085-0.022-0.167-0.05-0.248c-0.012-0.034-0.02-0.067-0.035-0.1   c-0.049-0.106-0.109-0.206-0.194-0.291v-0.001l0,0c0,0-0.001-0.001-0.001-0.002L34.161,0.293c-0.086-0.087-0.188-0.148-0.295-0.197   c-0.027-0.013-0.057-0.02-0.086-0.03c-0.086-0.029-0.174-0.048-0.265-0.053C33.494,0.011,33.475,0,33.453,0H22.177   c-3.678,0-6.669,2.992-6.669,6.67v1.674h-4.663c-3.678,0-6.67,2.992-6.67,6.67V49.03c0,3.678,2.992,6.669,6.67,6.669h22.677   c3.677,0,6.669-2.991,6.669-6.669v-1.675h4.664c3.678,0,6.669-2.991,6.669-6.669V18.069C51.524,18.045,51.512,18.025,51.51,18.001z    M34.454,3.414l13.655,13.655h-8.985c-2.575,0-4.67-2.095-4.67-4.67V3.414z M38.191,49.029c0,2.574-2.095,4.669-4.669,4.669H10.845   c-2.575,0-4.67-2.095-4.67-4.669V15.014c0-2.575,2.095-4.67,4.67-4.67h5.663h4.614v10.399c0,3.678,2.991,6.669,6.668,6.669h10.4   v18.942L38.191,49.029L38.191,49.029z M36.777,25.412h-8.986c-2.574,0-4.668-2.094-4.668-4.669v-8.985L36.777,25.412z    M44.855,45.355h-4.664V26.412c0-0.023-0.012-0.044-0.014-0.067c-0.006-0.085-0.021-0.167-0.049-0.249   c-0.012-0.033-0.021-0.066-0.036-0.1c-0.048-0.105-0.109-0.205-0.194-0.29l0,0l0,0c0-0.001-0.001-0.002-0.001-0.002L22.829,8.637   c-0.087-0.086-0.188-0.147-0.295-0.196c-0.029-0.013-0.058-0.021-0.088-0.031c-0.086-0.03-0.172-0.048-0.263-0.053   c-0.021-0.002-0.04-0.013-0.062-0.013h-4.614V6.67c0-2.575,2.095-4.67,4.669-4.67h10.277v10.4c0,3.678,2.992,6.67,6.67,6.67h10.399   v21.616C49.524,43.26,47.429,45.355,44.855,45.355z"/></g>
+                                  </svg>
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        </template>
+                    </div>
+                  </div>
+                  <!-- <template for:each={fieldMappingsWithObj} for:item="obj" for:index="objIndex">
+                    <div class="accorionContainer" key={obj.name}>
+                      <div class="accordianHeader" onclick={toogleAccordianItems}>
+                        <div class="accordianToggleBtn" > 
+                          <svg viewBox="0 0 24 24" ><path d="M13.1717 12.0007L8.22192 7.05093L9.63614 5.63672L16.0001 12.0007L9.63614 18.3646L8.22192 16.9504L13.1717 12.0007Z"></path></svg>
+                        </div>
+                        <div class="accordianTitle">{obj.label}</div>
+                      </div>
+                      <div class="accordianItemSection mappingFields_sub">
+                          <template for:each={obj.fieldMappings} for:item="field" for:index="index">
+                            <div class="table_tr mappingTableRow" key={field} data-fieldrow={field.name}>
+                              <div class="table_td"><div class="fieldLabel">{field.label}</div></div>
+                              <div class="table_td">
+                                <div class="fiedlKey" data-fieldtd={field.name} data-name="fieldTD">
+                                  <span class="fieldKeyText" onclick={handleSetSection}>{field.key}</span>
+                                  <span class="fieldKeyText_copyBTN" data-fieldname={field.name} data-fieldkey={field.key} onclick={handleCopyFieldKey}>
+                                    <svg version="1.1" viewBox="0 0 55.699 55.699" xml:space="preserve">
+                                    <g><path d="M51.51,18.001c-0.006-0.085-0.022-0.167-0.05-0.248c-0.012-0.034-0.02-0.067-0.035-0.1   c-0.049-0.106-0.109-0.206-0.194-0.291v-0.001l0,0c0,0-0.001-0.001-0.001-0.002L34.161,0.293c-0.086-0.087-0.188-0.148-0.295-0.197   c-0.027-0.013-0.057-0.02-0.086-0.03c-0.086-0.029-0.174-0.048-0.265-0.053C33.494,0.011,33.475,0,33.453,0H22.177   c-3.678,0-6.669,2.992-6.669,6.67v1.674h-4.663c-3.678,0-6.67,2.992-6.67,6.67V49.03c0,3.678,2.992,6.669,6.67,6.669h22.677   c3.677,0,6.669-2.991,6.669-6.669v-1.675h4.664c3.678,0,6.669-2.991,6.669-6.669V18.069C51.524,18.045,51.512,18.025,51.51,18.001z    M34.454,3.414l13.655,13.655h-8.985c-2.575,0-4.67-2.095-4.67-4.67V3.414z M38.191,49.029c0,2.574-2.095,4.669-4.669,4.669H10.845   c-2.575,0-4.67-2.095-4.67-4.669V15.014c0-2.575,2.095-4.67,4.67-4.67h5.663h4.614v10.399c0,3.678,2.991,6.669,6.668,6.669h10.4   v18.942L38.191,49.029L38.191,49.029z M36.777,25.412h-8.986c-2.574,0-4.668-2.094-4.668-4.669v-8.985L36.777,25.412z    M44.855,45.355h-4.664V26.412c0-0.023-0.012-0.044-0.014-0.067c-0.006-0.085-0.021-0.167-0.049-0.249   c-0.012-0.033-0.021-0.066-0.036-0.1c-0.048-0.105-0.109-0.205-0.194-0.29l0,0l0,0c0-0.001-0.001-0.002-0.001-0.002L22.829,8.637   c-0.087-0.086-0.188-0.147-0.295-0.196c-0.029-0.013-0.058-0.021-0.088-0.031c-0.086-0.03-0.172-0.048-0.263-0.053   c-0.021-0.002-0.04-0.013-0.062-0.013h-4.614V6.67c0-2.575,2.095-4.67,4.669-4.67h10.277v10.4c0,3.678,2.992,6.67,6.67,6.67h10.399   v21.616C49.524,43.26,47.429,45.355,44.855,45.355z"/></g>
+                                    </svg>
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                          </template>
+                        </div>
+                    </div>
+                  </template> -->
+                </div>
+                <div class="buttonSection">
+                  <lightning-button variant="destructive" label="Cancel" title="Cancel" onclick={closeEditTemplate} icon-name="utility:close" icon-position="left"></lightning-button>
+                  <lightning-button                    label="Preview" title="Preview" onclick={previewTemplate_4} icon-name="utility:preview" icon-position="left"></lightning-button>
+                  <lightning-button variant="brand" label="Save" onclick={saveTemplateData} title="Save" icon-name="utility:save" icon-position="left"></lightning-button>
+                </div>
+              </div>
+            <div class="waterMarkSection tabSectionArea deactiveTabs" data-section="waterMarkTab">
+              <div class="nonEditor_toobar_outer">
+                <div class="nonEditor_toobar">
+                  <lightning-slider label="Watermark Width" step="1" value="50"> </lightning-slider>
+                  <lightning-slider label="Watermark Height" step="1" value="50"> </lightning-slider>
+                  <lightning-slider label="Watermark Position - X" step="1" value="50"> </lightning-slider>
+                  <lightning-slider label="Watermark Position - X" step="1" value="50"> </lightning-slider>
+                  <lightning-slider label="Watermark Opactity" step="1" variant="label-hidden" value="50"> </lightning-slider>
+                  <div class="logoSection">
+                    <div class="docGeniusLogo"><img src={setdocGeniusLogoSvg}></img></div>
+                  </div>
+                </div>
+              </div>
+              <div class="waterMark_SubSection">
+                <div class="dummpy_page_container">
+                  <label for="watermarkInput">
+                    <div class="dummpy_page"></div>
+                  </label>
+                  <input id="watermarkInput" type="file" style="display : none;"/>
+                </div>
+                <div class="waterMarkOptsContainer desicionContainer">
+                  <div class="WatermarkOptTitle">
+                    Set Watermark Position
+                  </div>
+                  <div class="WatermarkOptions"></div>
+                  <div class="buttonSection">
+                    <lightning-button variant="destructive" label="Cancel" title="Cancel" onclick={closeEditTemplate} icon-name="utility:close" icon-position="left"></lightning-button>
+                    <lightning-button                    label="Preview" title="Preview" onclick={previewTemplate_4} icon-name="utility:preview" icon-position="left"></lightning-button>
+                    <lightning-button variant="brand" label="Save" onclick={saveTemplateData} title="Save" icon-name="utility:save" icon-position="left"></lightning-button>
+                  </div>
+                </div>
+              </div>
+            </div> 
+            <div class="basicxDetailCetion tabSectionArea deactiveTabs" data-section="basicTab">
+              <div class="nonEditor_toobar_outer">
+                <div class="nonEditor_toobar">
+                  <div class="logoSection">
+                    <div class="docGeniusLogo"><img src={setdocGeniusLogoSvg}></img></div>
+                  </div>
+                </div>
+              </div>
+              <div class="desicionContainer updateDeatilContainer">
+                <div class="tempInputFiled"></div>
+                <div class="buttonSection">
+                  <lightning-button variant="destructive" label="Cancel" title="Cancel" onclick={closeEditTemplate} icon-name="utility:close" icon-position="left"></lightning-button>
+                  <lightning-button                    label="Preview" title="Preview" onclick={previewTemplate_4} icon-name="utility:preview" icon-position="left"></lightning-button>
+                  <lightning-button variant="brand" label="Save" onclick={saveTemplateData} title="Save" icon-name="utility:save" icon-position="left"></lightning-button>
+                </div>
+              </div>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <template lwc:if={isPreview}>
+    <c-template-preview-modal 
+          templateid={templateRecord.Id} 
+          objectname={templateRecord.Object_API_Name__c} 
+          objectlabel={object_Label} 
+          onclosepreview={closeTemplatePreview}></c-template-preview-modal>
+  </template>
+
+  <c-message-popup onconfirmation={handleConfimation}></c-message-popup>
+
+  <div class="setupDropDown">
+    <div class="setupTitle">Page Configurations</div>
+    <div class="pageSetupOptions">
+      <div class="pageMarginConfig">
+        customeIcon.pageMargin
+        <div class="marginInputs">
+          <div class="topMargin">
+            <div class="marginType">Top: </div>
+            <input type="number" class="marginInput" placeholder="Top Margin">
+          </div>
+          <div class="topMargin">
+            <div class="marginType">Bottom: </div>
+            <input type="number" class="marginInput" placeholder="Bottom Margin">
+          </div>
+          <div class="topMargin">
+            <div class="marginType">Left: </div>
+            <input type="number" class="marginInput" placeholder="Left Margin">
+          </div>
+          <div class="topMargin">
+            <div class="marginType">Right: </div>
+            <input type="number" class="marginInput" placeholder="Right Margin">
+          </div>
+        </div>
+      </div>
+      <!-- <div class="pageOriantionConfig"></div>
+      <div class="pageSizeConfig"></div>
+      <div class="pageColumnnConfig"></div> -->
+    </div>
+  </div>
+
+  <template lwc:if={isSpinner}>
+    <!-- <c-spinner></c-spinner> -->
+    <c-document-loader></c-document-loader>
+  </template>
+
+  <c-utility-properties></c-utility-properties>
+</template>

@@ -1,0 +1,148 @@
+.main-div{
+    position: absolute;
+    top: 0%;
+    left: 0%;
+    z-index: 10;
+    width: calc(100% + 1.5rem);
+    height: calc(100% + 1.5rem);
+    margin-left: -0.75rem;
+    background: white;
+    padding: 0.5rem;
+    display: flex;
+}
+
+.fieldsection-body{
+    width: 30%;
+    height: calc(100% - 1rem);
+    /* background-color: brown; */
+    overflow: scroll;
+}
+
+.dropzone-body{
+    width: 70%;
+    height: calc(100% - 1rem);
+    /* background-color: aqua; */
+}
+
+.fielddiv {
+    height: 89%;
+    width: calc(100% - 2rem);
+    margin: 1rem;
+    border: 1px solid black;
+    border-radius: 8px;
+    overflow: scroll;
+}
+
+.obj-Name{
+    margin-right: 1rem;
+    margin-left: 1rem;
+}
+
+.fields {
+    margin: 13px auto 13px auto;
+    width: 90%;
+    padding: 10px;
+    height: fit-content;
+    border: 1px solid black;
+    border-radius: 8px;
+    text-align: center;
+    border-style: dashed;
+}
+
+.fields:hover {
+    background: #90dcff;
+}
+
+.main-page{
+    border: 1px solid black;
+    /* height: 100%; */
+    margin-left: 1rem;
+    height: 100%;
+    overflow: scroll;
+}
+
+.row {
+    display: flex;
+    border: 1px solid black;
+    margin: 1rem;
+    border-style: dashed;
+    border-radius: 8px;
+}
+
+.row > .column {
+    flex: 1;
+}
+
+/* If there are only two children */
+.row > .column:nth-child(2):only-child {
+    width: 50%;
+}
+
+/* If there are three children */
+.row > .column:nth-child(3):only-child {
+    width: 33.33%;
+}
+
+/* If there is only one child */
+.row > .column:only-child {
+    width: 100%;
+}
+
+.column {
+    border: 1px solid black;
+    margin: 1rem;
+    border-style: dotted;
+    /* height: 5rem; */
+    min-height: 5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* justify-content: center; */
+    border-radius: 8px;
+    padding: 1rem;
+}
+
+.column:hover {
+    background: #a1f792;
+}
+
+.fieldCover{
+    background-color: #90dcff;
+    height: 1.5rem;
+
+}
+
+.fieldDiv{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 1.5rem;
+    background: azure;
+    border: 1px solid;
+    border-style: dotted;
+    border-radius: 4px;
+    margin-top: 0.5rem;
+}
+
+.btn-div{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+    /* margin: 20px; */
+}
+
+.save-button, .cancel-button, .reset-button{
+    display: flex;
+    justify-content: center;
+    font-size: 16px;
+    background-color: #00AEFF;
+    width: 150px;
+    height: 40px;
+    border-radius: 8px;
+    border: none;
+    align-items: center;
+    color: white;
+}

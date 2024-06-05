@@ -1,0 +1,200 @@
+@font-face {
+    font-family: Coiny;
+    src: url(/resource/ConyFont/Coiny/Coiny-Regular.ttf);
+ }
+ :host{
+    --documerPageHeight : 17rem;
+ }
+.loader_mainDiv{
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: calc(100% + 1.5rem);
+    height: calc(100% + 1.5rem);
+    margin-left: -0.75rem;
+    margin-top: -0.75rem;
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.323);
+    backdrop-filter: blur(3px);
+
+}
+
+.documentPage{
+    width: auto;
+    height: var(--documerPageHeight);
+    aspect-ratio: 0.708;
+    border-radius: 6px;
+    background: white;
+    padding: 1rem 1rem;
+    box-shadow: 0px 0px 35px 0px #00000042;
+}
+.pager_subsection{
+    height: 100%;
+}
+.barColor{
+    background: #d3d3d3;
+}
+.barContainer{
+    display: flex;
+    margin-block: 0.25rem;
+    padding-block: 0.25rem;
+    height: max-content;
+    overflow: hidden;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    user-select: none;
+    
+}
+.barGrid{
+    display: grid;
+    grid-template-columns: auto auto;
+}
+.bar1{
+    width: 100%;
+    height: 0.6rem;
+    border-radius: 1rem;
+}
+.bar2{
+    display: inline-block;
+    width: calc(100% - 1.6rem);
+    height: 0.6rem;
+    border-radius: 1rem;
+}
+.barCircel2{
+    display: inline-block;
+    height: 0.6rem;
+    aspect-ratio: 1;
+    width: auto;
+    border-radius: 50%;
+    margin-inline: 0.75rem 0.25rem;
+}
+.bar3{
+    width: 100%;
+    height: 3rem;
+    border-radius: 0.5rem;
+}
+.bar4{
+    display: inline-block;
+    max-width: 90%;
+    height: 0.6rem;
+    border-radius: 1rem;
+    margin-inline: 2.5%;
+}
+.bar5{
+    display: inline-block;
+    max-width: 90%;
+    height: 0.6rem;
+    border-radius: 1rem;
+    margin-inline: 2.5%;
+}
+.bar6{
+    display: inline-block;
+    max-width: 90%;
+    height: 0.6rem;
+    border-radius: 1rem;
+    margin-inline: 2.5%;
+}
+.barCircel7{
+    display: inline-block;
+    height: 0.6rem;
+    aspect-ratio: 1;
+    width: auto;
+    border-radius: 90%;
+    margin-inline: 0.25rem 0.75rem;
+}
+.bar7{
+    display: inline-block;
+    width: calc(100% - 1.6rem);
+    height: 0.6rem;
+    border-radius: 1rem;
+}
+.barIcon{
+    width: auto;
+    height: 1.25rem;
+    fill: none;
+    filter: saturate(0);
+    margin-top: 1rem;
+    margin-inline: 5%;
+    opacity: 0.5;
+}
+.loadingLabel{
+    font-size: 24px;
+    margin-top: 1rem;
+    margin-inline: auto;
+    font-family: Coiny, Cambria, Cochin, Georgia, Times, 'Times New Roman', serif !important;
+    opacity: 1;
+    background: linear-gradient(to right, #39ffc9 0%, #41c5ff 100%);
+    background-clip : text !important;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: #ffffff00;
+    text-transform: uppercase;
+    max-width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.shineEffect{
+    background: linear-gradient(to right, rgba(130, 130, 130, 0.2) 10%, #ace5fe 20%, #aeffe9 36%, rgba(130, 130, 130, 0.2) 52%);
+    /* background: linear-gradient(to right, #ace5fe 10%, #aeffe9 20%, #aeffe9 36%, #ace5fe 52%); */
+
+    background-size: 800px 100px;
+
+    animation: scaleUp 1.25s cubic-bezier(0, 0, 0.25, 0.95) 0s 1 normal forwards,
+                shine 2s cubic-bezier(0, 0, 0.25, 0.95) 0s infinite normal forwards;
+                ;
+}
+@keyframes shine{
+    0% {
+        background-position: -600px 0;
+    }
+     100% {
+        background-position: 100px 0;
+    }
+}
+
+@keyframes scaleUp{
+    from{
+        scale: 0;
+    }
+    to {
+        scale: 1;
+    }
+}
+
+.saturationAnimation{
+    animation: saturate 3s linear 0.3s infinite forwards alternate;
+}
+@keyframes saturate{
+    0%{
+        /* filter: saturate(0) ; */
+        opacity: 0.4;
+    }
+    8%{
+        /* filter: saturate(0.5) ; */
+        opacity: 0.7;
+    }
+    20%{
+        /* filter: saturate(0.9) ; */
+        opacity: 0.9;
+    }
+    28%{
+        /* filter: saturate(1) ; */
+        opacity: 1;
+    }
+    36%{
+        /* filter: saturate(0.9) ; */
+        opacity: 0.9;
+    }
+    52%{
+        /* filter: saturate(0.5) ; */
+        opacity: 0.7;
+    }
+    70%{
+        /* filter: saturate(0) ; */
+        opacity: 0.4;
+    }
+}
