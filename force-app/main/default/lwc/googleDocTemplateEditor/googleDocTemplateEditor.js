@@ -2,9 +2,12 @@ import { LightningElement, track, wire ,api} from 'lwc';
 import getAllDocs from '@salesforce/apex/GoogleDocTemplateEditorController.getAllDocs'
 import getTemplate from '@salesforce/apex/GoogleDocTemplateEditorController.getTemplate'
 import getUsernameAndEmail from '@salesforce/apex/GoogleDocTemplateEditorController.getUsernameAndEmail'
+import new_template_bg from '@salesforce/resourceUrl/new_template_bg';
+
 
 export default class GoogleDocTemplateEditor extends LightningElement {
-    @api templateId = "a09F300000DMIOmIAP"
+    // @api templateId = "a09F300000DMIOmIAP"
+    @api templateId 
     @api objectName
 
     isSpinner = true
@@ -15,29 +18,49 @@ export default class GoogleDocTemplateEditor extends LightningElement {
     @track allTemplates
     @track serachString = ""
     @track profile
+    templateBg = new_template_bg
+    
+
+   
+    
    
     connectedCallback(){
-        this.getProfile()
-        getTemplate({id :this.templateId}).then(response => {
-            if (response) {
-                this.webViewLink = response
-                this.isSpinner = false
-            } else {
-                this.showPopup = true
-                getAllDocs()
-                .then((response)=>{
-                    this.allTemplates =  JSON.parse(response)
-                    this.setDateAndSize()
-                    this.templates = this.allTemplates
+        try {
+            this.getProfile()
+            getTemplate({id :this.templateId}).then(response => {
+                if (response) {
+                    this.webViewLink = response
                     this.isSpinner = false
-                }).catch(error => {
-                    console.log('Error ==> ',error);
-                })
-            }
-        }).catch(error => {
-            console.log('Error ==> ',error);
-        })
+                } else {
+                    this.showPopup = true
+                    getAllDocs()
+                    .then((response)=>{
+                        
+                        this.allTemplates =  JSON.parse(response)
+                        this.setDateAndSize()
+                        if (this.allTemplates.length>0) {
+                            this.templates = this.allTemplates
+                        }
+                        this.isSpinner = false
+                    }).catch(error => {
+                        console.log('Error ==> ',error);
+                    })
+                }
+            }).catch(error => {
+                console.log('Error ==> ',error);
+            })
+        } catch (error) {
+            console.error(error)
+        }
 
+    }
+
+    renderedCallback() {
+        try {
+            this.template.host.style.setProperty('--background-image-url',`url(${this.templateBg})`);
+        } catch (error) {
+            console.error(error)
+        }
     }
     closePopup(){
         this.showPopup = false
@@ -46,72 +69,114 @@ export default class GoogleDocTemplateEditor extends LightningElement {
         this.showPopup = true
     }
     handleTemplateClick(event) {
-        
-        let selected = this.template.querySelector('.selected')
-        if (selected) {
-            selected.classList.remove("selected")
+        try {
+            let selected = this.template.querySelector('.selected')
+            if (selected) {
+                selected.classList.remove("selected")
+            }
+            const templateId = event.currentTarget.dataset.id;
+            this.selectedTemplate = this.templates.find(template => template.id === templateId);
+            let template = event.currentTarget 
+            template.classList.add("selected")
+        } catch (error) {
+            console.error(error);
         }
-        const templateId = event.currentTarget.dataset.id;
-        this.selectedTemplate = this.templates.find(template => template.id === templateId);
-        let template = event.currentTarget 
-        template.classList.add("selected")
-        console.log(template);
+
     }
 
     refreshDocs(){
-        this.isSpinner = true
-        this.getProfile()
-        getAllDocs()
-        .then((response)=>{
-             this.allTemplates =  JSON.parse(response)
-             this.setDateAndSize()
-             this.templates = this.allTemplates
-             this.serachString = null
-            this.isSpinner = false
-        }).catch(error => {
-            console.log('Error ==> ',error);
-        })
+
+        try {
+            this.isSpinner = true
+            this.getProfile()
+            getAllDocs()
+            .then((response)=>{
+                 this.allTemplates =  JSON.parse(response)
+                 this.setDateAndSize()
+                 if (this.allTemplates.length>0) {
+                     this.templates = this.allTemplates
+                 }
+                 else{
+                    this.templates = undefined
+                 }
+    
+                 this.serachString = null
+                this.isSpinner = false
+            }).catch(error => {
+                console.log('Error ==> ',error);
+            })
+        } catch (error) {
+            console.error(error);
+        }
+
     }
 
     next(){
-        if (this.selectedTemplate) {
-            this.webViewLink = this.selectedTemplate.webViewLink
-            this.closePopup()
+        try {
+            if (this.selectedTemplate) {
+                this.webViewLink = this.selectedTemplate.webViewLink
+                this.closePopup()
+            }else{
+                const errorToast = this.template.querySelector('c-message-popup')
+                errorToast.showMessagePopup({
+                    'title' : 'Please Select Template',
+                    'message' : 'To go ahead you must have to select a template.',
+                }) 
+            }
+        } catch (error) {
+            console.error(error);
         }
+
     }
 
     setDateAndSize(){
-        this.allTemplates = this.allTemplates.map(template => {
-            template.createdTime = template.createdTime.split("T")[0]
-            if (template.size < 1024) {
-                template.size = Math.round(template.size)+"Byte"
-            } else if (template.size < 1024*1024) {
-                template.size = Math.round(template.size/1024)+"KB"
-            }else{
-                template.size = Math.round(template.size/(1024*1024))+"MB"
-            }
-            return template
-        })
+        try {
+            this.allTemplates = this.allTemplates.map(template => {
+                template.createdTime = template.createdTime.split("T")[0]
+                if (template.size < 1024) {
+                    template.size = Math.round(template.size)+"Byte"
+                } else if (template.size < 1024*1024) {
+                    template.size = Math.round(template.size/1024)+"KB"
+                }else{
+                    template.size = Math.round(template.size/(1024*1024))+"MB"
+                }
+                return template
+            })
+        } catch (error) {
+            console.error(error);
+        }
+
     }
 
     handleSearch(event){
-        this.serachString = event.target.value
-        if (this.serachString) {
-            this.templates = this.allTemplates.filter(template => {
-                // return template.name.includes(this.serachString)
-                return template.name.toLowerCase().includes(this.serachString.toLowerCase())
-                
-            })
-        } else {
-            this.templates = this.allTemplates
+        try {
+            if (this.templates) {
+                this.serachString = event.target.value
+                if (this.serachString) {
+                    this.templates = this.allTemplates.filter(template => {
+                        return template.name.toLowerCase().includes(this.serachString.toLowerCase())
+                        
+                    })
+                } else {
+                    this.templates = this.allTemplates
+                }
+            }
+        } catch (error) {
+            console.error(error);
         }
+    
     }
 
     getProfile(){
-        getUsernameAndEmail().then(response =>{
-            this.profile = JSON.parse(response)
-        }).catch(error => {
-            console.log("Error ==> "+error);
-        })
+        try {
+            getUsernameAndEmail().then(response =>{
+                this.profile = JSON.parse(response)
+            }).catch(error => {
+                console.log("Error ==> "+error);
+            })
+        } catch (error) {
+            console.error(error);
+        } 
     }
+
 }

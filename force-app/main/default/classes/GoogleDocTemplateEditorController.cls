@@ -10,7 +10,8 @@ public with sharing class GoogleDocTemplateEditorController {
             AuthProviderSettings__c authProvider = AuthProviderSettings__c.getInstance();
 
             Map<String, String> params = new Map<String, String>();
-            params.put('q','mimeType= "application/vnd.openxmlformats-officedocument.wordprocessingml.document" or mimeType= "application/vnd.google-apps.document"');
+            
+            params.put('q','(mimeType= "application/vnd.openxmlformats-officedocument.wordprocessingml.document" or mimeType= "application/vnd.google-apps.document") and (trashed=false)');
             params.put('fields','files(id,name,webViewLink,createdTime,modifiedTime,size)');
 
             String paramString = '';
@@ -136,6 +137,7 @@ public with sharing class GoogleDocTemplateEditorController {
     @AuraEnabled
     public static string getUsernameAndEmail(){
         try {
+
             AuthProviderSettings__c authProvider = AuthProviderSettings__c.getInstance();
             Map<String, String> profile = new Map<String, String>();
             profile.put('username',authProvider.username__c);
