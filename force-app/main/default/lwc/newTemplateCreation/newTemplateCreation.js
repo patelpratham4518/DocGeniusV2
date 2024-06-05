@@ -11,6 +11,7 @@ export default class NewTemplateCreation extends NavigationMixin(LightningElemen
         simpleTemplateBuilder : 'templateBuilder',
         csvTemplateBuilder : 'editCSVTemplate',
         dNdTemplateBuilder : 'editDragDropTemplate',
+        googleDocTemplateEditor : 'googleDocTemplateEditor',
     }
 
     @track templateImage = newTemplateImage;
@@ -282,6 +283,9 @@ export default class NewTemplateCreation extends NavigationMixin(LightningElemen
         }else if(this.selectedTemplateType === 'Drag&Drop Template'){
             console.log('Navigating to Drag&Drop template....... ');
             this.navigateToComp(this.components.dNdTemplateBuilder, paramToPass);
+        }else if(this.selectedTemplateType === 'Google Doc Template'){
+            console.log('Navigating to Google Doc template....... ');
+            this.navigateToComp(this.components.googleDocTemplateEditor,paramToPass);
         }
     }
 
