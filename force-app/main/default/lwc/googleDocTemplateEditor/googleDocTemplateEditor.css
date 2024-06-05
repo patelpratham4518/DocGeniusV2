@@ -219,7 +219,8 @@ input{
 }
 .cancel{
     margin-right: 0.5rem;
-    background: #D2D2D2;
+    background: #FFFF;
+    color: #00AEFF;
     box-shadow: 0px 3px 12px 0px #4A3AFF2E;
 
 }
