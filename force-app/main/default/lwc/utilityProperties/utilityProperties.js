@@ -7,6 +7,7 @@ export var navigationComps = {
         csvTemplateBuilder : 'editCSVTemplate',
         dNdTemplateBuilder : 'editDragDropTemplate',
         home : 'homePage',
+        googleDocTemplateEditor:'googleDocTemplateEditor'
 }
 
 export var customeIcons = {

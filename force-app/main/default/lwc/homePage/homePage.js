@@ -731,6 +731,8 @@ export default class HomePage extends NavigationMixin(LightningElement) {
             else if(event.currentTarget.dataset.type == 'Drag&Drop Template'){
                 // this.isEditDnDTemplate = true;
                 this.navigateToComp(navigationComps.dNdTemplateBuilder, paramToPass);
+            }else if(event.currentTarget.dataset.type == 'Google Doc Template'){
+                this.navigateToComp(navigationComps.googleDocTemplateEditor, paramToPass);
             }
 
         } catch (error) {
