@@ -5,6 +5,7 @@ import getUsernameAndEmail from '@salesforce/apex/GoogleDocTemplateEditorControl
 import saveTemplateData from '@salesforce/apex/GoogleDocTemplateEditorController.saveTemplateData'
 import saveHTML from '@salesforce/apex/GoogleDocTemplateEditorController.saveHTML'
 import new_template_bg from '@salesforce/resourceUrl/new_template_bg';
+import leftBackground from '@salesforce/resourceUrl/leftBackground';
 import { NavigationMixin } from 'lightning/navigation';
 
 export default class GoogleDocTemplateEditor extends NavigationMixin(LightningElement) {
@@ -23,6 +24,7 @@ export default class GoogleDocTemplateEditor extends NavigationMixin(LightningEl
     @track serachString = ""
     @track profile
     templateBg = new_template_bg
+    templateBgMain = leftBackground
 
     templateName = ""
     
@@ -61,6 +63,7 @@ export default class GoogleDocTemplateEditor extends NavigationMixin(LightningEl
     renderedCallback() {
         try {
             this.template.host.style.setProperty('--background-image-url',`url(${this.templateBg})`);
+            this.template.host.style.setProperty('--main-background-image-url',`url(${this.templateBgMain})`);
         } catch (error) {
             console.error(error)
         }

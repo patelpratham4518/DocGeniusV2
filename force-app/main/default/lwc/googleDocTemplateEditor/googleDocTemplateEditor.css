@@ -1,5 +1,7 @@
 :host {
     --background-image-url: 'default.jpg';
+    --main-background-image-url: 'default.jpg';
+    
 }
 .body{
     margin-left: -0.75rem;
@@ -7,6 +9,10 @@
     width: calc(100% + 1.5rem);
     height: calc(100% + 1.5rem);
     background-color: #FFFFFF;
+    background-image: var(--main-background-image-url);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
 }
 .sub_body{
     width: 100%;
@@ -30,6 +36,8 @@ iframe{
     width:100%;
     margin: 0.5rem;
     border-radius: 6px;
+    border: 1px solid rgb(210, 208, 206);
+    margin-left: 1.2rem;
 
 }
 
@@ -458,8 +466,8 @@ input:focus{
 
       /* ---- TAB SECTION CSS --- START ---- */
       .tabSection{
-        /* width: calc(100% - 2rem); */
-        width: calc(100% - 1.4rem);
+        width: calc(100% - 2rem);
+        /* width: calc(100% - 1.4rem); */
         height: 2rem;
         display: flex;
         justify-content: start;

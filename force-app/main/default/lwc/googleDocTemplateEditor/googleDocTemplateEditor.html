@@ -58,6 +58,7 @@
                 </div>
               </div>
             
+              
             <div class="main">
                 <template lwc:if={webViewLink}>
                     <iframe src={webViewLink}></iframe>
@@ -283,7 +284,7 @@
         </template>
     </template>
         
-        <c-document-loader display={isSpinner}></c-document-loader>
+        <c-document-loader display={isSpinner} fix-top="true"></c-document-loader>
         
         <c-message-popup></c-message-popup>
 
