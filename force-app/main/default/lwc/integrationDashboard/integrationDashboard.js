@@ -772,16 +772,24 @@ export default class IntegrationDashborad extends NavigationMixin(LightningEleme
                     });
     }
 
+    // *********************************************************
+    // @Method Name    : openChatBot & updateChatStatus
+    // @author         : Tirth Shah
+    // @description    : Method is used to open chatbot
+    // @param          :
+    // @return         : 
+    // ********************************************************
+
     openChatBot(){
-        if(this.startchat){
-            this.startchat = false;
-            const CHATPOPUP = this.template.querySelector('c-chat-bot');
-            CHATPOPUP.togglePopup();
-            console.log('chat bot called');
-        }
-        else{
-            console.log(this.startchat);
-        }
+        // if(this.startchat){
+        //     this.startchat = false;
+        //     const CHATPOPUP = this.template.querySelector('c-chat-bot');
+        //     CHATPOPUP.togglePopup();
+        //     console.log('chat bot called');
+        // }
+        // else{
+        //     console.log(this.startchat);
+        // }
     }
 
     updateChatStatus(event){
@@ -791,6 +799,8 @@ export default class IntegrationDashborad extends NavigationMixin(LightningEleme
         },1000)
         console.log(this.startchat);
     }
+
+    // ************Chatbot method End*******************
 
     closeCreateTemplate(event){
         this.ispopup = false

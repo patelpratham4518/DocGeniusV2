@@ -216,9 +216,7 @@
         </template>
     </template>
         
-        <template lwc:if={isSpinner}>
-            <c-document-loader></c-document-loader>
-        </template>
+        <c-document-loader display={isSpinner}></c-document-loader>
         
         <c-message-popup></c-message-popup>
 

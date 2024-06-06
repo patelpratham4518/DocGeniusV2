@@ -4,7 +4,7 @@ section {
     align-items: center;
 }
 
-.main-div {
+.main-csv-generator-div {
     border-radius: 0.5rem;
     display: flex;
     flex-direction: column;
@@ -60,4 +60,30 @@ section {
     border: none;
     align-items: center;
     color: white;
+}
+
+.select-template-div{
+    text-align: left;
+    --inputAreaBorderWidth: 1px;
+    --inputAreaBorderColor: black;
+    --inputOnFocusBorderColor: #00AEFF;
+    --inputAreaBorderRadius: 0.5rem;
+    --inputOnFocusShadow: none;
+    --inputAreaHeight: 3rem;
+
+    --labelBackgroundColor : white;
+    --labelLeft : 0.938rem;
+    --labelPosition : absolute;
+    --labelTop : -0.813rem;
+    --labelColor : #00AEFF;
+}
+
+lightning-input {
+    --slds-c-input-color-border: black;
+    --slds-c-checkbox-color-border : black;
+}
+
+.error-combo-box{
+    --inputAreaBorderColor : red !important;
+    --labelColor : red !important;
 }

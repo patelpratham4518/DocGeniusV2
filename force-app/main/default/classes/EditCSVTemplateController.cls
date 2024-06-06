@@ -1,4 +1,24 @@
 public with sharing class EditCSVTemplateController {
+
+/*
+*********************************************************
+@description    : Method is used to test the query generated, using executing the query once
+@param query    : {String} - Generated query string based on the Selections
+@return         : (Nothing will be returned)
+********************************************************
+*/
+    @AuraEnabled
+    public static Template__c getTemplateDetails(String templateId){
+        Template__c template ;
+        try {
+            template = [SELECT Id, Template_Name__c, Description__c, Object_API_Name__c, CreatedDate, CreatedBy.Name, Template_Status__c, Template_Type__c, LastModifiedDate, LastModifiedBy.Name FROM Template__c WHERE Id =:templateId][0];
+        } catch (Exception e) {
+            Log_Handler.store_Exception(e, 'EditCSVTemplateController', 'getTemplateDetails');
+        }
+
+        return template;
+    }
+
     // -=-=- this method is used to get the Fields for a perticular template object only -=-=- 
 /*
 *********************************************************
@@ -54,12 +74,12 @@ public with sharing class EditCSVTemplateController {
 *********************************************************
 @description     : Method is used to fetch data from the template fields records associated with template (if there are any)
 @param templateId: {String} - Id of the current  template
-@return          : templateDataWrapper - including the Selected Fields and the custom Separator Separated Filters String
+@return          : TemplateDataWrapper - including the Selected Fields and the custom Separator Separated Filters String
 ********************************************************
 */
     @AuraEnabled
-    public static templateDataWrapper getTemplateFieldsData(String templateId){
-        templateDataWrapper allData = new templateDataWrapper();
+    public static TemplateDataWrapper getTemplateFieldsData(String templateId){
+        TemplateDataWrapper allData = new TemplateDataWrapper();
         allData.fields = '';
         allData.filters = '';
         try {
@@ -287,6 +307,36 @@ public with sharing class EditCSVTemplateController {
         return prefix;
     }
 
+/*
+*********************************************************
+@description    : Method is used to fetch all the list views of the object 
+@param objName  : {String} - name of the object
+@return         : {List<ListView>} - Will return the list of  Id and Name of all the list views of the object
+********************************************************
+*/
+    @AuraEnabled
+    public static List<ListView> getListViews(String objName){
+        List<ListView> listViews = new List<ListView>();
+        try {
+            listViews = [SELECT Id,Name FROM ListView WHERE SobjectType =:objName];
+            System.debug(listViews);
+        }catch (Exception e) {
+            Log_Handler.store_Exception(e, 'EditCSVTemplateController', 'getListViews');
+        }
+        return listViews;
+    }
+
+/*
+*********************************************************
+@description    : Method is used to get the sessionId for the SF Metadata API use
+@return         : {String} - Will return the string containing the sessionID
+********************************************************
+*/
+    @AuraEnabled
+    public static String getSessionId(){
+        return Page.UserSessionIdPage.getContent().toString();
+    }
+
     // -=-=- this method is used to test the query generated -=-=-
     // -=-=- If there will be error in the query, the Method will go in catch block else it will get executed properly -=-=- 
 /*
@@ -318,7 +368,7 @@ public with sharing class EditCSVTemplateController {
 
     // -=-=- this wrapper is used to store the fields and filters strings containing data from existing template Fields for any template -=-=-
     // -=-=- this wrapper is used in a method getTemplateFieldsData -=-=-
-    public class templateDataWrapper {
+    public class TemplateDataWrapper {
         @AuraEnabled public String fields { get; set; }
         @AuraEnabled public String filters { get; set; }
     }

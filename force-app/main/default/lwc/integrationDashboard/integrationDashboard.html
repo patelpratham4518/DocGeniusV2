@@ -268,10 +268,12 @@
         <div class="slds-backdrop slds-backdrop_open"></div>         -->
     </template>
     
-    <template if:true={isSpinner}>
+    <!-- <template if:true={isSpinner}>
         <c-spinner></c-spinner>
-    </template>
+    </template> -->
+    <c-document-loader display={isSpinner} ></c-document-loader>
+
     <c-message-popup onconfirmation={handleConfimation}></c-message-popup>
     
-    <c-chat-bot onclick={openChatBot} ontoggleclose={updateChatStatus}></c-chat-bot>
+    <c-chat-bot-clone ontoggleclose={updateChatStatus}></c-chat-bot-clone>
 </template>

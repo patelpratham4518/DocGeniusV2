@@ -35,7 +35,6 @@
             <div class="preview_rightSection">
               <div class="iframe_outer">
                 <template lwc:if={vfPageSRC}>
-                  <div class="iframeToolbarSection"></div>
                   <iframe class="preview_iframe" data-id="vfPage" src={vfPageSRC} width="100%" height="100%" onload={vfPageLoaded}></iframe>
                 </template>
                 <template lwc:elseif={errorOccured}>
@@ -75,8 +74,8 @@
         </div>
       </div>
 
-      <template lwc:if={isSpinner}>
-        <!-- <c-spinner></c-spinner> -->
-        <c-document-loader label={spinnerLabel} fixed-position="true"></c-document-loader>
-      </template>
+      <!-- <template lwc:if={isSpinner}>
+        <c-spinner></c-spinner>
+      </template> -->
+      <c-document-loader display={isSpinner} label={spinnerLabel} full-size="true"></c-document-loader>
 </template>

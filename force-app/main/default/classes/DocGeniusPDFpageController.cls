@@ -19,7 +19,7 @@ public with sharing class DocGeniusPDFpageController {
         system.debug('at final paraData : ' + paraData);
         system.debug('at final rawData : ' + rawData);
 
-        Map<String, String> returnValue = TemplateBuilder_Controller.mappingFieldDataVF((String)rawData.get('templateId'), (String)rawData.get('recordId'), (String)rawData.get('Object_API_Name__c'));
+        Map<String, String> returnValue = KeyMappingController.mappingFieldDataVF((String)rawData.get('templateId'), (String)rawData.get('recordId'), (String)rawData.get('Object_API_Name__c'));
 
         displayText = returnValue.get('modifiedHTML');
         recordName = returnValue.get('recordName');

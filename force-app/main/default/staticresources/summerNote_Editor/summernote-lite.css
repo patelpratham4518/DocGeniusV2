@@ -1704,6 +1704,7 @@ a.note-dropdown-item:hover {
             .note-editor.note-airframe {
                 padding-top: calc(var(--toolbar_height) + 0.5rem);
                 border: none !important;
+                width: 100%;
                 height: 100%;
                 overflow: hidden;
                 display: flex;
@@ -1716,7 +1717,8 @@ a.note-dropdown-item:hover {
 
                     /* editing area outer div  */
             .note-editor .note-editing-area {
-                margin-right: calc(30% + 1.5rem);
+                max-width: calc(100% - 35rem - 1.25rem);
+                /* margin-right: calc(30% + 1.5rem); */
                 height: calc(100% - 0.5rem );
                 flex-grow: 1;
                 max-height: max-content;
@@ -2214,13 +2216,12 @@ a.note-dropdown-item:hover {
 
 
             /* ========================= page Setup popup css ================================= */
-            .pageSetupBackdrop{
+            /* .pageSetupBackdrop{
                 width: 100%;
                 height: 100%;
                 position: absolute;
                 top: 0%;
                 bottom: 0%;
-                /* display: flex; */
                 display: none;
                 justify-content: center;
                 align-items: center;
@@ -2322,18 +2323,6 @@ a.note-dropdown-item:hover {
                 margin-block: 0.25rem;
                 position: relative;
             }
-            /* .inputContainer::after{
-                display: none;
-                content: 'in';
-                position: absolute;
-                top: 2px;
-                right: 4px;
-                z-index: 99999999999;
-                color: #8f8f8f;
-                font-size: 14px;
-                background: white;
-                padding-inline: 2px;
-            } */
             .oriantationInputs .inputContainer{
                 justify-content: flex-start;
             }
@@ -2361,7 +2350,7 @@ a.note-dropdown-item:hover {
                 letter-spacing: 0px;
                 font-family: math;
                 margin-left: 0.5rem;
-            }
+            } */
             /* ========================= page Setup popup css - END - ================================= */
 
 
@@ -2369,9 +2358,16 @@ a.note-dropdown-item:hover {
 
 
 /* ========= =======  ========= ============ Media Query ======= ======== ========= ========= ============ */
-@media only screen and (max-width: 1200px){
+@media only screen and (max-width: 1440px){
+    .note-editor .note-editing-area {
+        max-width: calc(100% - 30rem - 1.25rem);
+    }
+}
+@media only screen and (max-width: 1350px){
     .note-editor .note-editing-area {
         margin-right: 0%;
+        margin-inline: auto;
+        max-width: 100%;
     }
     .note-custom_title{
         display: none !important;

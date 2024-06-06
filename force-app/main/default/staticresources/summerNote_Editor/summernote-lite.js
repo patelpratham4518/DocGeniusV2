@@ -6975,8 +6975,8 @@
               if (isImage) {
                 var $image = external_root_jQuery_commonjs2_jquery_commonjs_jquery_amd_jquery_default()(target);
                 var position = $image.position();
-                console.log('$image.position() : ', JSON.stringify($image.position()));
-                console.log('$image.offset() : ', JSON.stringify($image.offset()));
+                // console.log('$image.position() : ', JSON.stringify($image.position()));
+                // console.log('$image.offset() : ', JSON.stringify($image.offset()));
                 var pos = {
                   left: position.left + parseInt($image.css('marginLeft'), 10),
                   top: position.top + parseInt($image.css('marginTop'), 10)

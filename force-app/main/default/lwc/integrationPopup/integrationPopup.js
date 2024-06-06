@@ -41,6 +41,18 @@ export default class integrationPopup extends NavigationMixin(LightningElement) 
         }
     }
 
+    copyToClipboard() {
+        this.isSpinner = true;
+        console.log('Invoked clipboard');
+        var copyText = this.template.querySelector(".copy");
+        console.log(copyText);
+        copyText.select();
+        copyText.setSelectionRange(0, 99999); // For mobile devices
+        navigator.clipboard.writeText(copyText.value);
+        copyText.setSelectionRange(0, 0); // For mobile devices
+        this.isSpinner = false;
+    }
+
     imageLoaded(){
         this.isImageLoaded = true;
         console.log('image is loaded');

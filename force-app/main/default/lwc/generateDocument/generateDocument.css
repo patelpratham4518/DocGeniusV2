@@ -1,5 +1,6 @@
 :host {
     --background-image-url: 'default.jpg';
+
 }
 
 .main-div {
@@ -14,6 +15,7 @@
     background-repeat: no-repeat;
     background-position: center;
     overflow-y: scroll;
+    overflow-x: hidden;
 }
 
 .header-div{
@@ -29,11 +31,11 @@
     right: 1.5rem;
 }
 
-.main-container {
+/* .main-container {
     border: 1px #0176D3 solid;
     padding: 0 1rem 1rem 1rem;
     border-radius: 0.5rem;
-}
+} */
 
 .title-text {
     width: 100%;
@@ -111,15 +113,71 @@
     gap: 1rem;
 }
 
+.control-btns{
+    margin-top: 0;
+}
+
 .bottom-btn{
     width: 9rem;
     height: 2.5rem;
     background-color: #04ADFE;
     border: none;
     border-radius: 0.5rem;
+    font-size: 1.15rem;
+    box-shadow: 0px 0px 10px 0px #00000040;
+}
+
+.send-mail-btn{
+    height: 3rem;
+    width: 10rem;
+    display: flex;
+    position: relative;
+    align-items: center;
+    border-radius: 1.5rem;
+    padding-left: 1rem;
+    box-shadow: 0px 0px 10px 0px #00000040;
 }
 
 svg{
     height: 1.5rem;
     width: 1.5rem;
+}
+
+.email-svg-div {
+    position: absolute;
+    background: white;
+    border-radius: 50%;
+    display: flex;
+    right: 0.5rem;
+    padding: 0.125rem;
+}
+
+.email-element {
+    display: flex;
+    flex-direction: column;
+    padding-top: 0.5rem;
+    text-align: left;
+}
+
+.email-element span {
+    width: 3rem;
+    text-align: start;
+    display: flex;
+    align-items: center;
+}
+
+.email-element input {
+    width: 100%;
+    border-radius: 8px;
+    border: 1.5px gray solid;
+    height: 2.5rem;
+    padding-left: 1rem;
+}
+
+
+.template-select{
+    --inputAreaBorderWidth: 1px;
+    --inputAreaBorderColor : white;
+    --inputAreaHeight : 3rem;
+    --inputAreaBorderRadius : 0.5rem;
 }

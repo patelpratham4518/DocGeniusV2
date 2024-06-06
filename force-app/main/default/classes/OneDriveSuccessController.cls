@@ -130,23 +130,23 @@ public with sharing class OneDriveSuccessController {
                 System.debug('System org url -->'+url);
                 String baseUrl = url.substringBeforeLast('.develop.my.salesforce.com');
                 baseUrl = baseUrl.substringAfter('Url:[delegate=');
-                REFRENCEURL = baseUrl + '.develop.lightning.force.com/lightning/n/Doc_Genius_Integration';
+                REFRENCEURL = baseUrl + '.develop.lightning.force.com/lightning/n/User_Configuration';
                 }else if(url.contains('sandbox.my.salesforce.com')){
                     System.debug('System org url -->'+url);
                     String baseUrl = url.substringBeforeLast('.sandbox.my.salesforce.com');
                     baseUrl = baseUrl.substringAfter('Url:[delegate=');
-                    REFRENCEURL = baseUrl + '.sandbox.lightning.force.com/lightning/n/Doc_Genius_Integration';
+                    REFRENCEURL = baseUrl + '.sandbox.lightning.force.com/lightning/n/User_Configuration';
                 }
                 else if(url.contains('scratch.my.salesforce.com')){
                     System.debug('System org url -->'+url);
                     String baseUrl = url.substringBeforeLast('.scratch.my.salesforce.com');
                     baseUrl = baseUrl.substringAfter('Url:[delegate=');
-                    REFRENCEURL = baseUrl + '.scratch.lightning.force.com/lightning/n/Doc_Genius_Integration';
+                    REFRENCEURL = baseUrl + '.scratch.lightning.force.com/lightning/n/User_Configuration';
                 }else {
                     System.debug('System org url -->'+url);
                     String baseUrl = url.substringBeforeLast('.my.salesforce.com');
                     baseUrl = baseUrl.substringAfter('Url:[delegate=');
-                    REFRENCEURL = baseUrl + '.force.com/lightning/n/Doc_Genius_Integration';
+                    REFRENCEURL = baseUrl + '.force.com/lightning/n/User_Configuration';
                 }
                 System.debug(REFRENCEURL);
                 PageReference pageRef = new PageReference(REFRENCEURL); // Replace 'TargetPageName' with the name of your target Visualforce page

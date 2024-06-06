@@ -71,16 +71,9 @@ export default class TemplatePreviewModal extends LightningElement {
         }
     }
 
-    renderedCallback(){
-        try {
-
-        } catch (error) {
-            console.log('error in TemplatePreviewModal > renderedCallback', error.stack);
-        }
-    }
-
     recordPickerLoaded(event){
         try {
+
         } catch (error) {
             console.log('error in TemplatePreviewModal > recordPickerLoaded', error.stack);
         }
@@ -118,6 +111,7 @@ export default class TemplatePreviewModal extends LightningElement {
             console.log('vfPageSRC before : ', this.vfPageSRC);
 
             var newSRC = '/apex/DocGeniusPDFGeneratorPage?paraData=' + paraDataStringify;
+            // var newSRC = '/apex/docGenerate?paraData=' + paraDataStringify;
             if(newSRC != previousSRC){
                 this.vfPageSRC = newSRC;
             }
@@ -138,9 +132,6 @@ export default class TemplatePreviewModal extends LightningElement {
 
     vfPageLoaded(){
         try {
-            const iframeToolbarSection = this.template.querySelector('.iframeToolbarSection');
-            iframeToolbarSection.classList.add('show');
-
             console.log('loaded');
 
             this.isSpinner = false;

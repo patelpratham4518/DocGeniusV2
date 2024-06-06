@@ -66,11 +66,15 @@ public class GoogleSuccessController {
                         System.debug('acc');
                         String userdetails = fetchUserDetails(accessToken);
                         Map<String, Object> parsedResponse = (Map<String, Object>) JSON.deserializeUntyped(userdetails);
+                        System.debug('Parsed response-->'+parsedResponse);
                         Map<String, Object> userObject = (Map<String, Object>) parsedResponse.get('user');
+                        System.debug('Parsed response-->'+userObject);
                         String emailAddress = (String) userObject.get('emailAddress');
                         System.debug('Email Address: ' + emailAddress);
                         String displayName = (String) userObject.get('displayName');
                         System.debug('Display Name: ' + displayName);
+                        String userPhoto = (String) userObject.get('photoLink');
+                        settings.photolink__c = userPhoto;
                         settings.username__c = displayName;
                         settings.email__c = emailAddress;
                         settings.WorkingStatus__c = true;
@@ -100,23 +104,23 @@ public class GoogleSuccessController {
             System.debug('System org url -->'+url);
             String baseUrl = url.substringBeforeLast('.develop.my.salesforce.com');
             baseUrl = baseUrl.substringAfter('Url:[delegate=');
-            REFRENCEURL = baseUrl + '.develop.lightning.force.com/lightning/n/Doc_Genius_Integration';
+            REFRENCEURL = baseUrl + '.develop.lightning.force.com/lightning/n/User_Configuration';
             }else if(url.contains('sandbox.my.salesforce.com')){
                 System.debug('System org url -->'+url);
                 String baseUrl = url.substringBeforeLast('.sandbox.my.salesforce.com');
                 baseUrl = baseUrl.substringAfter('Url:[delegate=');
-                REFRENCEURL = baseUrl + '.sandbox.lightning.force.com/lightning/n/Doc_Genius_Integration';
+                REFRENCEURL = baseUrl + '.sandbox.lightning.force.com/lightning/n/User_Configuration';
             }
             else if(url.contains('scratch.my.salesforce.com')){
                 System.debug('System org url -->'+url);
                 String baseUrl = url.substringBeforeLast('.scratch.my.salesforce.com');
                 baseUrl = baseUrl.substringAfter('Url:[delegate=');
-                REFRENCEURL = baseUrl + '.scratch.lightning.force.com/lightning/n/Doc_Genius_Integration';
+                REFRENCEURL = baseUrl + '.scratch.lightning.force.com/lightning/n/User_Configuration';
             }else {
                 System.debug('System org url -->'+url);
                 String baseUrl = url.substringBeforeLast('.my.salesforce.com');
                 baseUrl = baseUrl.substringAfter('Url:[delegate=');
-                REFRENCEURL = baseUrl + '.force.com/lightning/n/Doc_Genius_Integration';
+                REFRENCEURL = baseUrl + '.force.com/lightning/n/User_Configuration';
             }
             System.debug(REFRENCEURL);
             PageReference pageRef = new PageReference(REFRENCEURL); // Replace 'TargetPageName' with the name of your target Visualforce page
@@ -152,8 +156,7 @@ public class GoogleSuccessController {
     
         public static Map<String, String> generaterefreshtoken(String client_id, String client_secret, String REDIRECT_URI, String authcode){
             try {
-                // String SCOPE = 'https://www.googleapis.com/auth/drive.file';
-                String SCOPE = 'openid email profile https://www.googleapis.com/auth/drive';
+                String SCOPE = 'openid email profile https://www.googleapis.com/auth/drive.file';
                 String ENDPOINT = 'https://oauth2.googleapis.com/token';
                 HttpRequest request = new HttpRequest();
                 request.setEndpoint(ENDPOINT);

@@ -11,6 +11,8 @@ export default class GenerateDocument extends NavigationMixin(LightningElement) 
 
     @api showModel;
     @api recordId;
+
+    @track isSendEmail = false;
     // @track showSpinner;
 
     isInitialStyleLoaded = false;
@@ -22,24 +24,13 @@ export default class GenerateDocument extends NavigationMixin(LightningElement) 
         if(this.isInitialStyleLoaded) return;
         const STYLE = document.createElement('style');
         STYLE.innerHTML = `
-            .mainComboDiv{
-                width: 100%;
-            }
-            .inputAreaCSS_2{
-                height: 3rem;
-                border: none;
-                border-radius: 0.5rem;
+            .slds-rich-text-editor__toolbar.slds-shrink-none {
+                background-color: white;
             }
         `;
 
         this.template.querySelector('.main-div').appendChild(STYLE);
         this.isInitialStyleLoaded = true;
-    }
-
-    connectedCallback(){
-        // this.showModel = true;
-        // this.showSpinner = true;
-        // setTimeout(() =>{this.showSpinner=false}, 5000);
     }
 
     handleSelectTemplate(event){
@@ -48,6 +39,11 @@ export default class GenerateDocument extends NavigationMixin(LightningElement) 
 
     handleEditTemplate(){
         console.log('Edit template called..' + this.recordId);
+    }
+
+    handleSendMail(){
+        console.log('Send mail called with isSendEmail = ' + this.isSendEmail);
+        this.isSendEmail = !this.isSendEmail;
     }
     
     handleNavigate() {

@@ -1,6 +1,7 @@
 import { LightningElement, api, track, wire } from "lwc";
 import { NavigationMixin } from 'lightning/navigation';
 import docGeniusImgs from "@salesforce/resourceUrl/homePageImgs";
+import docGeniusLogoSvg from "@salesforce/resourceUrl/docGeniusLogoSvg";
 import getTemplateList from '@salesforce/apex/HomePageController.getTemplateList';
 import updateTemplate from '@salesforce/apex/HomePageController.updateTemplate';
 import deleteTemplate from '@salesforce/apex/HomePageController.deleteTemplate';
@@ -18,7 +19,7 @@ export default class HomePage extends NavigationMixin(LightningElement) {
     @track templateTypeList = [];
     @track filterDateTypeList = [];
 
-    @track dispalyedTemplateList = [];
+    @track displayedTemplateList = [];
     
     @track defaultFieldToSort = 'Template_Name__c';
     @track sortAS = 'asc';
@@ -26,10 +27,12 @@ export default class HomePage extends NavigationMixin(LightningElement) {
     @track selectedTemplateId;
     @track selectedObjectName;
     @track selectedTemplate = {};
-    @track dataLoaded = false;
-    @track isSpinner = true;
+    @track dataLoaded = false; 
+    @track isSpinner = false;
     @track isCreateTemplate = false;
-
+    @track isCloneTemplate = false;
+    
+    isEmptyStateImgLoaded = false;
     toggelTemplateId = '';
     isToggleStatus = false;
     deleteTemplateId = ''
@@ -76,7 +79,7 @@ export default class HomePage extends NavigationMixin(LightningElement) {
     };
 
     get DocGeniusLogo(){
-        return this.imgSrc.DocGeniusLogo;
+        return docGeniusLogoSvg;
     }
     get createTemplateImg(){
         return this.imgSrc.createTemplateImg;
@@ -86,9 +89,9 @@ export default class HomePage extends NavigationMixin(LightningElement) {
         return this.imgSrc.emptyState;
     }
 
-    get isTemplates(){
-        return this.templateList.length > 0 || this.isSpinner ? true : false;
-        // return false;
+    get isEmptyState(){
+        return this.templateList.length <= 0 && !this.isSpinner ? true : false;
+        // return true;
     }
 
     get enableFilterBtn(){
@@ -97,6 +100,10 @@ export default class HomePage extends NavigationMixin(LightningElement) {
 
     get clearRangeDates(){
         return (this.filterOpts.hasOwnProperty('fromDate') != '' || this.filterOpts.hasOwnProperty('toDate') != '') ? true : false;
+    }
+
+    get noResultFound(){
+        return this.displayedTemplateList.length || this.isSpinner ? false : true;
     }
 
     // Get Template__c Object Information...
@@ -141,40 +148,55 @@ export default class HomePage extends NavigationMixin(LightningElement) {
     // Fetch Template Records From Apex..
     fetchTemplateRecords(){
         try {
+            this.isSpinner = true;
             getTemplateList()
             .then(result => {
                 console.log('result : ', result);
                 if(result.isSuccess == true){
-                    if(result.templateList.length > 0){
+                    if(result.returnMessage != 'No Template Found'){
                         var templateList = result.templateList;
-                        // Add additonal keys for logic implementation...
+                        // Add additional keys for logic implementation...
                         templateList.forEach(ele => {
                             ele['srNo'] = templateList.indexOf(ele) + 1;
                             ele['CreateDate_Only'] = ele.CreatedDate.split('T')[0];
                             ele['LastModifiedDate_Only'] = ele.LastModifiedDate.split('T')[0];
                         });
                         this.templateList = templateList;
-                        this.dispalyedTemplateList = JSON.parse(JSON.stringify(this.templateList));
+                        this.displayedTemplateList = JSON.parse(JSON.stringify(this.templateList));
                         this.setSerialNumber();
-
+    
+                        if(result.objectList.length > 0){
+                            this.objectList = result.objectList;
+                        }
+                        if(result.dateFields.length > 0){
+                            this.filterDateTypeList = result.dateFields;
+                        }
+                        this.dataLoaded = true;
+                        this.isSpinner = false;
                     }
-                    if(result.objectList.length > 0){
-                        this.objectList = result.objectList;
+                    else{
+                        this.dataLoaded = true;
+                        // check empty state image loaded or not?
+                        this.displayEmptyState();
                     }
-                    if(result.dateFields.length > 0){
-                        this.filterDateTypeList = result.dateFields;
-                    }
-                    this.dataLoaded = true;
-                    this.isSpinner = false;
                 }
-
+                this.isSpinner = false;
             })
             .catch(error => {
                 console.error('error in apex method getTemplateList : ', error);
+                this.isSpinner = false;
             })
         } catch (error) {
             console.error('error in fetchTemplateRecords : ', error.stack);
         }
+    }
+
+    emptyStateImgLoad(){
+        this.isEmptyStateImgLoaded = true;
+    }
+
+    displayEmptyState(){
+        this.isSpinner = this.isEmptyStateImgLoaded && this.dataLoaded ? false : true;
     }
 
     // ------- -------- --------- --------- Sorting, Filter and Searching Option Methos - START - -------- ----------- ----------
@@ -400,7 +422,7 @@ export default class HomePage extends NavigationMixin(LightningElement) {
             }
             else{
     
-                this.dispalyedTemplateList = this.templateList.filter(ele => {
+                this.displayedTemplateList = this.templateList.filter(ele => {
                     var inObject = this.filterOpts['objectsToFilter'] ? this.filterOpts['objectsToFilter'].includes(ele.Object_API_Name__c) : true;
                     var inType = this.filterOpts['TempTypeToFilter'] ? this.filterOpts['TempTypeToFilter'].includes(ele.Template_Type__c) : true;
                     var inStatus = this.filterOpts['TempStatusToFilter'] ? this.filterOpts['TempStatusToFilter'].includes(ele.Template_Status__c.toString()) : true;
@@ -425,7 +447,7 @@ export default class HomePage extends NavigationMixin(LightningElement) {
         try {
             var fieldToSort = this.filterOpts['fieldToSort'] ? this.filterOpts['fieldToSort'] : this.defaultFieldToSort;
             var sortAs = this.filterOpts['filterSortAS'] ? this.filterOpts['filterSortAS'] : this.defaultSortAS;
-            this.dispalyedTemplateList = this.dispalyedTemplateList.sort((a, b) => {
+            this.displayedTemplateList = this.displayedTemplateList.sort((a, b) => {
                 if(a[fieldToSort].toLowerCase() > b[fieldToSort].toLowerCase()){
                     return sortAs == 'asc' ? 1 : -1;
                 }
@@ -504,11 +526,11 @@ export default class HomePage extends NavigationMixin(LightningElement) {
 
     // Set Serial Number after Searching, Sorting and Filteration...
     setSerialNumber(){
-        var dispalyedTemplateList = JSON.parse(JSON.stringify(this.dispalyedTemplateList));
-        dispalyedTemplateList.forEach(ele => {
-            ele['srNo'] = dispalyedTemplateList.indexOf(ele) + 1;
+        var displayedTemplateList = JSON.parse(JSON.stringify(this.displayedTemplateList));
+        displayedTemplateList.forEach(ele => {
+            ele['srNo'] = displayedTemplateList.indexOf(ele) + 1;
         });
-        this.dispalyedTemplateList = dispalyedTemplateList;
+        this.displayedTemplateList = displayedTemplateList;
 
         var templateList = JSON.parse(JSON.stringify(this.templateList));
         templateList.forEach(ele => {
@@ -566,7 +588,7 @@ export default class HomePage extends NavigationMixin(LightningElement) {
         try {
             var searchValue = (event.target.value).toLowerCase();
             
-            this.dispalyedTemplateList = this.templateList.filter((ele) => {
+            this.displayedTemplateList = this.templateList.filter((ele) => {
                  return ele.Template_Name__c.toLowerCase().includes(searchValue);
             });
 
@@ -583,6 +605,10 @@ export default class HomePage extends NavigationMixin(LightningElement) {
         this.isCreateTemplate = !this.isCreateTemplate;
     }
 
+    toggleCloneTemplate(){
+        this.isCloneTemplate = !this.isCloneTemplate;
+    }
+
     // when user try to change status using toggle button.
     handleChangeStatus(event){
         try {
@@ -594,8 +620,8 @@ export default class HomePage extends NavigationMixin(LightningElement) {
             }
             else{
                 // update Status the template List to reflect on UI
-                var index = this.dispalyedTemplateList.findIndex(ele => ele.Id == this.toggelTemplateId);
-                this.dispalyedTemplateList[index].Template_Status__c = true;
+                var index = this.displayedTemplateList.findIndex(ele => ele.Id == this.toggelTemplateId);
+                this.displayedTemplateList[index].Template_Status__c = true;
 
                 var index2 = this.templateList.findIndex(ele => ele.Id == this.toggelTemplateId);
                 this.templateList[index2].Template_Status__c = true;
@@ -645,8 +671,8 @@ export default class HomePage extends NavigationMixin(LightningElement) {
                 if(event.detail){
                     // If recived Confirm from user ... 
                     // update Status the template List to reflect on UI...
-                    var index = this.dispalyedTemplateList.findIndex(ele => ele.Id == this.toggelTemplateId);
-                    this.dispalyedTemplateList[index].Template_Status__c = toggelInput.checked;
+                    var index = this.displayedTemplateList.findIndex(ele => ele.Id == this.toggelTemplateId);
+                    this.displayedTemplateList[index].Template_Status__c = toggelInput.checked;
     
                     var index2 = this.templateList.findIndex(ele => ele.Id == this.toggelTemplateId);
                     this.templateList[index2].Template_Status__c = toggelInput.checked;
@@ -677,7 +703,7 @@ export default class HomePage extends NavigationMixin(LightningElement) {
                         console.log('result on deleteTemplate : ', result);
                         if(result == 'deleted'){
                             // Remove Template from TemplateList...
-                            this.dispalyedTemplateList = this.dispalyedTemplateList.filter(ele => ele.Id != this.deleteTemplateId);
+                            this.displayedTemplateList = this.displayedTemplateList.filter(ele => ele.Id != this.deleteTemplateId);
                             this.templateList = this.templateList.filter(ele => ele.Id != this.deleteTemplateId);
                             
                             // Set Serial Number after Deleting...
@@ -722,6 +748,7 @@ export default class HomePage extends NavigationMixin(LightningElement) {
             if(event.currentTarget.dataset.type == 'Simple Template'){
                 // this.isEditSimpleTemplate = true;
                 this.navigateToComp(navigationComps.simpleTemplateBuilder, paramToPass);
+
             }
             else if(event.currentTarget.dataset.type == 'CSV Template'){
                 // this.isEditCSVTemplate = true;
@@ -730,7 +757,8 @@ export default class HomePage extends NavigationMixin(LightningElement) {
             else if(event.currentTarget.dataset.type == 'Drag&Drop Template'){
                 // this.isEditDnDTemplate = true;
                 this.navigateToComp(navigationComps.dNdTemplateBuilder, paramToPass);
-            }else if(event.currentTarget.dataset.type == 'Google Doc Template'){
+            }
+            else if(event.currentTarget.dataset.type == 'Google Doc Template'){
                 this.navigateToComp(navigationComps.googleDocTemplateEditor, paramToPass);
             }
 
@@ -739,26 +767,23 @@ export default class HomePage extends NavigationMixin(LightningElement) {
         }
     }
 
-    // after Create Template SuccessFully...
-    // handleAfterSave(event){
-    //     try {
-    //         this.isCreateTemplate = false
-    //         this.selectedTemplateId = event.detail.templateId;
-    //         this.selectedObjectName = event.detail.objectName;
-    //         if(event.detail.type == 'Simple Template'){
-    //             this.isEditSimpleTemplate = true;
-    //         }
-    //         else if(event.detail.type == 'CSV Template'){
-    //             this.isEditCSVTemplate = true;
-    //         }
-    //         else if(event.detail.type == 'Drag&Drop Template'){
-    //             this.isEditDnDTemplate = true;
-    //         }
-    //         this.fetchTemplateRecords();
-    //     } catch (error) {
-    //         console.error('error inside handleAfterSave ', error.stack);
-    //     }
-    // }
+    cloneTemp(event){
+        try {
+            console.log('click on the clone Bt');
+            this.selectedTemplateId = event.currentTarget.dataset.id;
+            console.log(' this.selectedTemplateId *** : ', this.selectedTemplateId);
+            console.log('this.templateList *** : ',JSON.stringify(this.templateList));
+            this.selectedTemplate = this.templateList.find(ele => ele.Id == this.selectedTemplateId);
+            console.log(' this.selectedTemplate *** : ', this.selectedTemplate);
+            this.selectedObjectName = event.currentTarget.dataset.objapi;
+            console.log(' this.selectedObjectName *** : ', this.selectedObjectName);
+            this.isCloneTemplate = !this.isCloneTemplate;
+
+        } catch (error) {
+            console.error('error in cloneTemp : ', error.stack);
+        }
+
+    }
 
         // ==== ===== ==== Generetic Method to test Message Popup and Toast... === === === === === === ===
         showMessagePopup(Status, Title, Message){

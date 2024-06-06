@@ -3,20 +3,30 @@
       <div class="spinner-div" if:true={showSpinner}>
           <c-spinner></c-spinner>
       </div>
-      <div class="main-div">
+      <div class="main-csv-generator-div">
         <div class="title-div">
           <span class="title-text">CSV Generator</span>
         </div>
         <div class="input-div">
           <div class="template-selection-div">
-            <lightning-combobox
+            <!-- <lightning-combobox
               name="Templates"
               label="Select Template"
               value={templateId}
               placeholder="Select template..."
               options={allTemplates}
               onchange={handleTemplateIdChange}
-            ></lightning-combobox>
+            ></lightning-combobox> -->
+            <c-custom-combobox
+            class="select-template-div"
+            label="Select Template"
+            options={allTemplates}
+            value={templateId}
+            multiselect="false"
+            placeholder ="Select Template"
+            searchable="true"
+            onselect={handleTemplateIdChange}
+            ></c-custom-combobox>
           </div>
           <lightning-input 
             type="text"

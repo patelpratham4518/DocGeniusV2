@@ -16,73 +16,83 @@ export default class GenerateCSV extends LightningElement {
 
 // -=-=- Used to fetch all the templates from the org Where template type is CSV -=-=-
     connectedCallback(){
-        this.showModel = true;
-        getAllTemplates()
-        .then((data) => {
-            this.allTemplates = data.map((template) => ({
-                value: template.Id,
-                label: template.Template_Name__c,
-                descr : template.Description__c,
-                objName : template.Object_API_Name__c,
-            }));
-            console.log('All Templates (value & label):', this.allTemplates[0].label);
-            console.log('All Templates (value & label):', this.allTemplates[0].value);
-            this.showSpinner = false;
-        })
-        .catch((err) => {
-            this.showSpinner = false;
-            console.error('Error fetching all the templates...', err.message);
-            this.showToast('error', 'Oops! Update Template!', 'We couldn\'t fetch the templates for you!', 5000);
-        });
+        try{
+            this.showModel = true;
+            getAllTemplates()
+            .then((data) => {
+                this.allTemplates = data.map((template) => ({
+                    value: template.Id,
+                    label: template.Template_Name__c,
+                    descr : template.Description__c,
+                    objName : template.Object_API_Name__c,
+                }));
+                console.log('All Templates (value & label):', this.allTemplates[0].label);
+                console.log('All Templates (value & label):', this.allTemplates[0].value);
+                this.showSpinner = false;
+            })
+            .catch((err) => {
+                this.showSpinner = false;
+                console.error('Error fetching all the templates...', err.message);
+                this.showToast('error', 'Oops! Update Template!', 'We couldn\'t fetch the templates for you!', 5000);
+            });
+        }catch(e){
+            console.log('Error in connectedCallback ::' , e.message);
+        }
     }
 
 // -=-=- Used to override the styles of the standard salesforce Input fields and combo boxes (Only Once)-=-=-
     renderedCallback(){
-        if(this.initialRender){
-            // To OverRider standard slds css properties...
-            var mainFilterDiv = this.template.querySelector('.main-div');
-            var styleEle = document.createElement('style');
-            styleEle.innerText = `
-                        .slds-input, .fix-slds-input_faux{
-                            height: 50px;
-                            border-radius: 8px;
-                        }
-                        .slds-input:focus, .slds-combobox__input:focus{
-                            border-color: #00aeff;
-                            box-shadow: none;
-                        }
-                        .slds-form-element__label{
-                            font-size: 13px;
-                            color: #00AEFF;
-                            padding: 0px 5px;
-                            border-radius: 50%;
-                            position: absolute;
-                            z-index: 1;
-                            background-color: white;
-                            top: -10px;
-                            left: 15px;
-                        }
-                        .fix-slds-input_faux{
-                            display: flex;
-                            align-items: center;
-                        }
-
-                        .slds-checkbox .slds-checkbox__label .slds-form-element__label {
-                            position : static !important;
-                        }
-            `;
-            if(mainFilterDiv){
-                mainFilterDiv.appendChild(styleEle);
-                this.initialRender = false;
+        try{
+            if(this.initialRender){
+                // To OverRider standard slds css properties...
+                var mainFilterDiv = this.template.querySelector('.main-csv-generator-div');
+                var styleEle = document.createElement('style');
+                styleEle.innerText = `
+                            .main-csv-generator-div .slds-input{
+                                height: 50px;
+                                border-radius: 8px;
+                            }
+                            .main-csv-generator-div .slds-input:focus
+                            {
+                                border-color: #00aeff;
+                                box-shadow: none;
+                            }
+                            .main-csv-generator-div  .slds-form-element__label{
+                                font-size: 13px;
+                                color: #00AEFF;
+                                padding: 0px 5px;
+                                border-radius: 50%;
+                                position: absolute;
+                                z-index: 1;
+                                background-color: white;
+                                top: -10px;
+                                left: 15px;
+                            }
+    
+                            .main-csv-generator-div  .slds-checkbox .slds-checkbox__label .slds-form-element__label {
+                                position : static !important;
+                            }
+                `;
+                if(mainFilterDiv){
+                    mainFilterDiv.insertBefore(styleEle, mainFilterDiv.firstElementChild);
+                    this.initialRender = false;
+                }
+    
             }
-
+        }catch(e){
+            console.log('Error in renderedCallback' , e.message);
         }
     }
 
 // -=-=- Used to handle the change of selected template -=-=-
     handleTemplateIdChange(event){
-        this.templateId = event.target.value;
+        this.templateId = event.detail[0];
         console.log('This Template Id:: ' + this.templateId);
+        if(this.templateId){
+            this.template.querySelector('.select-template-div').classList.remove("error-combo-box");
+        }else{
+            this.template.querySelector('.select-template-div').classList.add("error-combo-box");
+        }
     }
 
 // -=-=- Used to handle the change in checkbox for the additional details in the CSV -=-=-
@@ -102,6 +112,7 @@ export default class GenerateCSV extends LightningElement {
         this.showSpinner = true;
         if (!this.templateId) {
             this.showSpinner = false;
+            this.template.querySelector('.select-template-div').classList.add("error-combo-box");
             this.showToast('error', 'Oops!, Missed to select Template!', 'Please select a template to generate CSV from.', 5000);
             return;
         }

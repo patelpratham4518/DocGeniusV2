@@ -1,17 +1,18 @@
 import {customeIcons} from 'c/utilityProperties';
-var thisTemplate;
+var _self;
 var ListOfFielMappingKeys;
-export function intializeSummerNote(temp, document, docGeniusLogoSvg, editorSelector){
+export function initializeSummerNote(self, docGeniusLogoSvg, editorSelector){
     try { 
+      console.log('self : ', self.activeTabName);
             var note = {
               summerNote: null ,
               selector: null ,
               noteEditorFrame: null ,
             }
 
-            thisTemplate = temp;
+            _self = self;
             note.selector = editorSelector;
-            note.summerNote =  thisTemplate.querySelector(`[data-name="${note.selector}"]`);
+            note.summerNote =  _self.template.querySelector(`[data-name="${note.selector}"]`);
 
             // Create new fontResize Custom BUTTON....
             var fontResizerBtn = function (context) {
@@ -114,7 +115,7 @@ export function intializeSummerNote(temp, document, docGeniusLogoSvg, editorSele
                 blockquoteBreakingLevel: 2,
                 dialogsInBody : true,
                 dialogsFade : false,
-                disableDragAndDrop : false,
+                disableDragAndDrop : true,
                 shortcuts : true,
                 tabDisable : false,
                 codeviewFilter: false,
@@ -197,7 +198,7 @@ export function intializeSummerNote(temp, document, docGeniusLogoSvg, editorSele
                     onImageUploadError: null,
                     onInit: function(){
                         // Method to set CSS of HTML Elements Once Editor Load SuccessFully...
-                        setCSSAfterLoadEditor(thisTemplate, note);
+                        setCSSAfterLoadEditor(note);
                     },
                     onKeydown: null,
                     onKeyup: null,
@@ -207,31 +208,31 @@ export function intializeSummerNote(temp, document, docGeniusLogoSvg, editorSele
                     },
                     onPaste: function(event){
 
-                      // Get the clipboard data from the paste event
-                      var clipboardData = event.originalEvent.clipboardData || window.clipboardData
+                      // // Get the clipboard data from the paste event
+                      // var clipboardData = event.originalEvent.clipboardData || window.clipboardData
 
-                      // Retrieve text and HTML content from the clipboard
-                      var plainText = clipboardData.getData('text/plain');
-                      console.log('plainText : ', plainText);
-                      var htmlText = clipboardData.getData('text/html');
-                      console.log('htmlText : ', htmlText);
+                      // // Retrieve text and HTML content from the clipboard
+                      // var plainText = clipboardData.getData('text/plain');
+                      // console.log('plainText : ', plainText);
+                      // var htmlText = clipboardData.getData('text/html');
+                      // console.log('htmlText : ', htmlText);
 
-                      // Regular expression to match patterns like {{#sometext}}
-                      var regex = /\{\{#([^{}]+)\}\}/g;
+                      // // Regular expression to match patterns like {{#sometext}}
+                      // var regex = /\{\{#([^{}]+)\}\}/g;
 
-                      var inputString = htmlText || plainText; 
-                      var modifedString = null;
-                      // Loop through matches
-                      var match;
-                      while ((match = regex.exec(inputString)) !== null) {
-                        modifedString = inputString.replace(match[0], `<b class="fieldKey" data-field="key">${match[0]}</b>`);   
-                      }
+                      // var inputString = htmlText || plainText; 
+                      // var modifedString = null;
+                      // // Loop through matches
+                      // var match;
+                      // while ((match = regex.exec(inputString)) !== null) {
+                      //   modifedString = inputString.replace(match[0], `<b class="fieldKey" data-field="key">${match[0]}</b>`);   
+                      // }
 
-                      if(modifedString){
-                          // event.preventDefault();
-                          // $(note.summerNote).summernote('editor.pasteHTML', modifedString);
-                          // $(note.summerNote).summernote('editor.afterCommand');
-                      }
+                      // if(modifedString){
+                      //     // event.preventDefault();
+                      //     // $(note.summerNote).summernote('editor.pasteHTML', modifedString);
+                      //     // $(note.summerNote).summernote('editor.afterCommand');
+                      // }
 
                     },
                     onScroll: null,
@@ -240,13 +241,13 @@ export function intializeSummerNote(temp, document, docGeniusLogoSvg, editorSele
 
             return true;
     } catch (error) {
-        console.warn('error in editorConfig.intializeSummerNote : ', error.stack);
+        console.warn('error in editorConfig.initializeSummerNote : ', error.stack);
         return false;
     }
 }
 
 // Method to set CSS of HTML Elements Once Editor Load SuccessFully...
-function setCSSAfterLoadEditor(thisTemplate, note){
+function setCSSAfterLoadEditor(note){
   try {
     note.noteEditorFrame = note.summerNote.nextSibling;
     note.noteEditorFrame.setAttribute('data-zone', note.selector);
@@ -705,34 +706,10 @@ function createPageSetupBtn(note, context){
         className : 'pageSetup-toggle',
         contents : customeIcons.pageSetup,
         tooltip : lang.pageSetup,
-        data : {
-            toggle : 'dropdown'
-        }
-      }),
-      ui.dropdown({
-        className: 'pageSetupOptions',
-        items : [
-          generatePageSetupOptions()
-        ].join(''),
-        callback: ($dropdown) => {
-          var setupCloseBtn = $dropdown.find('.setupCloseBtn');
-          $(setupCloseBtn).on('click', function(event){
-            event.preventDefault();
-            var  pageSetupToggle = note.noteEditorFrame.querySelector('.pageSetup-toggle');
-            pageSetupToggle.classList.remove('active');
-            pageSetupToggle.parentNode.classList.remove('open');
-          })
-
-          var radioBtns = $dropdown.find('input[type=radio]');
-          radioBtns.each((ele, item) => {
-            $(item).on('click', function(event){
-              console.log(event.target.dataset.size);
-            });
-          })
-        },
-        click: (event) => {
-          event.preventDefault();
-          event.stopPropagation();
+        click: function () {
+          _self.activeTabName = 'basicTab';
+          _self.setActiveTab();
+          _self.SetCSSbasedOnScreenChangeIn();
         }
       })
     ]).render();

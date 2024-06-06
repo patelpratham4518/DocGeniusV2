@@ -30,6 +30,24 @@ section {
     cursor: pointer;
 }
 
+.copy{
+    padding-right: 40px !important;
+}
+
+.icon-copy {
+    position: absolute;
+    top: 140px; 
+    right: 50px;
+    transform: translateY(-30%); /* Center vertically */
+    cursor: pointer;
+    border: none;
+}
+
+.icon-copy svg:active {
+    filter: grayscale(1);
+
+}
+
 
 .image-div {
     padding: 0.625rem;

@@ -8,44 +8,51 @@ public class HomePageController {
                                             FROM Template__c 
                                             ORDER BY Template_Name__c ASC, CreatedDate ASC, Object_API_Name__c ASC];
 
-            // Store Object API Name of create Templates...
-            Set<String> objectList_Set = new Set<String>();  
-            for(Template__c temp : tempList){
-                objectList_Set.add(temp.Object_API_Name__c);
-            }
-
-            // Create List Of Object of create Templates with API and Label...
-            List<tempObject> objectList = new List<tempObject>();
-            if(objectList_Set.size() > 0){ 
-                for(String objectApi : objectList_Set){
-                    tempObject tempObj = new tempObject();
-                    tempObj.value = objectApi;
-                    tempObj.label = (String)Schema.getGlobalDescribe().get(objectApi).getDescribe().getLabel();
-                    objectList.add(tempObj);
+            if (tempList.size() > 0) {
+                // Store Object API Name of create Templates...
+                Set<String> objectList_Set = new Set<String>();  
+                for(Template__c temp : tempList){
+                    objectList_Set.add(temp.Object_API_Name__c);
                 }
-            }
-
-            // Create List of Only Date Field form Templare Object...
-            List<tempDateFields> tempDateFields = new List<tempDateFields>();
-            Map<String, Schema.SObjectField> MapofAllField = Schema.getGlobalDescribe().get('Template__c').getDescribe().fields.getMap();
-            for(String fieldName : MapofAllField.keySet()){
-                Schema.SObjectField field = MapofAllField.get(fieldName);
-                Schema.DescribeFieldResult F = field.getDescribe();
-                if((String.valueOf(F.getType()) == 'DATETIME' || String.valueOf(F.getType()) == 'DATE') && 
-                (String.valueOf(F.getName()) != 'LastReferencedDate' &&  String.valueOf(F.getName()) != 'System Modstamp' && String.valueOf(F.getName()) != 'SystemModstamp' && String.valueOf(F.getName()) != 'LastViewedDate')){
-                    tempDateFields dateField = new tempDateFields();
-                    dateField.label = String.valueOf(F.getLabel());
-                    dateField.value = String.valueOf(F.getName());
-                    tempDateFields.add(dateField);
+    
+                // Create List Of Object of create Templates with API and Label...
+                List<tempObject> objectList = new List<tempObject>();
+                if(objectList_Set.size() > 0){ 
+                    for(String objectApi : objectList_Set){
+                        tempObject tempObj = new tempObject();
+                        tempObj.value = objectApi;
+                        tempObj.label = (String)Schema.getGlobalDescribe().get(objectApi).getDescribe().getLabel();
+                        objectList.add(tempObj);
+                    }
                 }
+    
+                // Create List of Only Date Field form Templare Object...
+                List<tempDateFields> tempDateFields = new List<tempDateFields>();
+                Map<String, Schema.SObjectField> MapofAllField = Schema.getGlobalDescribe().get('Template__c').getDescribe().fields.getMap();
+                for(String fieldName : MapofAllField.keySet()){
+                    Schema.SObjectField field = MapofAllField.get(fieldName);
+                    Schema.DescribeFieldResult F = field.getDescribe();
+                    if((String.valueOf(F.getType()) == 'DATETIME' || String.valueOf(F.getType()) == 'DATE') && 
+                    (String.valueOf(F.getName()) != 'LastReferencedDate' &&  String.valueOf(F.getName()) != 'System Modstamp' && String.valueOf(F.getName()) != 'SystemModstamp' && String.valueOf(F.getName()) != 'LastViewedDate')){
+                        tempDateFields dateField = new tempDateFields();
+                        dateField.label = String.valueOf(F.getLabel());
+                        dateField.value = String.valueOf(F.getName());
+                        tempDateFields.add(dateField);
+                    }
+                }
+    
+                // Assign Values to returnValue Object...
+                returnValue.isSuccess = true;
+                returnValue.objectList = objectList;
+                returnValue.dateFields = tempDateFields;
+                returnValue.returnMessage = 'Success';
+                returnValue.templateList = tempList;
+            }
+            else {
+                returnValue.isSuccess = true;
+                returnValue.returnMessage = 'No Template Found';
             }
 
-            // Assign Values to returnValue Object...
-            returnValue.isSuccess = true;
-            returnValue.objectList = objectList;
-            returnValue.dateFields = tempDateFields;
-            returnValue.returnMessage = 'Success';
-            returnValue.templateList = tempList;
             return returnValue;
         } catch (Exception e) {
             Log_Handler.store_Exception(e, 'docGeniusHomePageController', 'getTempalaterecords');
