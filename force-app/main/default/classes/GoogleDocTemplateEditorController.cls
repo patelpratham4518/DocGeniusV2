@@ -123,9 +123,9 @@ public with sharing class GoogleDocTemplateEditorController {
     }
 
     @AuraEnabled
-    public static string getTemplate(String id){
+    public static string getTemplate(String templateId){
         try {
-            Template_Data__c templateData = [SELECT Google_Doc_WebViewLink__c FROM Template_Data__c WHERE Template__c=:id];
+            Template_Data__c templateData = [SELECT Google_Doc_WebViewLink__c FROM Template_Data__c WHERE Template__c=:templateId];
             return templateData.Google_Doc_WebViewLink__c;
         } catch (Exception e) {
             System.debug('Error In getTemplate ==> '+e.getMessage());
@@ -161,6 +161,19 @@ public with sharing class GoogleDocTemplateEditorController {
             Log_Handler.store_Exception(e,'GoogleDriveTemplatesController','saveTemplateData');
         }
     }
+    @AuraEnabled
+    public static void saveHTML(String templateId){
+        try {
+            Template_Data__c templateData = [SELECT Google_Doc_Template_Id__c FROM Template_Data__c WHERE Template__c=:templateId];
+            String html = getTemplateHTML(templateData.Google_Doc_Template_Id__c);
+            System.debug('HTML ==>'+html);
+        } catch (Exception e) {
+            System.debug('Error In saveHTML ==> '+e.getMessage());
+            Log_Handler.store_Exception(e,'GoogleDriveTemplatesController','saveHTML');
+        }
+    }
+
+    
 
 
 }

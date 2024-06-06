@@ -5,9 +5,16 @@
             <template lwc:if={webViewLink}>
                 <iframe src={webViewLink}></iframe>
             </template>
-            <div class="fieldMappingContainer">
-                fieldMappingContainer
-            </div>
+            <c-key-mapping-container 
+              class="fieldMappingContainer desicionContainer" 
+              object-name={objectName} 
+              save-button-label="Save" 
+              preview-button-label="Save &#38; Preview"
+              cancel-button-label="Save &#38; Close" 
+              onsave={saveTemplateDataIframe} 
+              onpreview={handleSaveNPreviewIframe}
+              onclose={handleSaveNCloseIframe} 
+              ontogglemapping={showHideMappingContainer}></c-key-mapping-container>
         </div>
 
     <template if:false={isSpinner}>

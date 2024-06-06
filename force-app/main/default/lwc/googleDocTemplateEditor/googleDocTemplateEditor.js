@@ -3,10 +3,13 @@ import getAllDocs from '@salesforce/apex/GoogleDocTemplateEditorController.getAl
 import getTemplate from '@salesforce/apex/GoogleDocTemplateEditorController.getTemplate'
 import getUsernameAndEmail from '@salesforce/apex/GoogleDocTemplateEditorController.getUsernameAndEmail'
 import saveTemplateData from '@salesforce/apex/GoogleDocTemplateEditorController.saveTemplateData'
+import saveHTML from '@salesforce/apex/GoogleDocTemplateEditorController.saveHTML'
 import new_template_bg from '@salesforce/resourceUrl/new_template_bg';
 import { NavigationMixin } from 'lightning/navigation';
 
 export default class GoogleDocTemplateEditor extends NavigationMixin(LightningElement) {
+
+    
     
     @api templateId 
     @api objectName
@@ -24,7 +27,7 @@ export default class GoogleDocTemplateEditor extends NavigationMixin(LightningEl
     connectedCallback(){
         try {
             this.getProfile()
-            getTemplate({id :this.templateId}).then(response => {
+            getTemplate({templateId :this.templateId}).then(response => {
                 if (response) {
                     this.webViewLink = response
                     this.isSpinner = false
@@ -226,4 +229,41 @@ export default class GoogleDocTemplateEditor extends NavigationMixin(LightningEl
         }
     }
 
+
+    saveIframe(){
+        saveHTML({"templateId" : this.templateId}).then(response=>{
+            console.log("HTML saved ",response);
+        }).catch(error=>{
+            console.log("Error in save Iframe==> ",error);
+        })
+    }
+    saveTemplateDataIframe(){
+        this.saveIframe()
+    }
+    handleSaveNPreviewIframe(){
+        this.saveIframe()
+    }
+    handleSaveNCloseIframe(){
+        this.navigateToComp("homePage",{})
+        this.saveIframe()
+    }
+
+    @track isMappingOpen = false;
+    @track isMappingContainerExpanded = false;
+    showHideMappingContainer(){
+        try {
+            this.isMappingOpen = !this.isMappingOpen;
+            var fieldMappingContainer = this.template.querySelector('.fieldMappingContainer');
+            if(fieldMappingContainer){
+                if(this.isMappingOpen){
+                    fieldMappingContainer.classList.add('openFieldMapping');
+                }
+                else{
+                    fieldMappingContainer.classList.remove('openFieldMapping');
+                }
+            }
+        } catch (error) {
+            console.log('error in showHideMappingContainer : ', error.stack);
+        }
+    }
 }
