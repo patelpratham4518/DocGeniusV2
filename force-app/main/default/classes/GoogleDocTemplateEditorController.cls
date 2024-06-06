@@ -125,6 +125,7 @@ public with sharing class GoogleDocTemplateEditorController {
     @AuraEnabled
     public static string getTemplate(String templateId){
         try {
+            
             Template_Data__c templateData = [SELECT Google_Doc_WebViewLink__c FROM Template_Data__c WHERE Template__c=:templateId];
             return templateData.Google_Doc_WebViewLink__c;
         } catch (Exception e) {

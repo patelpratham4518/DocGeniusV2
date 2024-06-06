@@ -403,3 +403,45 @@ input:focus{
     border-radius: 6px;
     background: white;
   }
+
+
+  @media only screen and (max-width: 1350px){
+    .fieldMappingContainer{
+      position: absolute;
+      right: 0%;
+      width: 30rem;
+      margin-inline: 1rem 0rem;
+      border-top-right-radius: 0px;
+      border-bottom-right-radius: 0px;
+      transform: translateX(calc(100% + 0.5rem));
+      transition: all linear 0.325s;
+    }
+    .openFieldMapping{
+      transform: translateX(0px) !important;
+    }
+    .toggleFieldMapping{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0.25rem;
+  
+      position: absolute;
+      top: 0.5rem;
+      right: 100%;
+      
+      width: 5.5rem;
+      padding: 0.25rem 0.5rem;
+      border: 1px solid #00000021;
+      border-top-left-radius: 6px;
+      border-bottom-left-radius: 6px;
+      background: white;
+      overflow: hidden;
+      transition: all linear 0.325s;
+      cursor: pointer;
+      user-select: none;
+  
+      font-size: 14px;
+      font-family: Bahnschrift, 'Segoe UI', 'Segoe UI Web (West European)', -apple-system, BlinkMacSystemFont, Roboto, 'Helvetica Neue', sans-serif;
+  
+    }
+  }

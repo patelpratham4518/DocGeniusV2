@@ -253,7 +253,7 @@ export default class GoogleDocTemplateEditor extends NavigationMixin(LightningEl
     showHideMappingContainer(){
         try {
             this.isMappingOpen = !this.isMappingOpen;
-            var fieldMappingContainer = this.template.querySelector('.fieldMappingContainer');
+            var fieldMappingContainer = this.template.querySelector('[data-name="fieldMappingContainer"]');
             if(fieldMappingContainer){
                 if(this.isMappingOpen){
                     fieldMappingContainer.classList.add('openFieldMapping');
