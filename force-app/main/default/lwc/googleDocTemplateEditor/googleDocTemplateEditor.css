@@ -6,21 +6,29 @@
     margin-top: -0.75rem;
     width: calc(100% + 1.5rem);
     height: calc(100% + 1.5rem);
+    background-color: #FFFFFF;
+}
+.sub_body{
+    width: 100%;
+    min-height: 100%;
+    height: 100%;
+    padding-top: 0.5rem;
 }
 
-.tabSection{
+/* .tabSection{
     width:98%;
     height: 2rem;
     background-color: #FFFF;
     border-radius: 6px;
     margin-inline: 1%;
     margin-top: 0.5%;
-}
+} */
 
 iframe{
-    height: 80vh;
+    /* height: 80vh; */
+
     width:100%;
-    margin: 0.5%;
+    margin: 0.5rem;
     border-radius: 6px;
 
 }
@@ -28,6 +36,7 @@ iframe{
 .main{
     display: flex;
     width:100%;
+    height: calc(100% - 2rem);
 }
 
 .fieldMappingContainer{
@@ -35,7 +44,7 @@ iframe{
     width:30rem;
     border-radius: 6px;
     margin: 0.5%;
-    height: 80vh;
+    /* height: 80vh; */
 }
 
 
@@ -445,3 +454,147 @@ input:focus{
   
     }
   }
+
+
+      /* ---- TAB SECTION CSS --- START ---- */
+      .tabSection{
+        /* width: calc(100% - 2rem); */
+        width: calc(100% - 1.4rem);
+        height: 2rem;
+        display: flex;
+        justify-content: start;
+        align-items: center;
+        padding-left: 1rem;
+        background: linear-gradient(269.86deg, rgb(173 229 255) 0%, rgb(174 255 233) 100%);
+        /* box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px; */
+        position: relative;
+        margin-inline: auto;
+        /* margin-top: 0.5rem; */
+        border-top-left-radius: 6px;
+        border-top-right-radius: 6px;
+        border-bottom: 1px solid #51c7ff;
+      }
+     
+      .tabSection_sub{
+        width: fit-content;
+        /* background: white; */
+        height: 100%;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        position: relative;
+        z-index: 10;
+        /* border-bottom: 1px solid #00aeff; */
+      }
+      .tabSection_sub:last-child{
+        flex-grow: 1;
+      }
+      .homeBtn{
+        margin-right: 0.5rem;
+        cursor: pointer;
+      }
+      .homeBtn svg{
+        width: 20px;
+        height: 20px;
+      }
+      .homeBtn path{
+        fill: #003b57;
+      }
+      .tab{
+        width: fit-content;
+        min-width: 7rem;
+        height: 100%;
+        padding: 0.25rem 1.5rem;
+        display: flex;
+        gap: 0.5rem;
+        justify-content: center;
+        align-items: center;
+        font-size: 12px;
+        font-family: Bahnschrift, 'Segoe UI', 'Segoe UI Web (West European)', -apple-system, BlinkMacSystemFont, Roboto, 'Helvetica Neue', sans-serif;
+        font-weight: 600;
+        color: #595959;
+        cursor: pointer;
+        margin-inline: 0.2rem;
+        background: transparent;
+        transition: all linear 0.2s;
+        
+        &:hover{
+          /* border-radius: 16px; */
+          color: black;
+          background: linear-gradient(0deg, #00aeff27 0%, transparent 117%);
+          /* background: linear-gradient(0deg, rgba(0, 174, 255, 0.106) 0%, rgba(0, 255, 187, 0.106) 100%); */
+        }
+      }
+      .activeT{
+        background: linear-gradient(0deg, #00aeff27 0%, transparent 117%);
+        color: black;
+        /* color: #06aeff; */
+      }
+      .tab svg{
+        width: 16px;
+        height: 16px;
+        fill: #595959;
+      }
+      .activeT svg{
+        fill: black;
+      }
+      .activeTabBar{
+        width: 0%;
+        height: 100%;
+        top: 0px;
+        left: 0px;
+        position: absolute;
+        background: linear-gradient(0deg, #00aeff 3%, #00aeff3b 0%, transparent 117%);
+        /* background: linear-gradient(0deg, #00aeff 3%, rgb(0 174 255 / 17%) 0%, rgb(0 255 186 / 20%) 100%); */
+        border-bottom: 1px solid #00aeff;
+        transition: all linear 0.2s;
+      }
+      /* ---- TAB SECTION CSS --- END ---- */
+
+      .tabArea{
+        width: 100%;
+        height: 100%;
+      }
+      .deactiveTabs{
+        display: none;
+      }
+      .templateName{
+        /* flex-grow: 1; */
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 0.75rem;
+        margin-right: 1rem;
+        /* height: 100%; */
+        padding: 1px 1rem;
+        border-radius: 6px;
+        margin-left: auto;
+        backdrop-filter: blur(13px);
+        background: linear-gradient(93deg, rgb(199 255 242 / 57%) 0%, rgb(207 244 255) 100%);
+        box-shadow: rgb(0 49 81 / 22%) 0px 0px 3px 0px, rgb(148 148 148 / 15%) 0px 0px 0px 1px;
+      }
+      .templateNameText{
+        font-size: 14px;
+        font-family: Bahnschrift, 'Segoe UI', 'Segoe UI Web (West European)', -apple-system, BlinkMacSystemFont, Roboto, 'Helvetica Neue', sans-serif;
+        font-weight: 600;
+        color: black;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+        max-width: 30rem;
+      }
+      .recordSVG{
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+      }
+      .recordSVG svg{
+        width: 16px;
+        height: 16px;
+      }
+      .recordSVG path{
+        fill: black;
+      }
+  

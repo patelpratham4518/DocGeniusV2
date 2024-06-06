@@ -123,11 +123,14 @@ public with sharing class GoogleDocTemplateEditorController {
     }
 
     @AuraEnabled
-    public static string getTemplate(String templateId){
+    public static Map<String,String> getTemplate(String templateId){
         try {
-            
+            String templateName = [SELECT Template_Name__c FROM Template__c WHERE Id=:templateId].Template_Name__c;
             Template_Data__c templateData = [SELECT Google_Doc_WebViewLink__c FROM Template_Data__c WHERE Template__c=:templateId];
-            return templateData.Google_Doc_WebViewLink__c;
+            Map<String, String> response = new Map<String, String>();
+            response.put('templateName',templateName);
+            response.put('webViewLink',templateData.Google_Doc_WebViewLink__c);
+            return response;
         } catch (Exception e) {
             System.debug('Error In getTemplate ==> '+e.getMessage());
             Log_Handler.store_Exception(e,'GoogleDriveTemplatesController','getTemplate');

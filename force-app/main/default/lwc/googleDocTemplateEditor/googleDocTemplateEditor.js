@@ -23,13 +23,16 @@ export default class GoogleDocTemplateEditor extends NavigationMixin(LightningEl
     @track serachString = ""
     @track profile
     templateBg = new_template_bg
+
+    templateName = ""
     
     connectedCallback(){
         try {
             this.getProfile()
             getTemplate({templateId :this.templateId}).then(response => {
                 if (response) {
-                    this.webViewLink = response
+                    this.webViewLink = response.webViewLink
+                    this.templateName = response.templateName
                     this.isSpinner = false
                 } else {
                     this.showPopup = true
