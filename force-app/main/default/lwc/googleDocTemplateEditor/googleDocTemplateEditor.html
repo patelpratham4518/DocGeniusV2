@@ -58,23 +58,27 @@
                 </div>
               </div>
             
-              
-            <div class="main">
-                <template lwc:if={webViewLink}>
-                    <iframe src={webViewLink}></iframe>
+            <template if:false={isSpinner}>
+                <template if:false={showPopup}>
+                    <div class="main">
+                        <template lwc:if={webViewLink}>
+                            <iframe src={webViewLink}></iframe>
+                        </template>
+                        <c-key-mapping-container 
+                          class="fieldMappingContainer desicionContainer"
+                          data-name="fieldMappingContainer" 
+                          object-name={objectName} 
+                          save-button-label="Save" 
+                          preview-button-label="Save &#38; Preview"
+                          cancel-button-label="Save &#38; Close" 
+                          onsave={saveTemplateDataIframe} 
+                          onpreview={handleSaveNPreviewIframe}
+                          onclose={handleSaveNCloseIframe} 
+                          ontogglemapping={showHideMappingContainer}></c-key-mapping-container>
+                    </div>
                 </template>
-                <c-key-mapping-container 
-                  class="fieldMappingContainer desicionContainer"
-                  data-name="fieldMappingContainer" 
-                  object-name={objectName} 
-                  save-button-label="Save" 
-                  preview-button-label="Save &#38; Preview"
-                  cancel-button-label="Save &#38; Close" 
-                  onsave={saveTemplateDataIframe} 
-                  onpreview={handleSaveNPreviewIframe}
-                  onclose={handleSaveNCloseIframe} 
-                  ontogglemapping={showHideMappingContainer}></c-key-mapping-container>
-            </div>
+            </template>
+            
 
         </div>
 
