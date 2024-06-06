@@ -126,7 +126,7 @@ public with sharing class GoogleDocTemplateEditorController {
     public static Map<String,String> getTemplate(String templateId){
         try {
             String templateName = [SELECT Template_Name__c FROM Template__c WHERE Id=:templateId].Template_Name__c;
-            Template_Data__c templateData = [SELECT Google_Doc_WebViewLink__c FROM Template_Data__c WHERE Template__c=:templateId];
+            Template_Data__c templateData = [SELECT Google_Doc_WebViewLink__c FROM Template_Data__c WHERE Template__c=:templateId AND Order_No_Simple__c = 1];
             Map<String, String> response = new Map<String, String>();
             response.put('templateName',templateName);
             response.put('webViewLink',templateData.Google_Doc_WebViewLink__c);
@@ -159,6 +159,7 @@ public with sharing class GoogleDocTemplateEditorController {
             templateData.Google_Doc_Template_Id__c	= googleDocId;
             templateData.Google_Doc_WebViewLink__c = webViewLink;
             templateData.Template__c = templateId;
+            templateData.Order_No_Simple__c = 1;
             insert templateData;
         } catch (Exception e) {
             System.debug('Error In saveTemplateData ==> '+e.getMessage());
@@ -168,12 +169,34 @@ public with sharing class GoogleDocTemplateEditorController {
     @AuraEnabled
     public static void saveHTML(String templateId){
         try {
-            Template_Data__c templateData = [SELECT Google_Doc_Template_Id__c FROM Template_Data__c WHERE Template__c=:templateId];
+            Template_Data__c templateData = [SELECT Google_Doc_Template_Id__c,Template__c,Value_Type__c,Order_No_Simple__c FROM Template_Data__c WHERE Template__c=:templateId];
             String html = getTemplateHTML(templateData.Google_Doc_Template_Id__c);
             System.debug('HTML ==>'+html);
+            divideAndSaveHTML(html,templateData,1);
         } catch (Exception e) {
             System.debug('Error In saveHTML ==> '+e.getMessage());
             Log_Handler.store_Exception(e,'GoogleDriveTemplatesController','saveHTML');
+        }
+    }
+
+    public static void divideAndSaveHTML(String html,Template_Data__c templateData,Integer orderNo) {
+        if (html.length() < 130000) {
+            templateData.Value_Type__c = html;
+            templateData.Order_No_Simple__c = orderNo;
+            templateData.Value_Type__c = 'Body Value';
+            update templateData;
+        } else {
+            String leftHTML  = html.substring(130000,html.length());
+            Template_Data__c newTemplateData = new Template_Data__c();
+            newTemplateData.Template__c = templateData.Template__c;
+            insert newTemplateData;
+
+            html = html.substring(0,130000);
+            templateData.Value_Type__c = html;
+            templateData.Order_No_Simple__c = orderNo;
+            templateData.Value_Type__c = 'Body Value';
+            update templateData;
+            divideAndSaveHTML(leftHTML,newTemplateData,orderNo+1);
         }
     }
 
