@@ -287,17 +287,24 @@ export default class GoogleDocTemplateEditor extends NavigationMixin(LightningEl
         basicTab = false
         activeTab(event){
             try {
+                let basicTab = this.template.querySelector(`.basicTab`).style
+                let mainStyle = this.template.querySelector(`.main`).style
+                
                 if(event){
                     this.activeTabName = event.currentTarget.dataset.name;
                 }
                 this.setActiveTab();
                 if (this.activeTabName == "contentTab") {
-                    this.contentTab = true
-                    this.basicTab = false
-                    this.isSpinner = true
+                    // this.contentTab = true
+                    // this.basicTab = false
+                    // this.isSpinner = true
+                    mainStyle.display = "flex"
+                    basicTab.display = "none"
                 } else if(this.activeTabName == "basicTab"){
-                    this.basicTab = true
-                    this.contentTab = false
+                    // this.basicTab = true
+                    // this.contentTab = false
+                    basicTab.display = "block"
+                    mainStyle.display = "none"
                 }
             } catch (error) {
                 console.log('error in templateBuilder.activeTab : ', error.stack)
