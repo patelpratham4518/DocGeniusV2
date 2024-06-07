@@ -39,7 +39,7 @@ export default class GoogleDocTemplateEditor extends NavigationMixin(LightningEl
                 if (response) {
                     this.webViewLink = response
                     // this.isSpinner = false
-                    this.isSpinner = false
+                    this.isSpinner = true
                 } else {
                     this.showPopup = true
                     getAllDocs()
