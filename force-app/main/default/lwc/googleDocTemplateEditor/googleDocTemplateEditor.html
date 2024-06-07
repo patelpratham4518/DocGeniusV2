@@ -307,10 +307,11 @@
             </div>
         </template>
     </template>
-        
         <c-document-loader display={isSpinner} fix-top="true"></c-document-loader>
-        
         <c-message-popup></c-message-popup>
-
+        <template lwc:if={isPreview}>
+            <c-template-preview-modal templateid={templateId} objectname={objectName}
+              objectlabel="Account" onclosepreview={closeTemplatePreview}></c-template-preview-modal>
+        </template>
     </div>
 </template>

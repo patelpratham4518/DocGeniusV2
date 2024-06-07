@@ -28,6 +28,7 @@ export default class GoogleDocTemplateEditor extends NavigationMixin(LightningEl
     templateBgMain = leftBackground
 
     templateName = ""
+    isPreview = false
     
     connectedCallback(){
         try {
@@ -255,6 +256,7 @@ export default class GoogleDocTemplateEditor extends NavigationMixin(LightningEl
     }
     handleSaveNPreviewIframe(){
         this.saveIframe()
+        this.isPreview = true
     }
     handleSaveNCloseIframe(){
         this.navigateToComp("homePage",{})
@@ -354,5 +356,11 @@ export default class GoogleDocTemplateEditor extends NavigationMixin(LightningEl
             console.log("Iframe loaded");
             this.isSpinner = false
         }
+
+        closeTemplatePreview(){
+            this.isPreview = false
+        }
+
+
     
 }
