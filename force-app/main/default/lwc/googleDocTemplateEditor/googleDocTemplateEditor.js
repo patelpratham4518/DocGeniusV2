@@ -218,7 +218,9 @@ export default class GoogleDocTemplateEditor extends NavigationMixin(LightningEl
             "googleDocId" : this.selectedTemplate.id,
             "webViewLink" : this.selectedTemplate.webViewLink
         }).then(response=>{
-            console.log("Template Data Saved");
+            if (response == "success") {    
+                console.log("Template Data Saved");
+            }
         }).catch(error=>{
             console.log("Error saving template data ==> ",error);
         })
@@ -267,8 +269,10 @@ export default class GoogleDocTemplateEditor extends NavigationMixin(LightningEl
         this.saveIframe()
     }
     handleSaveNPreviewIframe(){
-        this.saveIframe()
-        this.isPreview = true
+        
+            this.saveIframe()
+            this.isPreview = true
+        
     }
     handleSaveNCloseIframe(){
         this.navigateToComp("homePage",{})

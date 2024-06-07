@@ -177,38 +177,52 @@ public with sharing class GoogleDocTemplateEditorController {
         }
     }
     @AuraEnabled
-    public static void saveHTML(String templateId){
+    public static string saveHTML(String templateId){
         try {
             Template_Data__c templateData = [SELECT Google_Doc_Template_Id__c,Template__c,Value_Type__c,Order_No_Simple__c FROM Template_Data__c WHERE Template__c=:templateId AND Order_No_Simple__c = 1];
             String html = getTemplateHTML(templateData.Google_Doc_Template_Id__c);
             System.debug('HTML ==>'+html);
             System.debug('HTML Size total ==> '+html.length());
             divideAndSaveHTML(html,templateData,1);
+            return 'success';
         } catch (Exception e) {
             System.debug('Error In saveHTML ==> '+e.getMessage());
             Log_Handler.store_Exception(e,'GoogleDriveTemplatesController','saveHTML');
+            return 'fail';
         }
     }
 
     public static void divideAndSaveHTML(String html,Template_Data__c templateData,Integer orderNo) {
-        if (html.length() < 130000) {
-            templateData.Template_Value_Simple__c = html;
-            templateData.Order_No_Simple__c = orderNo;
-            templateData.Value_Type__c = 'Body Value';
-            update templateData;
-        } else {
-            String leftHTML  = html.substring(130000,html.length());
-            Template_Data__c newTemplateData = new Template_Data__c();
-            newTemplateData.Template__c = templateData.Template__c;
-            insert newTemplateData;
-
-            html = html.substring(0,130000);
-            templateData.Template_Value_Simple__c = html;
-            templateData.Order_No_Simple__c = orderNo;
-            templateData.Value_Type__c = 'Body Value';
-            update templateData;
-            divideAndSaveHTML(leftHTML,newTemplateData,orderNo+1);
+        try {
+            if (html.length() < 130000) {
+                templateData.Template_Value_Simple__c = html;
+                templateData.Order_No_Simple__c = orderNo;
+                templateData.Value_Type__c = 'Body Value';
+                upsert templateData;
+                deleteRestTemplateData(templateData);
+            } else {
+                String leftHTML  = html.substring(130000,html.length());
+                Template_Data__c newTemplateData = new Template_Data__c();
+                newTemplateData.Template__c = templateData.Template__c;
+                upsert newTemplateData;
+    
+                html = html.substring(0,130000);
+                templateData.Template_Value_Simple__c = html;
+                templateData.Order_No_Simple__c = orderNo;
+                templateData.Value_Type__c = 'Body Value';
+                upsert templateData;
+                divideAndSaveHTML(leftHTML,newTemplateData,orderNo+1);
+            }
+        } catch (Exception e) {
+            System.debug('Error In divideAndSaveHTML ==> '+e.getMessage());
+            Log_Handler.store_Exception(e,'GoogleDriveTemplatesController','divideAndSaveHTML');
         }
+       
+    }
+
+    public static void deleteRestTemplateData(Template_Data__c templateData){
+        List<Template_Data__c> restTemplatDatas = [SELECT Id,Template__c,Order_No_Simple__c FROM Template_Data__c WHERE Template__c=:templateData.Template__c AND Order_No_Simple__c>:templateData.Order_No_Simple__c];
+        delete restTemplatDatas;
     }
 
     @AuraEnabled
