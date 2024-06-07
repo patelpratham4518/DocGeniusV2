@@ -290,7 +290,7 @@ export default class GoogleDocTemplateEditor extends NavigationMixin(LightningEl
                 if (this.activeTabName == "contentTab") {
                     this.contentTab = true
                     this.basicTab = false
-                    // this.isSpinner = true
+                    this.isSpinner = true
                 } else if(this.activeTabName == "basicTab"){
                     this.basicTab = true
                     this.contentTab = false
