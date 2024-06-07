@@ -123,18 +123,28 @@ public with sharing class GoogleDocTemplateEditorController {
     }
 
     @AuraEnabled
-    public static Map<String,String> getTemplate(String templateId){
+    public static String getTemplate(String templateId){
         try {
             String templateName = [SELECT Template_Name__c FROM Template__c WHERE Id=:templateId].Template_Name__c;
             Template_Data__c templateData = [SELECT Google_Doc_WebViewLink__c FROM Template_Data__c WHERE Template__c=:templateId AND Order_No_Simple__c = 1];
-            Map<String, String> response = new Map<String, String>();
-            response.put('templateName',templateName);
-            response.put('webViewLink',templateData.Google_Doc_WebViewLink__c);
-            return response;
+            return templateData.Google_Doc_WebViewLink__c;
         } catch (Exception e) {
             System.debug('Error In getTemplate ==> '+e.getMessage());
             Log_Handler.store_Exception(e,'GoogleDriveTemplatesController','getTemplate');
             return null;
+        }
+    }
+
+
+    @AuraEnabled
+    public static string getTemplateName(string templateId){
+        try {
+            String templateName = [SELECT Template_Name__c FROM Template__c WHERE Id=:templateId].Template_Name__c;
+            return templateName;
+        } catch (Exception e) {
+            System.debug('Error In getTemplateName ==> '+e.getMessage());
+            Log_Handler.store_Exception(e,'GoogleDriveTemplatesController','getTemplate');
+            return null;   
         }
     }
 

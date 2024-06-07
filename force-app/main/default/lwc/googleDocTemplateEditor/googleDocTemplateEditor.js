@@ -4,6 +4,7 @@ import getTemplate from '@salesforce/apex/GoogleDocTemplateEditorController.getT
 import getUsernameAndEmail from '@salesforce/apex/GoogleDocTemplateEditorController.getUsernameAndEmail'
 import saveTemplateData from '@salesforce/apex/GoogleDocTemplateEditorController.saveTemplateData'
 import saveHTML from '@salesforce/apex/GoogleDocTemplateEditorController.saveHTML'
+import getTemplateName from '@salesforce/apex/GoogleDocTemplateEditorController.getTemplateName'
 import new_template_bg from '@salesforce/resourceUrl/new_template_bg';
 import leftBackground from '@salesforce/resourceUrl/leftBackground';
 import { NavigationMixin } from 'lightning/navigation';
@@ -31,10 +32,13 @@ export default class GoogleDocTemplateEditor extends NavigationMixin(LightningEl
     connectedCallback(){
         try {
             this.getProfile()
+            getTemplateName({templateId :this.templateId}).then(response=>{
+                this.templateName = response
+            })
             getTemplate({templateId :this.templateId}).then(response => {
                 if (response) {
-                    this.webViewLink = response.webViewLink
-                    this.templateName = response.templateName
+                    this.webViewLink = response
+                    // this.isSpinner = false
                     this.isSpinner = false
                 } else {
                     this.showPopup = true
@@ -125,7 +129,7 @@ export default class GoogleDocTemplateEditor extends NavigationMixin(LightningEl
             if (this.selectedTemplate) {
                 this.webViewLink = this.selectedTemplate.webViewLink
                 this.closePopup()
-                // this.isSpinner = true
+                this.isSpinner = true
                 this.save()
             }else{
                 const errorToast = this.template.querySelector('c-message-popup')
