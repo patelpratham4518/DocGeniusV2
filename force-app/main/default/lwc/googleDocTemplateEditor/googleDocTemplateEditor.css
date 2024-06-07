@@ -604,11 +604,50 @@ input:focus{
 
 
 .basicTab{
-  
-  height: calc(100% - 4rem);
+  /* height: calc(100% - 4rem);
   margin: 1rem;
-  border-radius: 6px;
-  border: 1px solid rgb(210, 208, 206);
-  background-color:#FFFFFF;
+  background-color:#FFFFFF; */
+  /* border: 1px solid rgb(210, 208, 206); */
+  /* border-radius: 6px; */
   display: none;
+}
+
+.updateDeatilContainer{
+  height: calc(100% - 4rem);
+  width: calc(100% - 2rem);
+  /* height : calc(100% - var(--toolbar_height) - 1.5rem); */
+  overflow: hidden;
+  transition: all linear 0.5s;
+  padding : 1rem;
+  margin-top: 0.5rem;
+}
+
+.basicDetails{
+  flex-grow: 1;
+  padding: 1rem;
+  padding-top: 0rem;
+  width: 100%;
+}
+
+
+.buttonSection{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 4rem;
+  gap: 1rem;
+  
+
+  box-shadow: 0px 0px 11px 0px #00000040;
+  border-radius: 6px;
+  width: calc(100% - 2rem);
+  /* margin: 1rem; */
+  min-height: 3.25rem;
+  max-height: 5rem;
+  transition: all linear 0.5s;
+
+  --slds-c-button-brand-color-background : var(--mainThemeColor);
+  --slds-c-button-brand-color-border: var(--mainThemeColor);
+  --slds-c-button-brand-color-background-hover: var(--mainThemeColor);
+  --slds-c-button-brand-color-border-hover: var(--mainThemeColor);
 }
