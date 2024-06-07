@@ -179,9 +179,10 @@ public with sharing class GoogleDocTemplateEditorController {
     @AuraEnabled
     public static void saveHTML(String templateId){
         try {
-            Template_Data__c templateData = [SELECT Google_Doc_Template_Id__c,Template__c,Value_Type__c,Order_No_Simple__c FROM Template_Data__c WHERE Template__c=:templateId];
+            Template_Data__c templateData = [SELECT Google_Doc_Template_Id__c,Template__c,Value_Type__c,Order_No_Simple__c FROM Template_Data__c WHERE Template__c=:templateId AND Order_No_Simple__c = 1];
             String html = getTemplateHTML(templateData.Google_Doc_Template_Id__c);
             System.debug('HTML ==>'+html);
+            System.debug('HTML Size total ==> '+html.length());
             divideAndSaveHTML(html,templateData,1);
         } catch (Exception e) {
             System.debug('Error In saveHTML ==> '+e.getMessage());
@@ -191,7 +192,7 @@ public with sharing class GoogleDocTemplateEditorController {
 
     public static void divideAndSaveHTML(String html,Template_Data__c templateData,Integer orderNo) {
         if (html.length() < 130000) {
-            templateData.Value_Type__c = html;
+            templateData.Template_Value_Simple__c = html;
             templateData.Order_No_Simple__c = orderNo;
             templateData.Value_Type__c = 'Body Value';
             update templateData;
@@ -202,7 +203,7 @@ public with sharing class GoogleDocTemplateEditorController {
             insert newTemplateData;
 
             html = html.substring(0,130000);
-            templateData.Value_Type__c = html;
+            templateData.Template_Value_Simple__c = html;
             templateData.Order_No_Simple__c = orderNo;
             templateData.Value_Type__c = 'Body Value';
             update templateData;
