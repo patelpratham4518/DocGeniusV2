@@ -54,6 +54,8 @@ export default class GoogleDocTemplateEditor extends NavigationMixin(LightningEl
             }).catch(error => {
                 console.log('Error ==> ',error);
             })
+
+          
         } catch (error) {
             console.error(error)
         }
@@ -123,6 +125,7 @@ export default class GoogleDocTemplateEditor extends NavigationMixin(LightningEl
             if (this.selectedTemplate) {
                 this.webViewLink = this.selectedTemplate.webViewLink
                 this.closePopup()
+                // this.isSpinner = true
                 this.save()
             }else{
                 const errorToast = this.template.querySelector('c-message-popup')
@@ -272,4 +275,73 @@ export default class GoogleDocTemplateEditor extends NavigationMixin(LightningEl
             console.log('error in showHideMappingContainer : ', error.stack);
         }
     }
+
+
+        // ==== Toggle Tab Methods - START - ========
+        activeTabName = "contentTab";
+        contentTab = true
+        basicTab = false
+        activeTab(event){
+            try {
+                if(event){
+                    this.activeTabName = event.currentTarget.dataset.name;
+                }
+                this.setActiveTab();
+                if (this.activeTabName == "contentTab") {
+                    this.contentTab = true
+                    this.basicTab = false
+                    // this.isSpinner = true
+                } else if(this.activeTabName == "basicTab"){
+                    this.basicTab = true
+                    this.contentTab = false
+                }
+            } catch (error) {
+                console.log('error in templateBuilder.activeTab : ', error.stack)
+            }
+        }
+    
+        setActiveTab(){
+            try {
+                console.log('activeTabName : ', this.activeTabName);
+                const activeTabBar = this.template.querySelector(`.activeTabBar`);
+                const tabS = this.template.querySelectorAll('.tab');
+    
+                tabS.forEach(ele => {
+                    if(ele.dataset.name == this.activeTabName){
+                        ele.classList.add('activeT');
+                        activeTabBar.style = ` transform: translateX(${ele.offsetLeft}px);
+                                        width : ${ele.clientWidth}px;`;
+                    }
+                    else{
+                        ele.classList.remove('activeT');
+                    }
+                })
+    
+                const sections = this.template.querySelectorAll('.tabArea');
+                sections.forEach(ele => {
+                    if(ele.dataset.section == this.activeTabName){
+                        ele.classList.remove('deactiveTabs');
+                    }
+                    else{
+                        ele.classList.add('deactiveTabs');
+                    }
+                })
+    
+            } catch (error) {
+                console.log('error in  : ', error.stack);
+            }
+        }
+        // ==== Active Tab Methods - END - ========
+
+        // on load start is not supported
+        // iframeLoadnig(){
+        //     console.log("Iframe loading");
+        //     this.isSpinner = true
+        // }
+
+        iframeLoaded(){
+            console.log("Iframe loaded");
+            this.isSpinner = false
+        }
+    
 }
