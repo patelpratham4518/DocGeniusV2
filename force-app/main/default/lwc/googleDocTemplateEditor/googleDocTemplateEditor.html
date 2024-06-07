@@ -311,7 +311,7 @@
         <c-message-popup></c-message-popup>
         <template lwc:if={isPreview}>
             <c-template-preview-modal templateid={templateId} objectname={objectName}
-              objectlabel="Account" onclosepreview={closeTemplatePreview}></c-template-preview-modal>
+              objectlabel={objectlabel} onclosepreview={closeTemplatePreview}></c-template-preview-modal>
         </template>
     </div>
 </template>

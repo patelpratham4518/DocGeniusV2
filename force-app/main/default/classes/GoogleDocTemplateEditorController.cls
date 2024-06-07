@@ -211,6 +211,19 @@ public with sharing class GoogleDocTemplateEditorController {
         }
     }
 
+    @AuraEnabled
+    public static string getLabel(String objectName){
+        try {
+            Map<String, Schema.SObjectType> sObjectMap = Schema.getGlobalDescribe(); 
+            string objLabel = sObjectMap.get(objectName).getDescribe().getLabel();
+            return objLabel;
+        } catch (Exception e) {
+            System.debug('Error In getLabel ==> '+e.getMessage());
+            Log_Handler.store_Exception(e,'GoogleDriveTemplatesController','getLabel');
+            return null;
+        }
+    }
+
     
 
 

@@ -5,9 +5,11 @@ import getUsernameAndEmail from '@salesforce/apex/GoogleDocTemplateEditorControl
 import saveTemplateData from '@salesforce/apex/GoogleDocTemplateEditorController.saveTemplateData'
 import saveHTML from '@salesforce/apex/GoogleDocTemplateEditorController.saveHTML'
 import getTemplateName from '@salesforce/apex/GoogleDocTemplateEditorController.getTemplateName'
+import getLabel from '@salesforce/apex/GoogleDocTemplateEditorController.getLabel'
 import new_template_bg from '@salesforce/resourceUrl/new_template_bg';
 import leftBackground from '@salesforce/resourceUrl/leftBackground';
 import { NavigationMixin } from 'lightning/navigation';
+import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 
 export default class GoogleDocTemplateEditor extends NavigationMixin(LightningElement) {
 
@@ -15,6 +17,11 @@ export default class GoogleDocTemplateEditor extends NavigationMixin(LightningEl
     
     @api templateId 
     @api objectName
+    
+    
+    // @wire(getObjectInfo, { objectApiName: objectName })
+    // objectlabel;
+    objectlabel
 
     isSpinner = true
     selectedTemplate
@@ -32,6 +39,11 @@ export default class GoogleDocTemplateEditor extends NavigationMixin(LightningEl
     
     connectedCallback(){
         try {
+            getLabel({objectName:this.objectName}).then(response=>{
+                this.objectlabel = response
+            }).catch(error=>{
+                console.log("Error in get label=>",error);
+            })
             this.getProfile()
             getTemplateName({templateId :this.templateId}).then(response=>{
                 this.templateName = response
