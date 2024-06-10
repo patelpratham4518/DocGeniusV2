@@ -176,14 +176,22 @@ public with sharing class GoogleDocTemplateEditorController {
             Log_Handler.store_Exception(e,'GoogleDriveTemplatesController','saveTemplateData');
         }
     }
+
+    public static List<Template_Data__c> oldTemplateData;
+    public static List<Template_Data__c> newTemplateData;
     @AuraEnabled
     public static string saveHTML(String templateId){
         try {
-            Template_Data__c templateData = [SELECT Google_Doc_Template_Id__c,Template__c,Value_Type__c,Order_No_Simple__c FROM Template_Data__c WHERE Template__c=:templateId AND Order_No_Simple__c = 1];
-            String html = getTemplateHTML(templateData.Google_Doc_Template_Id__c);
+            oldTemplateData = [SELECT Google_Doc_Template_Id__c,Template__c,Value_Type__c,Order_No_Simple__c FROM Template_Data__c WHERE Template__c=:templateId ORDER BY Order_No_Simple__c];
+            newTemplateData = new List<Template_Data__c>();
+            newTemplateData.add(oldTemplateData[0]);
+            oldTemplateData.remove(0);
+
+            // Template_Data__c templateData = [SELECT Google_Doc_Template_Id__c,Template__c,Value_Type__c,Order_No_Simple__c FROM Template_Data__c WHERE Template__c=:templateId AND Order_No_Simple__c = 1];
+            String html = getTemplateHTML(newTemplateData[0].Google_Doc_Template_Id__c);
             System.debug('HTML ==>'+html);
             System.debug('HTML Size total ==> '+html.length());
-            divideAndSaveHTML(html,templateData,1);
+            divideAndSaveHTML(html,1);
             return 'success';
         } catch (Exception e) {
             System.debug('Error In saveHTML ==> '+e.getMessage());
@@ -192,26 +200,32 @@ public with sharing class GoogleDocTemplateEditorController {
         }
     }
 
-    public static void divideAndSaveHTML(String html,Template_Data__c templateData,Integer orderNo) {
+
+    public static void divideAndSaveHTML(String html,Integer orderNo) {
         try {
+            Template_Data__c templateData = newTemplateData[newTemplateData.size()-1];
             if (html.length() < 130000) {
                 templateData.Template_Value_Simple__c = html;
                 templateData.Order_No_Simple__c = orderNo;
                 templateData.Value_Type__c = 'Body Value';
-                upsert templateData;
-                deleteRestTemplateData(templateData);
+                upsert newTemplateData;
+                delete oldTemplateData;
             } else {
                 String leftHTML  = html.substring(130000,html.length());
-                Template_Data__c newTemplateData = new Template_Data__c();
-                newTemplateData.Template__c = templateData.Template__c;
-                upsert newTemplateData;
-    
+                if (oldTemplateData.isEmpty()) {
+                    newTemplateData.add(new Template_Data__c(Template__c=templateData.Template__c));
+                
+                } else {
+                    newTemplateData.add(oldTemplateData[0]);
+                    oldTemplateData.remove(0);
+                }
+                
                 html = html.substring(0,130000);
                 templateData.Template_Value_Simple__c = html;
                 templateData.Order_No_Simple__c = orderNo;
                 templateData.Value_Type__c = 'Body Value';
-                upsert templateData;
-                divideAndSaveHTML(leftHTML,newTemplateData,orderNo+1);
+                
+                divideAndSaveHTML(leftHTML,orderNo+1);
             }
         } catch (Exception e) {
             System.debug('Error In divideAndSaveHTML ==> '+e.getMessage());
