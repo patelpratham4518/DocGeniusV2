@@ -9,7 +9,7 @@ import getLabel from '@salesforce/apex/GoogleDocTemplateEditorController.getLabe
 import new_template_bg from '@salesforce/resourceUrl/new_template_bg';
 import leftBackground from '@salesforce/resourceUrl/leftBackground';
 import { NavigationMixin } from 'lightning/navigation';
-import { getObjectInfo } from 'lightning/uiObjectInfoApi';
+
 
 export default class GoogleDocTemplateEditor extends NavigationMixin(LightningElement) {
 
@@ -18,9 +18,8 @@ export default class GoogleDocTemplateEditor extends NavigationMixin(LightningEl
     @api templateId 
     @api objectName
     
+    @track templateRecord = {}
     
-    // @wire(getObjectInfo, { objectApiName: objectName })
-    // objectlabel;
     objectlabel
 
     isSpinner = true
@@ -34,7 +33,7 @@ export default class GoogleDocTemplateEditor extends NavigationMixin(LightningEl
     templateBg = new_template_bg
     templateBgMain = leftBackground
 
-    templateName = ""
+    
     isPreview = false
     
     connectedCallback(){
@@ -46,11 +45,14 @@ export default class GoogleDocTemplateEditor extends NavigationMixin(LightningEl
             })
             this.getProfile()
             getTemplateName({templateId :this.templateId}).then(response=>{
-                this.templateName = response
+                this.templateRecord = response
+                
             })
             getTemplate({templateId :this.templateId}).then(response => {
                 if (response) {
-                    this.webViewLink = response
+                    response = JSON.parse(response)
+                    this.webViewLink = response.Google_Doc_WebViewLink__c
+                    this.Google_Doc_Template_Id__c = response.Google_Doc_Template_Id__c
                     // this.isSpinner = false
                     this.isSpinner = true
                 } else {
@@ -259,7 +261,7 @@ export default class GoogleDocTemplateEditor extends NavigationMixin(LightningEl
 
 
     saveIframe(){
-        saveHTML({"templateId" : this.templateId}).then(response=>{
+        saveHTML({"templateId" : this.templateId,"templateRecord" : JSON.stringify(this.templateRecord)}).then(response=>{
             console.log("HTML saved ",response);
         }).catch(error=>{
             console.log("Error in save Iframe==> ",error);
@@ -377,6 +379,21 @@ export default class GoogleDocTemplateEditor extends NavigationMixin(LightningEl
             this.isPreview = false
         }
 
-
+        get showTempDetail(){
+            return Object.keys(this.templateRecord).length ? true : false;
+       }
+       handleEditDetail(event){
+        try {
+            const targetInput = event.currentTarget.dataset.name;
+            if(event.target.type != 'CHECKBOX'){
+                this.templateRecord[targetInput] = event.target.value;
+            }
+            else{
+                this.templateRecord[targetInput] = event.target.checked;
+            }
+        } catch (error) {
+            console.log('error in handleEditDetail : ', error.stack);
+        }
+    }
     
 }

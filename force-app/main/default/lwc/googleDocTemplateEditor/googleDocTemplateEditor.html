@@ -51,7 +51,7 @@
                       </svg>
                     </div> 
                     <div class="templateNameText">
-                      {templateName}
+                      {templateRecord.Template_Name__c}
                     </div>
                   </div>
                   <div class="activeTabBar"></div>
@@ -83,7 +83,105 @@
                         <div class="basicTab" >
 
                             <div class="desicionContainer updateDeatilContainer">
-                                <h1>Basic Details</h1>
+                                <div class="basicDetails">
+                                    <div class="basicDetails_sub">
+                                        <div class="templateDetails">
+                                          <div class="detailHeader">Template Basic Detail</div>
+                                          <div class="detailEditSection">
+                                            <template lwc:if={showTempDetail}>
+                                              <div class="editName editField">
+                                                <div class="floatingLabel">Template Name</div>
+                                                
+                                                <lightning-input type="text" class="fieldInput" value={templateRecord.Template_Name__c} variant="label-hidden" data-name="Template_Name__c" onkeyup={handleEditDetail} ></lightning-input>
+                                              </div>
+                                              <div class="editDescription editField">
+                                                <div class="floatingLabel">Description</div>
+                                                
+                                                <lightning-textarea class="descriptionInput" value={templateRecord.Description__c} variant="label-hidden" data-name="Description__c" onkeyup={handleEditDetail}></lightning-textarea>
+                                              </div>
+                                              <div class="editStatus">
+                                                <span class="statusLabel">Status: </span>
+                                                <div class="tempToggle">
+                                                  <template lwc:if={templateRecord.Template_Status__c}>
+                                                    
+                                                    <input class="checkBox checked" type="checkbox" id={templateRecord.Id} data-name="Template_Status__c" onchange={handleEditDetail} style="display: none;" checked/>
+                                                  </template>
+                                                  <template lwc:else>
+                                                    
+                                                    <input class="checkBox" type="checkbox" id={templateRecord.Id} data-name="Template_Status__c" onchange={handleEditDetail} style="display: none;"/>
+                                                  </template>
+                                                  <label for={templateRecord.Id}> 
+                                                    <div class="toggleDiv">
+                                                      <div class="toggleBtnBg">
+                                                        <div class="StatusText">
+                                                          <span>Active</span>
+                                                          <span>Inactive</span>
+                                                        </div>
+                                                      </div>
+                                                    </div>
+                                                  </label>
+                                                </div>
+                                              </div>
+                                              <div class="previewTwise">
+                                                <div class="previewField">
+                                                  <div class="previewLabel">Source Object</div>
+                                                 
+                                                  <lightning-input type="text" class="nonEditInput" value={templateRecord.Object_API_Name__c} variant="label-hidden" disabled="true"></lightning-input>
+                                                </div>
+                                                <div class="previewField">
+                                                  <div class="previewLabel">Template Type</div>
+                                                 
+                                                  <lightning-input type="text" class="nonEditInput" value={templateRecord.Template_Type__c} variant="label-hidden" disabled="true"></lightning-input>
+                                                </div>
+                                              </div>
+                                              <div class="previewField">
+                                                <div class="previewLabel">Google Doc Id</div>
+                                                <lightning-input 
+                                                  type="text"
+                                                  class="nonEditInput"
+                                                  value={Google_Doc_Template_Id__c}
+                                                  variant="label-hidden"
+                                                  disabled="true"
+                                                ></lightning-input>
+                                            </div>
+                                              <div class="previewTwise">
+                                                <div class="previewField ">
+                                                  <div class="previewLabel">Create Date and Time</div>
+                                                  
+                                                  <lightning-input type="datetime" class="nonEditInput" value={templateRecord.CreatedDate} variant="label-hidden" disabled="true"></lightning-input>
+                                                </div>
+                                                <div class="previewField">
+                                                  <div class="previewLabel">Last Modified Date and Time</div>
+                                                 
+                                                  <lightning-input type="datetime" class="nonEditInput" value={templateRecord.LastModifiedDate} variant="label-hidden" disabled="true"></lightning-input>
+                                                </div>
+                                              </div>
+                                              <div class="previewTwise">
+                                                <div class="previewField ">
+                                                  <div class="previewLabel">Create By</div>
+                                                 
+                                                  <lightning-input type="text" class="nonEditInput" value={templateRecord.CreatedBy.Name} variant="label-hidden" disabled="true"></lightning-input>
+                                                </div>
+                                                <div class="previewField">
+                                                  <div class="previewLabel">Last Modified By</div>
+        
+                                                  <lightning-input type="text" class="nonEditInput" value={templateRecord.LastModifiedBy.Name} variant="label-hidden" disabled="true"></lightning-input>
+                                                </div>
+                                               
+                                              </div>
+                                            </template>
+                                            </div>
+                                        </div>
+                                        <div class="pageConfigs">
+                                          <div class="pageConfigTitle">Page Configurations</div>
+                                          <div class="pageConfig_sub">
+                                              <div class="dummyPageContainer">
+                                                  <div class="dummyPage"></div>
+                                              </div> 
+                                          </div>
+                                        </div>
+                                      </div>
+                                </div>
                                 <div class="buttonSection">
                                   <lightning-button variant="destructive" label="Cancel" title="Cancel" onclick={handleSaveNCloseIframe}
                                     icon-name="utility:close" icon-position="left"></lightning-button>

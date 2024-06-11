@@ -125,9 +125,10 @@ public with sharing class GoogleDocTemplateEditorController {
     @AuraEnabled
     public static String getTemplate(String templateId){
         try {
-            String templateName = [SELECT Template_Name__c FROM Template__c WHERE Id=:templateId].Template_Name__c;
-            Template_Data__c templateData = [SELECT Google_Doc_WebViewLink__c FROM Template_Data__c WHERE Template__c=:templateId AND Order_No_Simple__c = 1];
-            return templateData.Google_Doc_WebViewLink__c;
+            // String templateName = [SELECT Template_Name__c FROM Template__c WHERE Id=:templateId].Template_Name__c;
+            Template_Data__c templateData = [SELECT Google_Doc_WebViewLink__c,Google_Doc_Template_Id__c FROM Template_Data__c WHERE Template__c=:templateId AND Order_No_Simple__c = 1];
+            // return templateData.Google_Doc_WebViewLink__c;
+            return JSON.serialize(templateData);
         } catch (Exception e) {
             System.debug('Error In getTemplate ==> '+e.getMessage());
             Log_Handler.store_Exception(e,'GoogleDriveTemplatesController','getTemplate');
@@ -137,10 +138,10 @@ public with sharing class GoogleDocTemplateEditorController {
 
 
     @AuraEnabled
-    public static string getTemplateName(string templateId){
+    public static Template__c getTemplateName(string templateId){
         try {
-            String templateName = [SELECT Template_Name__c FROM Template__c WHERE Id=:templateId].Template_Name__c;
-            return templateName;
+            Template__c template = [SELECT Template_Name__c,Description__c,Id,Template_Status__c,Object_API_Name__c,Template_Type__c,CreatedDate,LastModifiedDate,CreatedBy.Name,LastModifiedBy.Name FROM Template__c WHERE Id=:templateId];
+            return template;
         } catch (Exception e) {
             System.debug('Error In getTemplateName ==> '+e.getMessage());
             Log_Handler.store_Exception(e,'GoogleDriveTemplatesController','getTemplate');
@@ -180,8 +181,12 @@ public with sharing class GoogleDocTemplateEditorController {
     public static List<Template_Data__c> oldTemplateData;
     public static List<Template_Data__c> newTemplateData;
     @AuraEnabled
-    public static string saveHTML(String templateId){
+    public static string saveHTML(String templateId,String templateRecord){
         try {
+            Template__c template =(Template__c) JSON.deserialize(templateRecord,Template__c.class);
+            update template;
+
+            //logic for saving html
             oldTemplateData = [SELECT Google_Doc_Template_Id__c,Template__c,Value_Type__c,Order_No_Simple__c FROM Template_Data__c WHERE Template__c=:templateId ORDER BY Order_No_Simple__c];
             newTemplateData = new List<Template_Data__c>();
             newTemplateData.add(oldTemplateData[0]);
@@ -253,6 +258,5 @@ public with sharing class GoogleDocTemplateEditorController {
     }
 
     
-
 
 }
