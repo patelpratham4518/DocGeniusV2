@@ -76,17 +76,22 @@ public with sharing class CreateGoogleDoc {
     }
 
     public static void main() {
-        String sourceDocContent = getDocument('1Dga4sbG65SM8dDbEiA3yRfvTeGXmafOlb2J9B_Goy2Q');
-        sourceDocContent = modifyContent(sourceDocContent,'{Your Company}','MV Clouds');
+        // createNewDoc('Nirbhay Bhai Again');
+        // String sourceDocContent = getDocument('1Dga4sbG65SM8dDbEiA3yRfvTeGXmafOlb2J9B_Goy2Q');
+        // String modifiedHTML = sourceDocContent;
+        // modifiedHTML = KeyMappingController.mappingObjFieldsData(modifiedHTML, '001H4000008UpuCIAS', 'Account');
+        // sourceDocContent = modifiedHTML;
 
-        List<Object> bodyContent = (List<Object>) ((Map<String,Object>)JSON.deserializeUntyped(JSON.serialize(((Map<String,Object>) JSON.deserializeUntyped(sourceDocContent)).get('body')))).get('content');
+        // List<Object> bodyContent = (List<Object>) ((Map<String,Object>)JSON.deserializeUntyped(JSON.serialize(((Map<String,Object>) JSON.deserializeUntyped(sourceDocContent)).get('body')))).get('content');
       
-        Map<String,Object> inlineObjects = (Map<String,Object>) ((Map<String,Object>) JSON.deserializeUntyped(sourceDocContent)).get('inlineObjects');
-        Map<String,Object> positionedObjects = (Map<String,Object>) ((Map<String,Object>) JSON.deserializeUntyped(sourceDocContent)).get('positionedObjects');
+        // Map<String,Object> inlineObjects = (Map<String,Object>) ((Map<String,Object>) JSON.deserializeUntyped(sourceDocContent)).get('inlineObjects');
+        // Map<String,Object> positionedObjects = (Map<String,Object>) ((Map<String,Object>) JSON.deserializeUntyped(sourceDocContent)).get('positionedObjects');
        
-        List<Object> requests = formatContentForBatchUpdate(bodyContent,inlineObjects,positionedObjects);
+        // List<Object> requests = formatContentForBatchUpdate(bodyContent,inlineObjects,positionedObjects);
         
-        CreateGoogleDoc.updateDoc('17-VWzwbL79v7iYi3lXFS3lDeHFS62EVrpJXb49i9ZfE',sourceDocContent,requests);
+        // CreateGoogleDoc.updateDoc('15fCFQzVs0UtZEkzc_JYd8OUX7976N5ECjNFJlHMV564',sourceDocContent,requests);
+        // getPDF('17-VWzwbL79v7iYi3lXFS3lDeHFS62EVrpJXb49i9ZfE');
+        deleteDoc('15fCFQzVs0UtZEkzc_JYd8OUX7976N5ECjNFJlHMV564');
     }
 
     
@@ -256,6 +261,61 @@ public with sharing class CreateGoogleDoc {
         return requests;
     }
 
+    public static void getPDF(String googleDocId) {
+        String endpoint = 'https://www.googleapis.com/drive/v3/files/'+googleDocId+'/export';
+        AuthProviderSettings__c authProvider = AuthProviderSettings__c.getInstance();
+
+        Map<String, String> params = new Map<String, String>();
+        params.put('mimeType','application/pdf');
+        String paramString = '';
+
+        for (String key : params.keySet()) {
+            if (!String.isEmpty(paramString)) {
+                paramString += '&';
+            }
+            paramString += EncodingUtil.urlEncode(key, 'UTF-8') + '=' + EncodingUtil.urlEncode(params.get(key), 'UTF-8');
+        }
+
+        HttpRequest request = new HttpRequest();
+        request.setEndpoint(endpoint + '?'+paramString);
+        request.setMethod('GET');
+        request.setHeader('Authorization','Bearer '+authProvider.access_token__c);
+        Http http = new Http();
+        HttpResponse response = http.send(request);
+        System.debug('Response=>'+response);
+        System.debug('Body=>'+response.getBody());
+        if (response.getStatusCode() == 200) {
+            Attachment attachment = new Attachment(Name='Google.pdf',ParentId='003H4000006wabAIAQ',Body=response.getBodyAsBlob(),ContentType='application/pdf');
+            insert attachment;
+        } 
+    }
+
+
+    public static void deleteDoc(String googleDocId) {
+        String endpoint = 'https://www.googleapis.com/drive/v3/files/'+googleDocId;
+        AuthProviderSettings__c authProvider = AuthProviderSettings__c.getInstance();
+
+        Map<String, String> params = new Map<String, String>();
+        
+        String paramString = '';
+
+        for (String key : params.keySet()) {
+            if (!String.isEmpty(paramString)) {
+                paramString += '&';
+            }
+            paramString += EncodingUtil.urlEncode(key, 'UTF-8') + '=' + EncodingUtil.urlEncode(params.get(key), 'UTF-8');
+        }
+
+        HttpRequest request = new HttpRequest();
+        request.setEndpoint(endpoint + '?'+paramString);
+        request.setMethod('DELETE');
+        request.setHeader('Authorization','Bearer '+authProvider.access_token__c);
+        Http http = new Http();
+        HttpResponse response = http.send(request);
+        System.debug('Response=>'+response);
+        System.debug('Body=>'+response.getBody());
+        
+    }
 
 }
 
