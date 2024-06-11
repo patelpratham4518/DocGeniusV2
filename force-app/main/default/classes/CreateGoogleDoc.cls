@@ -184,7 +184,8 @@ public with sharing class CreateGoogleDoc {
                         if (positionedObjects.containsKey(positionedObjectId)) {
                             Map<String, Object> positionedObject = (Map<String, Object>) positionedObjects.get(positionedObjectId);
                             
-                            Object positionedObjectProperties = positionedObject.get('positionedObjectProperties');
+                            // Object positionedObjectProperties = positionedObject.get('positionedObjectProperties');
+                            Map<String, Object> positionedObjectProperties =(Map<String, Object>) positionedObject.get('positionedObjectProperties');
                             Object embeddedObject =  ((Map<String,Object>) JSON.deserializeUntyped(JSON.serialize(positionedObjectProperties))).get('embeddedObject');
                             Object imageProperties =  ((Map<String,Object>) JSON.deserializeUntyped(JSON.serialize(embeddedObject))).get('imageProperties');
                             String imageUrl = (String)  ((Map<String,Object>) JSON.deserializeUntyped(JSON.serialize(imageProperties))).get('contentUri');
@@ -211,7 +212,12 @@ public with sharing class CreateGoogleDoc {
                             requests.add(insertPositionedImageRequest);
                             System.debug('Image=>'+insertPositionedImageRequest);
                             currentIndex += 1; // Move the index forward
+                            
+
+                            
                         }
+
+                        
                     }
                 }
             } else if (elementMap.containsKey('positionedObjectElement')) {
@@ -252,3 +258,20 @@ public with sharing class CreateGoogleDoc {
 
 
 }
+
+
+
+ // Then update paragraph style to position the object
+                            // Map<String, Object> positionedObjectProperties = (Map<String, Object>) positionedObject.get('positionedObjectProperties');
+                            // Map<String, Object> updateParagraphStyleRequest = new Map<String, Object>{
+                            //     'updateParagraphStyle' => new Map<String, Object>{
+                            //         'range' => new Map<String, Object>{
+                            //             'startIndex' => currentIndex - 1,  // Positioning the previously inserted inline image
+                            //             'endIndex' => currentIndex
+                            //         },
+                            //         'paragraphStyle' => positionedObjectProperties.get('positioning'),
+                            //         'fields' => 'positioning'
+                            //     }
+                            // };
+
+                            // requests.add(updateParagraphStyleRequest);
