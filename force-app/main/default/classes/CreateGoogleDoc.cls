@@ -79,7 +79,7 @@ public with sharing class CreateGoogleDoc {
         
         String jsonBody = JSON.serialize(requestBody);
         
-        System.debug('Update doc jsonBody=>   '+jsonBody);
+        // System.debug('Update doc jsonBody=>   '+jsonBody);
     
         HttpRequest request = new HttpRequest();
         request.setEndpoint(endpoint);
@@ -90,8 +90,8 @@ public with sharing class CreateGoogleDoc {
 
         Http http = new Http();
         HttpResponse response = http.send(request);
-        // System.debug('Response ==>'+response);
-        // System.debug('Response body=>'+response.getBody());
+        System.debug('Response ==>'+response);
+        System.debug('Response body=>'+response.getBody());
     }
 
     public static void main() {
@@ -170,7 +170,7 @@ public with sharing class CreateGoogleDoc {
 
         for (Object element : bodyContent) {
             Map<String, Object> elementMap = (Map<String, Object>) element;
-            System.debug('Element Map=>'+elementMap.keySet());
+            
             if (elementMap.containsKey('paragraph')) {
                 Map<String, Object> paragraph = (Map<String, Object>) elementMap.get('paragraph');
                 List<Object> elements = (List<Object>) paragraph.get('elements');
@@ -244,14 +244,29 @@ public with sharing class CreateGoogleDoc {
 
                 // Handle positioned objects in the paragraph
                 if (paragraph.containsKey('positionedObjectIds')) {
-                    System.debug('positionedObjectIds=> '+paragraph.get('positionedObjectIds'));
-                    List<String> positionedObjectIds = (List<String>) paragraph.get('positionedObjectIds');
+                    // System.debug('positionedObjectIds=> '+paragraph.get('positionedObjectIds'));
+                    // List<String> positionedObjectIds = (List<String>) paragraph.get('positionedObjectIds');
+                    List<Object> positionedObjectIdsObject = (List<Object>) paragraph.get('positionedObjectIds');
+                    List<String> positionedObjectIds = new List<String>();
+                    
+                    for(object positionedObjectId : positionedObjectIdsObject){
+                        string po = String.valueOf(positionedObjectId);
+                        positionedObjectIds.add(po);
+
+                    }
                     for (String positionedObjectId : positionedObjectIds) {
                         if (positionedObjects.containsKey(positionedObjectId)) {
                             Map<String, Object> positionedObject = (Map<String, Object>) positionedObjects.get(positionedObjectId);
+                            
                             // String imageUrl = (String) ((Map<String, Object>) positionedObject.get('embeddedObject')).get('imageProperties').get('contentUri');
-                            String imageUrl = (String) ((Map<String,Object>) JSON.deserializeUntyped(JSON.serialize(((Map<String,Object>) JSON.deserializeUntyped(JSON.serialize(positionedObject.get('embeddedObject')))).get('imageProperties')))).get('contentUri');
-                            System.debug('Image url=>'+imageUrl);
+                            // String imageUrl = (String) ((Map<String,Object>) JSON.deserializeUntyped(JSON.serialize(((Map<String,Object>) JSON.deserializeUntyped(JSON.serialize(positionedObject.get('embeddedObject')))).get('imageProperties')))).get('contentUri');
+
+                            Object positionedObjectProperties = positionedObject.get('positionedObjectProperties');
+                            Object embeddedObject =  ((Map<String,Object>) JSON.deserializeUntyped(JSON.serialize(positionedObjectProperties))).get('embeddedObject');
+                            Object imageProperties =  ((Map<String,Object>) JSON.deserializeUntyped(JSON.serialize(embeddedObject))).get('imageProperties');
+                            String imageUrl = (String)  ((Map<String,Object>) JSON.deserializeUntyped(JSON.serialize(imageProperties))).get('contentUri');
+                            Map<String, Object> size =  (Map<String, Object>)  ((Map<String,Object>) JSON.deserializeUntyped(JSON.serialize(embeddedObject))).get('size');
+
 
                             Map<String, Object> insertPositionedImageRequest = new Map<String, Object>{
                                 'insertPositionedImage' => new Map<String, Object>{
@@ -262,20 +277,28 @@ public with sharing class CreateGoogleDoc {
                                     'objectSize' => new Map<String, Object>{
                                         // 'height' => ((Map<String, Object>) positionedObject.get('embeddedObject')).get('size').get('height'),
                                         // 'width' => ((Map<String, Object>) positionedObject.get('embeddedObject')).get('size').get('width')
-                                        'height' => ((Map<String,Object>) JSON.deserializeUntyped(JSON.serialize(((Map<String,Object>) JSON.deserializeUntyped(JSON.serialize(positionedObject.get('embeddedObject')))).get('size')))).get('height'),
-                                        'width' => ((Map<String,Object>) JSON.deserializeUntyped(JSON.serialize(((Map<String,Object>) JSON.deserializeUntyped(JSON.serialize(positionedObject.get('embeddedObject')))).get('size')))).get('width')
 
+
+                                        // 'height' => ((Map<String,Object>) JSON.deserializeUntyped(JSON.serialize(((Map<String,Object>) JSON.deserializeUntyped(JSON.serialize(positionedObject.get('embeddedObject')))).get('size')))).get('height'),
+                                        // 'width' => ((Map<String,Object>) JSON.deserializeUntyped(JSON.serialize(((Map<String,Object>) JSON.deserializeUntyped(JSON.serialize(positionedObject.get('embeddedObject')))).get('size')))).get('width')
+
+
+                                        'height' => size.get('height'),
+                                        'width' => size.get('width')
+
+                                        
                                     },
                                     'positionedObjectProperties' => positionedObject.get('positionedObjectProperties')
                                 }
                             };
                             requests.add(insertPositionedImageRequest);
+                            System.debug('Image=>'+insertPositionedImageRequest);
                             currentIndex += 1; // Move the index forward
                         }
                     }
                 }
             } else if (elementMap.containsKey('positionedObjectElement')) {
-                System.debug('Positioned objects');
+                
                 // String positionedObjectId = (String) elementMap.get('positionedObjectElement').get('positionedObjectId');
                 String positionedObjectId = (String) ((Map<String,Object>) JSON.deserializeUntyped(JSON.serialize(elementMap.get('positionedObjectElement')))).get('positionedObjectId');
                 if (positionedObjects.containsKey(positionedObjectId)) {
