@@ -678,11 +678,12 @@ input:focus{
 
 /* ============ =============== DETAIl EDIT Section -- START -- ================= ================ */
 .templateDetails{
-  width: 100%;
+  /* width: 100%; */
+  width: 70%;
   min-width: 50%;
   height: 100%;
   padding-inline: 1rem;
-  border-right: 1px dashed black;
+  /* border-right: 1px dashed black; */
   overflow: auto;
 }
 
