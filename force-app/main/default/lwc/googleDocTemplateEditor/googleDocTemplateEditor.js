@@ -6,6 +6,7 @@ import saveTemplateData from '@salesforce/apex/GoogleDocTemplateEditorController
 import saveHTML from '@salesforce/apex/GoogleDocTemplateEditorController.saveHTML'
 import getTemplateName from '@salesforce/apex/GoogleDocTemplateEditorController.getTemplateName'
 import getLabel from '@salesforce/apex/GoogleDocTemplateEditorController.getLabel'
+import editTemplate from '@salesforce/apex/GoogleDocTemplateEditorController.editTemplate'
 import new_template_bg from '@salesforce/resourceUrl/new_template_bg';
 import leftBackground from '@salesforce/resourceUrl/leftBackground';
 import { NavigationMixin } from 'lightning/navigation';
@@ -261,7 +262,7 @@ export default class GoogleDocTemplateEditor extends NavigationMixin(LightningEl
 
 
     saveIframe(){
-        saveHTML({"templateId" : this.templateId,"templateRecord" : JSON.stringify(this.templateRecord)}).then(response=>{
+        saveHTML({"templateId" : this.templateId}).then(response=>{
             console.log("HTML saved ",response);
         }).catch(error=>{
             console.log("Error in save Iframe==> ",error);
@@ -383,19 +384,33 @@ export default class GoogleDocTemplateEditor extends NavigationMixin(LightningEl
             return Object.keys(this.templateRecord).length ? true : false;
        }
        handleEditDetail(event){
-        try {
-            const targetInput = event.currentTarget.dataset.name;
+            try {
+                const targetInput = event.currentTarget.dataset.name;
 
-            if(event.target.type != 'checkbox'){
-                this.templateRecord[targetInput] = event.target.value;
+                if(event.target.type != 'checkbox'){
+                    this.templateRecord[targetInput] = event.target.value;
+                }
+                else{
+                    console.log("Status=>"+event.target.checked);
+                    this.templateRecord[targetInput] = event.target.checked;
+                }
+            } catch (error) {
+                console.log('error in handleEditDetail : ', error.stack);
             }
-            else{
-                console.log("Status=>"+event.target.checked);
-                this.templateRecord[targetInput] = event.target.checked;
-            }
-        } catch (error) {
-            console.log('error in handleEditDetail : ', error.stack);
         }
-    }
+
+        editTemplateDetails(){
+            editTemplate({"templateRecord" : JSON.stringify(this.templateRecord)}).then(response=>{
+                console.log("Details Edited");
+            }).catch(error=>{
+                console.log("Error in editTemplateDetails==> ",error);
+            })
+        }
+
+        cancelEditTemplate(){
+            getTemplateName({templateId :this.templateId}).then(response=>{
+                this.templateRecord = response
+            })
+        }
     
 }

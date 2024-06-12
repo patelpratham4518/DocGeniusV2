@@ -181,10 +181,9 @@ public with sharing class GoogleDocTemplateEditorController {
     public static List<Template_Data__c> oldTemplateData;
     public static List<Template_Data__c> newTemplateData;
     @AuraEnabled
-    public static string saveHTML(String templateId,String templateRecord){
+    public static string saveHTML(String templateId){
         try {
-            Template__c template =(Template__c) JSON.deserialize(templateRecord,Template__c.class);
-            update template;
+            
 
             //logic for saving html
             oldTemplateData = [SELECT Google_Doc_Template_Id__c,Template__c,Value_Type__c,Order_No_Simple__c FROM Template_Data__c WHERE Template__c=:templateId ORDER BY Order_No_Simple__c];
@@ -255,6 +254,19 @@ public with sharing class GoogleDocTemplateEditorController {
             Log_Handler.store_Exception(e,'GoogleDriveTemplatesController','getLabel');
             return null;
         }
+    }
+
+    @AuraEnabled
+    public static void editTemplate(String templateRecord){
+        
+            try {
+                Template__c template =(Template__c) JSON.deserialize(templateRecord,Template__c.class);
+                update template;
+            } catch (Exception e) {
+                System.debug('Error In editTemplate ==> '+e.getMessage());
+                Log_Handler.store_Exception(e,'GoogleDriveTemplatesController','editTemplate');
+            }
+       
     }
 
     

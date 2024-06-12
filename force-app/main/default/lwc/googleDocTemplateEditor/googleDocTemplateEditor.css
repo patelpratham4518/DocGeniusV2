@@ -674,6 +674,8 @@ input:focus{
   border: 1px solid #9ee0ff;
   border-radius: 6px;
   padding: 1rem;
+  overflow: auto;
+
 }
 
 /* ============ =============== DETAIl EDIT Section -- START -- ================= ================ */
@@ -684,7 +686,7 @@ input:focus{
   height: 100%;
   padding-inline: 1rem;
   /* border-right: 1px dashed black; */
-  overflow: auto;
+  /* overflow: auto; */
 }
 
 .detailHeader {
