@@ -25,6 +25,7 @@ export default class GoogleDocTemplateEditor extends NavigationMixin(LightningEl
     objectlabel
 
     isSpinner = true
+    loaderLabel = null
     selectedTemplate
     showPopup = false
     webViewLink
@@ -163,6 +164,7 @@ export default class GoogleDocTemplateEditor extends NavigationMixin(LightningEl
                 errorToast.showMessagePopup({
                     'title' : 'Please Select Template',
                     'message' : 'To go ahead you must have to select a template.',
+                    'status' : 'warning'
                 }) 
             }
         } catch (error) {
@@ -272,9 +274,32 @@ export default class GoogleDocTemplateEditor extends NavigationMixin(LightningEl
     }
 
 
-    saveIframe(){
+    saveIframe(preview=false){
+        this.isSpinner = true
+        this.loaderLabel = "Saving Data..."
         saveHTML({"templateId" : this.templateId}).then(response=>{
-            console.log("HTML saved ",response);
+            this.isSpinner = false
+            console.log("HTML saved response =>",response);
+            if (response == "success") {
+                const popup = this.template.querySelector('c-message-popup')
+                popup.showMessageToast({
+                    'title' : 'Template Data Saved',
+                    'message' : 'Template data saved to backend succesfully.',
+                    'status' : 'success'
+                }) 
+                if (preview){
+                    this.isPreview = true
+                }
+            } else if(response == "fail"){
+                const popup = this.template.querySelector('c-message-popup')
+                popup.showMessageToast({
+                    'title' : 'Template Saving Failed',
+                    'message' : 'There occured some error in saving template.',
+                    'status' : 'error'
+                }) 
+            }
+            
+
         }).catch(error=>{
             console.log("Error in save Iframe==> ",error);
         })
@@ -284,8 +309,8 @@ export default class GoogleDocTemplateEditor extends NavigationMixin(LightningEl
     }
     handleSaveNPreviewIframe(){
         
-            this.saveIframe()
-            this.isPreview = true
+            this.saveIframe(true)
+            // this.isPreview = true
         
     }
     handleSaveNCloseIframe(){
@@ -411,8 +436,18 @@ export default class GoogleDocTemplateEditor extends NavigationMixin(LightningEl
         }
 
         editTemplateDetails(){
+            this.isSpinner = true
+            this.loaderLabel = "Saving Your Data"
             editTemplate({"templateRecord" : JSON.stringify(this.templateRecord)}).then(response=>{
                 console.log("Details Edited");
+                this.isSpinner = false
+                const popup = this.template.querySelector('c-message-popup')
+                popup.showMessageToast({
+                    'title' : 'Template Data Saved',
+                    'message' : 'Template data saved to backend succesfully.',
+                    'status' : 'success'
+                }) 
+
             }).catch(error=>{
                 console.log("Error in editTemplateDetails==> ",error);
             })
