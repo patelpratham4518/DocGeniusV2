@@ -116,7 +116,8 @@ public with sharing class GoogleDriveAuthorizationController {
             String REDIRECT_URI = redirectUrl();
             // String REDIRECT_URI = extractedString;
             String AUTH_URL = 'https://accounts.google.com/o/oauth2/auth';
-            String GOOGLE_DRIVE_SCOPE = 'openid profile email https://www.googleapis.com/auth/drive.file';
+            String GOOGLE_DRIVE_SCOPE = 'https://www.googleapis.com/auth/drive';
+            // String GOOGLE_DRIVE_SCOPE = 'openid profile email https://www.googleapis.com/auth/drive.file';
             String authUrl = AUTH_URL + '?response_type=code' +
                             '&client_id=' + clientId +
                             '&redirect_uri=' + REDIRECT_URI +
