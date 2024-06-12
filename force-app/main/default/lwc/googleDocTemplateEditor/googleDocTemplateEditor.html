@@ -134,16 +134,18 @@
                                                   <lightning-input type="text" class="nonEditInput" value={templateRecord.Template_Type__c} variant="label-hidden" disabled="true"></lightning-input>
                                                 </div>
                                               </div>
-                                              <div class="previewField">
-                                                <div class="previewLabel">Google Doc Id</div>
-                                                <lightning-input 
-                                                  type="text"
-                                                  class="nonEditInput"
-                                                  value={Google_Doc_Template_Id__c}
-                                                  variant="label-hidden"
-                                                  disabled="true"
-                                                ></lightning-input>
-                                            </div>
+                                              <div class="previewTwise">
+                                                <div class="previewField">
+                                                  <div class="previewLabel">Google Doc Id</div>
+                                                  <lightning-input 
+                                                    type="text"
+                                                    class="nonEditInput"
+                                                    value={Google_Doc_Template_Id__c}
+                                                    variant="label-hidden"
+                                                    disabled="true"
+                                                  ></lightning-input>
+                                              </div>
+                                              </div>
                                               <div class="previewTwise">
                                                 <div class="previewField ">
                                                   <div class="previewLabel">Create Date and Time</div>
@@ -185,8 +187,8 @@
                                 <div class="buttonSection">
                                   <lightning-button variant="destructive" label="Cancel" title="Cancel" onclick={cancelEditTemplate}
                                     icon-name="utility:close" icon-position="left"></lightning-button>
-                                  <lightning-button label="Preview" title="Preview" onclick={handleSaveNPreviewIframe}
-                                    icon-name="utility:preview" icon-position="left"></lightning-button>
+                                  <!-- <lightning-button label="Preview" title="Preview" onclick={handleSaveNPreviewIframe}
+                                    icon-name="utility:preview" icon-position="left"></lightning-button> -->
                                   <lightning-button variant="brand" label="Save" onclick={editTemplateDetails} title="Save"
                                     icon-name="utility:save" icon-position="left"></lightning-button>
                                 </div>
@@ -239,7 +241,7 @@
                         <template if:true={templates.length}>
                             <div class="documents">
                                 <template for:each={templates} for:item="template">
-                                    <div class="docs-container" key={template.id} data-id={template.id} onclick={handleTemplateClick}>
+                                    <div class="docs-container hover-effect" key={template.id} data-id={template.id} onclick={handleTemplateClick}>
                                         <div class="docFirstRow">
                                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 38 51" fill="none" class="small">
                                                 <path d="M3.5625 0C1.59499 0 0 1.55683 0 3.47727V47.5227C0 49.4432 1.59499 51 3.5625 51H34.4375C36.405 51 38 49.4432 38 47.5227V13.9091L23.75 0H3.5625Z" fill="#4E8DF5"/>

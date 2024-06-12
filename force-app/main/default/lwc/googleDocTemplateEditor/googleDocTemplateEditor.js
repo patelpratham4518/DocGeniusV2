@@ -19,6 +19,7 @@ export default class GoogleDocTemplateEditor extends NavigationMixin(LightningEl
     @api templateId 
     @api objectName
     
+    
     @track templateRecord = {}
     
     objectlabel
@@ -39,16 +40,20 @@ export default class GoogleDocTemplateEditor extends NavigationMixin(LightningEl
     
     connectedCallback(){
         try {
+           
+            
             getLabel({objectName:this.objectName}).then(response=>{
                 this.objectlabel = response
             }).catch(error=>{
                 console.log("Error in get label=>",error);
             })
+
             this.getProfile()
             getTemplateName({templateId :this.templateId}).then(response=>{
                 this.templateRecord = response
                 
             })
+
             getTemplate({templateId :this.templateId}).then(response => {
                 if (response) {
                     response = JSON.parse(response)
@@ -75,6 +80,7 @@ export default class GoogleDocTemplateEditor extends NavigationMixin(LightningEl
                 console.log('Error ==> ',error);
             })
 
+           
           
         } catch (error) {
             console.error(error)
@@ -86,6 +92,7 @@ export default class GoogleDocTemplateEditor extends NavigationMixin(LightningEl
         try {
             this.template.host.style.setProperty('--background-image-url',`url(${this.templateBg})`);
             this.template.host.style.setProperty('--main-background-image-url',`url(${this.templateBgMain})`);
+            this.setActiveTab()
         } catch (error) {
             console.error(error)
         }
@@ -102,11 +109,14 @@ export default class GoogleDocTemplateEditor extends NavigationMixin(LightningEl
             let selected = this.template.querySelector('.selected')
             if (selected) {
                 selected.classList.remove("selected")
+                selected.classList.add("hover-effect") 
             }
             const templateId = event.currentTarget.dataset.id;
             this.selectedTemplate = this.templates.find(template => template.id === templateId);
             let template = event.currentTarget 
             template.classList.add("selected")
+            template.classList.remove("hover-effect") 
+            
         } catch (error) {
             console.error(error);
         }
@@ -144,6 +154,7 @@ export default class GoogleDocTemplateEditor extends NavigationMixin(LightningEl
         try {
             if (this.selectedTemplate) {
                 this.webViewLink = this.selectedTemplate.webViewLink
+                this.Google_Doc_Template_Id__c = this.selectedTemplate.id
                 this.closePopup()
                 this.isSpinner = true
                 this.save()

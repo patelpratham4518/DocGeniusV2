@@ -93,10 +93,10 @@ public with sharing class CreateGoogleDoc {
        
         List<Object> requests = formatContentForBatchUpdate(bodyContent,inlineObjects,positionedObjects);
         
-        // CreateGoogleDoc.updateDoc('1dE4SFFo0zw914ijVbIncCDwpz1_LSS8qHN2Dbjl8fOE',sourceDocContent,requests);
+        // CreateGoogleDoc.updateDoc('10MsBRbypmPhC_mhubaDNEXCLpRmXplFezzBdUVGc9Ic',sourceDocContent,requests);
         CreateGoogleDoc.updateDoc(docId,sourceDocContent,requests);
         getPDF(docId);
-        // deleteDoc(docId);
+        deleteDoc(docId);
     }
 
     // original     
