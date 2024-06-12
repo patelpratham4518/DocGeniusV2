@@ -14,7 +14,7 @@ public with sharing class CreateGoogleDoc {
             request.setHeader('Authorization','Bearer '+authProvider.access_token__c);
             Http http = new Http();
             HttpResponse response = http.send(request);
-            System.debug('Response ==>'+response.getBody());
+            // System.debug('Response ==>'+response.getBody());
             return response.getBody();
         } catch (Exception e) {
             System.debug('Error In get Docs ==> '+e.getMessage());
@@ -27,7 +27,7 @@ public with sharing class CreateGoogleDoc {
     }
 
     public static void createNewDoc(String title) {
-        System.debug('Create new doc');
+        // System.debug('Create new doc');
         try {
             String endpoint = 'https://docs.googleapis.com/v1/documents';
             AuthProviderSettings__c authProvider = AuthProviderSettings__c.getInstance();
@@ -150,7 +150,7 @@ public with sharing class CreateGoogleDoc {
                             Map<String, Object> inlineObject = (Map<String, Object>) inlineObjects.get(inlineObjectId);
                            
                             String imageUrl = (String) ((Map<String,Object>) JSON.deserializeUntyped(JSON.serialize(inlineObject.get('embeddedObject')))).get('contentUri');
-                            System.debug('Image URL==>'+imageUrl);
+                            // System.debug('Image URL==>'+imageUrl);
                             
                             Map<String, Object> insertInlineImageRequest = new Map<String, Object>{
                                 'insertInlineImage' => new Map<String, Object>{
@@ -215,7 +215,7 @@ public with sharing class CreateGoogleDoc {
                                 }
                             };
                             requests.add(insertPositionedImageRequest);
-                            System.debug('Image=>'+insertPositionedImageRequest);
+                            
                             currentIndex += 1; // Move the index forward
                             
 
@@ -233,7 +233,7 @@ public with sharing class CreateGoogleDoc {
                     Map<String, Object> positionedObject = (Map<String, Object>) positionedObjects.get(positionedObjectId);
                     
                     String imageUrl = (String) ((Map<String,Object>) JSON.deserializeUntyped(JSON.serialize(((Map<String,Object>) JSON.deserializeUntyped(JSON.serialize(positionedObject.get('embeddedObject')))).get('imageProperties')))).get('contentUri');
-                    System.debug('Image URL==>'+imageUrl);
+                    
                     
                     
                     Map<String, Object> insertPositionedImageRequest = new Map<String, Object>{
@@ -282,8 +282,8 @@ public with sharing class CreateGoogleDoc {
         request.setHeader('Authorization','Bearer '+authProvider.access_token__c);
         Http http = new Http();
         HttpResponse response = http.send(request);
-        System.debug('Response=>'+response);
-        System.debug('Body=>'+response.getBody());
+        // System.debug('Response=>'+response);
+        // System.debug('Body=>'+response.getBody());
         if (response.getStatusCode() == 200) {
             Attachment attachment = new Attachment(Name='Google.pdf',ParentId='003H4000006wabAIAQ',Body=response.getBodyAsBlob(),ContentType='application/pdf');
             insert attachment;
