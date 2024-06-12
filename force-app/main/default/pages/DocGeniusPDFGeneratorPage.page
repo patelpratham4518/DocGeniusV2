@@ -1,4 +1,4 @@
-<apex:page controller="DocGeniusPDFpageController" renderAs="{!renderAS}" contentType="{!contentType}" 
+<apex:page controller="DocGeniusPDFpageController"  contentType="{!contentType}" 
 		   applyHtmlTag="false" showHeader="false" cache="true" readOnly="true" title="{!recordName}" >
            
     <html>
