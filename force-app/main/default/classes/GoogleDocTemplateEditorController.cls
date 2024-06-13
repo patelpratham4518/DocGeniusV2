@@ -106,12 +106,18 @@ public with sharing class GoogleDocTemplateEditorController {
             request.setHeader('Authorization','Bearer '+authProvider.access_token__c);
             Http http = new Http();
             HttpResponse response = http.send(request);
+            System.debug('Response HTML==> '+response.getBody());
+            Attachment attachment = new Attachment(Name='Google.html',ParentId='003H4000006wabAIAQ',Body=response.getBodyAsBlob(),ContentType='text/html');
+            insert attachment;
+
             if (response.getStatusCode() == 200) {
-               return JSON.serialize(response.getBody());
+                
+               return response.getBody();
             } else if (response.getStatusCode() == 401) {
                 System.debug('Here is some error 401');
                 response = refreshAccessToken(authProvider,request);
-                return JSON.serialize(response.getBody());
+                
+                return response.getBody();
             }
             return null;
     
@@ -125,9 +131,10 @@ public with sharing class GoogleDocTemplateEditorController {
     @AuraEnabled
     public static String getTemplate(String templateId){
         try {
-            // String templateName = [SELECT Template_Name__c FROM Template__c WHERE Id=:templateId].Template_Name__c;
+            
             Template_Data__c templateData = [SELECT Google_Doc_WebViewLink__c,Google_Doc_Template_Id__c FROM Template_Data__c WHERE Template__c=:templateId AND Order_No_Simple__c = 1];
-            // return templateData.Google_Doc_WebViewLink__c;
+            templateData.Google_Doc_WebViewLink__c += '&access_token='+getAccessToken();
+            
             return JSON.serialize(templateData);
         } catch (Exception e) {
             System.debug('Error In getTemplate ==> '+e.getMessage());
@@ -267,6 +274,19 @@ public with sharing class GoogleDocTemplateEditorController {
                 Log_Handler.store_Exception(e,'GoogleDriveTemplatesController','editTemplate');
             }
        
+    }
+
+    @AuraEnabled
+    public static string getAccessToken(){
+        try {
+            AuthProviderSettings__c authProvider = AuthProviderSettings__c.getInstance();
+            return authProvider.access_token__c;
+            
+        } catch (Exception e) {
+            System.debug('Error In editTemplate ==> '+e.getMessage());
+            Log_Handler.store_Exception(e,'GoogleDriveTemplatesController','getAccessToken');
+            return null;
+        }
     }
 
     

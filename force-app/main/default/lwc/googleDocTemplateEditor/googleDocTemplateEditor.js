@@ -7,6 +7,7 @@ import saveHTML from '@salesforce/apex/GoogleDocTemplateEditorController.saveHTM
 import getTemplateName from '@salesforce/apex/GoogleDocTemplateEditorController.getTemplateName'
 import getLabel from '@salesforce/apex/GoogleDocTemplateEditorController.getLabel'
 import editTemplate from '@salesforce/apex/GoogleDocTemplateEditorController.editTemplate'
+// import getAccessToken from '@salesforce/apex/GoogleDocTemplateEditorController.getAccessToken'
 import new_template_bg from '@salesforce/resourceUrl/new_template_bg';
 import leftBackground from '@salesforce/resourceUrl/leftBackground';
 import { NavigationMixin } from 'lightning/navigation';
@@ -35,13 +36,20 @@ export default class GoogleDocTemplateEditor extends NavigationMixin(LightningEl
     @track profile
     templateBg = new_template_bg
     templateBgMain = leftBackground
+    // accessToken
 
     
     isPreview = false
     
     connectedCallback(){
         try {
-           
+
+            // getAccessToken().then(response=>{
+            //     this.accessToken = response
+            // }).catch(error=>{
+            //     console.log("Error in get access token=>"+error);
+            // })
+            
             
             getLabel({objectName:this.objectName}).then(response=>{
                 this.objectlabel = response
@@ -81,6 +89,8 @@ export default class GoogleDocTemplateEditor extends NavigationMixin(LightningEl
                 console.log('Error ==> ',error);
             })
 
+
+          
            
           
         } catch (error) {
@@ -94,6 +104,7 @@ export default class GoogleDocTemplateEditor extends NavigationMixin(LightningEl
             this.template.host.style.setProperty('--background-image-url',`url(${this.templateBg})`);
             this.template.host.style.setProperty('--main-background-image-url',`url(${this.templateBgMain})`);
             this.setActiveTab()
+
         } catch (error) {
             console.error(error)
         }
@@ -401,11 +412,7 @@ export default class GoogleDocTemplateEditor extends NavigationMixin(LightningEl
         }
         // ==== Active Tab Methods - END - ========
 
-        // on load start is not supported
-        // iframeLoadnig(){
-        //     console.log("Iframe loading");
-        //     this.isSpinner = true
-        // }
+        
 
         iframeLoaded(){
             console.log("Iframe loaded");
