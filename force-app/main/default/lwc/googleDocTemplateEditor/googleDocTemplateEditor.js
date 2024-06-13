@@ -164,7 +164,7 @@ export default class GoogleDocTemplateEditor extends NavigationMixin(LightningEl
                 errorToast.showMessagePopup({
                     'title' : 'Please Select Template',
                     'message' : 'To go ahead you must have to select a template.',
-                    'status' : 'warning'
+                    'status' : 'error'
                 }) 
             }
         } catch (error) {
