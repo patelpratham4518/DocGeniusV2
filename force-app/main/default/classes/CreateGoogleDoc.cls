@@ -472,7 +472,7 @@ public with sharing class CreateGoogleDoc {
             AuthProviderSettings__c authProvider = AuthProviderSettings__c.getInstance();
             Map<String, Object> requestBody = new Map<String, Object>();
 
-            requestBody.put('name', 'CopyRefresh');
+            requestBody.put('name', 'CopyGoogleDOC');
 
             String jsonBody = JSON.serialize(requestBody);
             HttpRequest request = new HttpRequest();
@@ -516,73 +516,123 @@ public with sharing class CreateGoogleDoc {
     }
 
     public static void main2() {
-        // String newDocId = copy('1Dga4sbG65SM8dDbEiA3yRfvTeGXmafOlb2J9B_Goy2Q');
-        // System.debug('New Doc Id ==>'+newDocId);
-        String newDocId = '1iOWZae4OtxwnOeAHZtKR1Dk2HG_eg6IZd0cKRAK7KXE';
+        String newDocId = copy('1Dga4sbG65SM8dDbEiA3yRfvTeGXmafOlb2J9B_Goy2Q');
         String sourceDocContent = getDocument(newDocId);
         String modifiedHTML = sourceDocContent;
         modifiedHTML = KeyMappingController.mappingObjFieldsData(modifiedHTML, '001H4000008UpuCIAS', 'Account');
         modifiedHTML = KeyMappingController.mappingGeneralFieldData(modifiedHTML);
         modifiedHTML = KeyMappingController.mappingMergeTemplate(modifiedHTML);
-        sourceDocContent = modifiedHTML;
+        
          
 
-        List<Object> bodyContent = (List<Object>) ((Map<String,Object>)JSON.deserializeUntyped(JSON.serialize(((Map<String,Object>) JSON.deserializeUntyped(sourceDocContent)).get('body')))).get('content');
+        List<Object> bodyContentNew = (List<Object>) ((Map<String,Object>)JSON.deserializeUntyped(JSON.serialize(((Map<String,Object>) JSON.deserializeUntyped(modifiedHTML)).get('body')))).get('content');
+        List<Object> bodyContentOriginal = (List<Object>) ((Map<String,Object>)JSON.deserializeUntyped(JSON.serialize(((Map<String,Object>) JSON.deserializeUntyped(sourceDocContent)).get('body')))).get('content');
       
         
        
-        List<Object> requests = formatContentForBatchUpdate(bodyContent);
+        List<Object> requests = formatContentForBatchUpdate(bodyContentNew,bodyContentOriginal);
         
         CreateGoogleDoc.updateDoc(newDocId,requests);
 
-        // getPDF(newDocId);
+        getPDF(newDocId);
+        // deleteDoc();
     }
 
-    public static List<Object> formatContentForBatchUpdate(List<Object> bodyContent) {
+    // public static List<Object> formatContentForBatchUpdate(List<Object> bodyContentNew,List<Object> bodyContentOriginal) {
+    //     List<Object> requests = new List<Object>();
+    
+    //     for (Object element : bodyContentNew) {
+    //         Map<String, Object> elementMap = (Map<String, Object>) element;
+    
+    //         if (elementMap.containsKey('paragraph')) {
+    //             Map<String, Object> paragraph = (Map<String, Object>) elementMap.get('paragraph');
+    //             List<Object> elements = (List<Object>) paragraph.get('elements');
+    
+    //             for (Object el : elements) {
+    //                 Map<String, Object> elMap = (Map<String, Object>) el;
+    //                 if (elMap.containsKey('textRun')) {
+    //                     Map<String, Object> textRun = (Map<String, Object>) elMap.get('textRun');
+    //                     if (textRun != null) {
+    //                         String text = (String) textRun.get('content');
+    //                         // System.debug('Text =>'+text);
+    //                         Map<String, Object> textStyle = (Map<String, Object>) textRun.get('textStyle');
+    
+    //                         // Create a replaceAllText request to replace the text
+    //                         Map<String, Object> replaceAllTextRequest = new Map<String, Object>{
+    //                             'replaceAllText' => new Map<String, Object>{
+    //                                 'containsText' => new Map<String, Object>{
+    //                                     'text' => text,
+    //                                     // 'text' => '{{#Name}}',
+    //                                     'matchCase' => true
+    //                                 },
+    //                                 'replaceText' => text
+    //                                 // 'replaceText' => 'Pratham'
+    //                             }
+    //                         };
+    
+    //                         requests.add(replaceAllTextRequest);
+                           
+    //                     }
+    //                 }
+    //             }
+    //         }
+    //     }
+    
+    //     return requests;
+    // }
+        
+    public static List<Object> formatContentForBatchUpdate(List<Object> bodyContentNew, List<Object> bodyContentOriginal) {
         List<Object> requests = new List<Object>();
     
-        for (Object element : bodyContent) {
-            Map<String, Object> elementMap = (Map<String, Object>) element;
+        Integer originalIndex = 0;
     
-            if (elementMap.containsKey('paragraph')) {
-                Map<String, Object> paragraph = (Map<String, Object>) elementMap.get('paragraph');
-                List<Object> elements = (List<Object>) paragraph.get('elements');
+        for (Object newElement : bodyContentNew) {
+            Map<String, Object> newElementMap = (Map<String, Object>) newElement;
+            Map<String, Object> originalElementMap = (Map<String, Object>) bodyContentOriginal[originalIndex];
+        
+            if (newElementMap.containsKey('paragraph') && originalElementMap.containsKey('paragraph')) {
+                Map<String, Object> newParagraph = (Map<String, Object>) newElementMap.get('paragraph');
+                Map<String, Object> originalParagraph = (Map<String, Object>) originalElementMap.get('paragraph');
+                List<Object> newElements = (List<Object>) newParagraph.get('elements');
+                List<Object> originalElements = (List<Object>) originalParagraph.get('elements');
     
-                for (Object el : elements) {
-                    Map<String, Object> elMap = (Map<String, Object>) el;
-                    if (elMap.containsKey('textRun')) {
-                        Map<String, Object> textRun = (Map<String, Object>) elMap.get('textRun');
-                        if (textRun != null) {
-                            String text = (String) textRun.get('content');
-                            // System.debug('Text =>'+text);
-                            Map<String, Object> textStyle = (Map<String, Object>) textRun.get('textStyle');
-    
+                for (Integer i = 0; i < newElements.size(); i++) {
+                    Map<String, Object> newElMap = (Map<String, Object>) newElements[i];
+                    Map<String, Object> originalElMap = (Map<String, Object>) originalElements[i];
+                    
+                    if (newElMap.containsKey('textRun') && originalElMap.containsKey('textRun')) {
+                        Map<String, Object> newTextRun = (Map<String, Object>) newElMap.get('textRun');
+                        Map<String, Object> originalTextRun = (Map<String, Object>) originalElMap.get('textRun');
+                        
+                        if (newTextRun != null && originalTextRun != null) {
+                            String newText = (String) newTextRun.get('content');
+                            String originalText = (String) originalTextRun.get('content');
+                            // System.debug('New Text => ' + newText);
+                            // System.debug('Original Text => ' + originalText);
+                            Map<String, Object> textStyle = (Map<String, Object>) newTextRun.get('textStyle');
+        
                             // Create a replaceAllText request to replace the text
                             Map<String, Object> replaceAllTextRequest = new Map<String, Object>{
                                 'replaceAllText' => new Map<String, Object>{
                                     'containsText' => new Map<String, Object>{
-                                        // 'text' => text,
-                                        'text' => '{{#Name}}',
+                                        'text' => originalText,
                                         'matchCase' => true
                                     },
-                                    // 'replaceText' => text
-                                    'replaceText' => 'Pratham'
+                                    'replaceText' => newText
                                 }
                             };
-    
+        
                             requests.add(replaceAllTextRequest);
-                           
+        
                         }
                     }
                 }
             }
+    
+            originalIndex++;
         }
     
         return requests;
     }
-  
     
-    
-    
-
 }

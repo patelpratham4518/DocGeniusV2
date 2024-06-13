@@ -133,7 +133,7 @@ public with sharing class GoogleDocTemplateEditorController {
         try {
             
             Template_Data__c templateData = [SELECT Google_Doc_WebViewLink__c,Google_Doc_Template_Id__c FROM Template_Data__c WHERE Template__c=:templateId AND Order_No_Simple__c = 1];
-            templateData.Google_Doc_WebViewLink__c += '&access_token='+getAccessToken();
+            // templateData.Google_Doc_WebViewLink__c += '&access_token='+getAccessToken();
             
             return JSON.serialize(templateData);
         } catch (Exception e) {
@@ -289,6 +289,45 @@ public with sharing class GoogleDocTemplateEditorController {
         }
     }
 
+    // @AuraEnabled
+    // public static String getPublicLink(String googleDocId,String revisionId) {
+    //     try {
+    //         String endpoint = 'https://www.googleapis.com/drive/v3/files/'+googleDocId+'/revisions/'+revisionId;
+    //         AuthProviderSettings__c authProvider = AuthProviderSettings__c.getInstance();
+
+    //         Map<String, Object> requestBody = new Map<String, Object>();
+    //         requestBody.put('publishAuto',true);
+    //         requestBody.put('published',true);
+    //         requestBody.put('publishedOutsideDomain',true);
+
+    //         HttpRequest request = new HttpRequest();
+    //         request.setEndpoint(endpoint);
+    //         request.setMethod('PATCH');
+    //         request.setHeader('Authorization','Bearer '+authProvider.access_token__c);
+    //         request.setHeader('Content-Type','application/json');
+    //         request.setBody(JSON.serialize(requestBody));
+    //         Http http = new Http();
+    //         HttpResponse response = http.send(request);
+    //         System.debug('Response ==>'+response);
+    //         System.debug('Response Public Link==> '+response.getBody());
+          
+
+    //         if (response.getStatusCode() == 200) {
+                
+    //            return response.getBody();
+    //         } else if (response.getStatusCode() == 401) {
+    //             System.debug('Here is some error 401');
+    //             response = refreshAccessToken(authProvider,request);
+                
+    //             return response.getBody();
+    //         }
+    //         return null;
     
+    //     } catch (Exception e) {
+    //         System.debug('Error In get PublicLink of  Docs ==> '+e.getMessage());
+    //         Log_Handler.store_Exception(e,'GoogleDriveTemplatesController','getPublicLink');
+    //         return null;
+    //     }
+    // }
 
 }
