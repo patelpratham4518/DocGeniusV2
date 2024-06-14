@@ -7,7 +7,6 @@ import saveHTML from '@salesforce/apex/GoogleDocTemplateEditorController.saveHTM
 import getTemplateName from '@salesforce/apex/GoogleDocTemplateEditorController.getTemplateName'
 import getLabel from '@salesforce/apex/GoogleDocTemplateEditorController.getLabel'
 import editTemplate from '@salesforce/apex/GoogleDocTemplateEditorController.editTemplate'
-// import getAccessToken from '@salesforce/apex/GoogleDocTemplateEditorController.getAccessToken'
 import new_template_bg from '@salesforce/resourceUrl/new_template_bg';
 import leftBackground from '@salesforce/resourceUrl/leftBackground';
 import { NavigationMixin } from 'lightning/navigation';
@@ -36,7 +35,7 @@ export default class GoogleDocTemplateEditor extends NavigationMixin(LightningEl
     @track profile
     templateBg = new_template_bg
     templateBgMain = leftBackground
-    // accessToken
+    
 
     
     isPreview = false
@@ -44,11 +43,7 @@ export default class GoogleDocTemplateEditor extends NavigationMixin(LightningEl
     connectedCallback(){
         try {
 
-            // getAccessToken().then(response=>{
-            //     this.accessToken = response
-            // }).catch(error=>{
-            //     console.log("Error in get access token=>"+error);
-            // })
+           
             
             
             getLabel({objectName:this.objectName}).then(response=>{
