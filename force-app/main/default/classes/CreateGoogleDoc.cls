@@ -14,7 +14,7 @@ public with sharing class CreateGoogleDoc {
             request.setHeader('Authorization','Bearer '+authProvider.access_token__c);
             Http http = new Http();
             HttpResponse response = http.send(request);
-            System.debug('Response ==>'+response.getBody());
+            // System.debug('Response ==>'+response.getBody());
             return response.getBody();
         } catch (Exception e) {
             System.debug('Error In get Docs ==> '+e.getMessage());
@@ -130,37 +130,120 @@ public with sharing class CreateGoogleDoc {
     }
 
     public static void main2() {
-        String newDocId = copy('1Dga4sbG65SM8dDbEiA3yRfvTeGXmafOlb2J9B_Goy2Q');
+        // String newDocId = copy('16orWcm4A2sQRwMBhUt1n0m02bPbBfj5HltmxtEkCFdA');
+        String newDocId = '1TGMkEO_bNGivqfHr7j75YEDhS5w7nj0rqWikZzg6woc';
         String sourceDocContent = getDocument(newDocId);
-        String modifiedHTML = sourceDocContent;
-        modifiedHTML = KeyMappingController.mappingObjFieldsData(modifiedHTML, '001H4000008UpuCIAS', 'Account');
-        modifiedHTML = KeyMappingController.mappingGeneralFieldData(modifiedHTML);
-        modifiedHTML = KeyMappingController.mappingMergeTemplate(modifiedHTML);
+
+        // String modifiedHTML = sourceDocContent;
+        // modifiedHTML = KeyMappingController.mappingObjFieldsData(modifiedHTML, '001H4000008UpuCIAS', 'Account');
+        // modifiedHTML = KeyMappingController.mappingGeneralFieldData(modifiedHTML);
+        // modifiedHTML = KeyMappingController.mappingMergeTemplate(modifiedHTML);
         
          
-        List<Object> bodyContentNew = (List<Object>) ((Map<String,Object>)JSON.deserializeUntyped(JSON.serialize(((Map<String,Object>) JSON.deserializeUntyped(modifiedHTML)).get('body')))).get('content');
+        // List<Object> bodyContentNew = (List<Object>) ((Map<String,Object>)JSON.deserializeUntyped(JSON.serialize(((Map<String,Object>) JSON.deserializeUntyped(modifiedHTML)).get('body')))).get('content');
         List<Object> bodyContentOriginal = (List<Object>) ((Map<String,Object>)JSON.deserializeUntyped(JSON.serialize(((Map<String,Object>) JSON.deserializeUntyped(sourceDocContent)).get('body')))).get('content');
       
-        List<Object> requests = formatContentForBatchUpdate(bodyContentNew,bodyContentOriginal);
+        // List<Object> requests = formatContentForBatchUpdate(bodyContentNew,bodyContentOriginal);
+        List<Object> requests = insertTabletext(bodyContentOriginal);
         
-        CreateGoogleDoc.updateDoc(newDocId,requests);
+        // CreateGoogleDoc.updateDoc(newDocId,requests);
 
-        Attachment attachment = getPDF(newDocId);
-        deleteDoc(newDocId);
-        insert attachment;
+        // Attachment attachment = getPDF(newDocId);
+        // deleteDoc(newDocId);
+        // insert attachment;
     }
 
     
+        // my code 
+    // public static List<Object> formatContentForBatchUpdate(List<Object> bodyContentNew, List<Object> bodyContentOriginal) {
+    //     List<Object> requests = new List<Object>();
+    //     List<Object> tableRequests = new List<Object>();
+
+    
+    //     Integer originalIndex = 0;
+    
+    //     for (Object newElement : bodyContentNew) {
+    //         Map<String, Object> newElementMap = (Map<String, Object>) newElement;
+    //         Map<String, Object> originalElementMap = (Map<String, Object>) bodyContentOriginal[originalIndex];
         
+    //         if (newElementMap.containsKey('paragraph') && originalElementMap.containsKey('paragraph')) {
+    //             Map<String, Object> newParagraph = (Map<String, Object>) newElementMap.get('paragraph');
+    //             Map<String, Object> originalParagraph = (Map<String, Object>) originalElementMap.get('paragraph');
+    //             List<Object> newElements = (List<Object>) newParagraph.get('elements');
+    //             List<Object> originalElements = (List<Object>) originalParagraph.get('elements');
+    
+    //             for (Integer i = 0; i < newElements.size(); i++) {
+    //                 Map<String, Object> newElMap = (Map<String, Object>) newElements[i];
+    //                 Map<String, Object> originalElMap = (Map<String, Object>) originalElements[i];
+                    
+    //                 if (newElMap.containsKey('textRun') && originalElMap.containsKey('textRun')) {
+    //                     Map<String, Object> newTextRun = (Map<String, Object>) newElMap.get('textRun');
+    //                     Map<String, Object> originalTextRun = (Map<String, Object>) originalElMap.get('textRun');
+                        
+    //                     if (newTextRun != null && originalTextRun != null) {
+    //                         String newText = (String) newTextRun.get('content');
+    //                         String originalText = (String) originalTextRun.get('content');
+    //                         // System.debug('New Text => ' + newText);
+    //                         // System.debug('Original Text => ' + originalText);
+    //                         Map<String, Object> textStyle = (Map<String, Object>) newTextRun.get('textStyle');
+        
+    //                         // Create a replaceAllText request to replace the text
+    //                         Map<String, Object> replaceAllTextRequest = new Map<String, Object>{
+    //                             'replaceAllText' => new Map<String, Object>{
+    //                                 'containsText' => new Map<String, Object>{
+    //                                     'text' => originalText,
+    //                                     'matchCase' => true
+    //                                 },
+    //                                 'replaceText' => newText
+    //                             }
+    //                         };
+        
+    //                         requests.add(replaceAllTextRequest);
+        
+    //                     }
+    //                 }
+    //             }
+    //         }else if (newElementMap.containsKey('table') && originalElementMap.containsKey('table')) {
+    //         //  Logic for table
+                
+    //            Map<String, Object>  table = (Map<String, Object>) originalElementMap.get('table');
+    //            Integer tableStartLocation = (Integer) table.get('startIndex');
+    //            List<Object>  tableRows = (List<Object>) table.get('tableRows');
+    //             System.debug('Second Row'+tableRows[1]);
+    //             Map<String, Object> insertTableRowRequest = new Map<String, Object>{
+    //                 'insertTableRow' => new Map<String,Object>{
+    //                     'tableCellLocation' => new Map<String,Object>{
+    //                         'tableStartLocation' => new Map<String,Object>{
+    //                             'index' => tableStartLocation
+    //                         },
+    //                         'rowIndex'=> 1, // The row index where the new row will be inserted
+    //                         'columnIndex'=> 0 // This is required but can be 0 for row insertion
+    //                     },
+    //                     'insertBelow'=> true 
+    //                 }
+    //             };
+    //             tableRequests.add(insertTableRowRequest);
+    //         // End table     
+    //         }
+           
+    //         originalIndex++;
+    //     }
+        
+    //     requests.addAll(tableRequests);
+    //     return requests;
+    // }
+
+    // chatgpt
     public static List<Object> formatContentForBatchUpdate(List<Object> bodyContentNew, List<Object> bodyContentOriginal) {
         List<Object> requests = new List<Object>();
+        List<Object> tableRequests = new List<Object>();
     
         Integer originalIndex = 0;
     
         for (Object newElement : bodyContentNew) {
             Map<String, Object> newElementMap = (Map<String, Object>) newElement;
             Map<String, Object> originalElementMap = (Map<String, Object>) bodyContentOriginal[originalIndex];
-        
+    
             if (newElementMap.containsKey('paragraph') && originalElementMap.containsKey('paragraph')) {
                 Map<String, Object> newParagraph = (Map<String, Object>) newElementMap.get('paragraph');
                 Map<String, Object> originalParagraph = (Map<String, Object>) originalElementMap.get('paragraph');
@@ -170,18 +253,16 @@ public with sharing class CreateGoogleDoc {
                 for (Integer i = 0; i < newElements.size(); i++) {
                     Map<String, Object> newElMap = (Map<String, Object>) newElements[i];
                     Map<String, Object> originalElMap = (Map<String, Object>) originalElements[i];
-                    
+    
                     if (newElMap.containsKey('textRun') && originalElMap.containsKey('textRun')) {
                         Map<String, Object> newTextRun = (Map<String, Object>) newElMap.get('textRun');
                         Map<String, Object> originalTextRun = (Map<String, Object>) originalElMap.get('textRun');
-                        
+    
                         if (newTextRun != null && originalTextRun != null) {
                             String newText = (String) newTextRun.get('content');
                             String originalText = (String) originalTextRun.get('content');
-                            // System.debug('New Text => ' + newText);
-                            // System.debug('Original Text => ' + originalText);
                             Map<String, Object> textStyle = (Map<String, Object>) newTextRun.get('textStyle');
-        
+    
                             // Create a replaceAllText request to replace the text
                             Map<String, Object> replaceAllTextRequest = new Map<String, Object>{
                                 'replaceAllText' => new Map<String, Object>{
@@ -192,18 +273,78 @@ public with sharing class CreateGoogleDoc {
                                     'replaceText' => newText
                                 }
                             };
-        
+    
                             requests.add(replaceAllTextRequest);
-        
                         }
                     }
                 }
+            } else if (newElementMap.containsKey('table') && originalElementMap.containsKey('table')) {
+                // Logic for table
+                Map<String, Object> newTable = (Map<String, Object>) newElementMap.get('table');
+                Map<String, Object> originalTable = (Map<String, Object>) originalElementMap.get('table');
+              
+                Integer tableStartLocation = (Integer) originalElementMap.get('startIndex');
+                System.debug('tableStartLocation=>'+tableStartLocation);
+                List<Object> originalTableRows = (List<Object>) originalTable.get('tableRows');
+                List<Object> newTableRows = (List<Object>) newTable.get('tableRows');
+    
+                // Assuming we want to clone the first row
+                Map<String, Object> firstRow = (Map<String, Object>) originalTableRows[0];
+                // System.debug('End of first row=>'+firstRow.get('endIndex'));
+                
+    
+                // Prepare a request to insert a new row below the first row
+                Map<String, Object> insertTableRowRequest = new Map<String, Object>{
+                    'insertTableRow' => new Map<String, Object>{
+                        'tableCellLocation' => new Map<String, Object>{
+                            'tableStartLocation' => new Map<String, Object>{
+                                'segmentId' => '',
+                                'index' => tableStartLocation
+                            },
+                            'rowIndex' => 1, // The row index where the new row will be inserted (0-based index)
+                            'columnIndex' => 0 // This is required but can be 0 for row insertion
+                        },
+                        'insertBelow' => true
+                    }
+                };
+                tableRequests.add(insertTableRowRequest);
+                // End table
             }
-            
+    
             originalIndex++;
         }
     
+        requests.addAll(tableRequests);
         return requests;
     }
+
+    public static List<Object> insertTabletext(List<Object> bodyContentOriginal) {
+        System.debug('Insert text in table');
+        List<Object> requests = new List<Object>();
+        
+    
+        Integer originalIndex = 0;
+    
+        for (Object element : bodyContentOriginal) {            
+            Map<String, Object> originalElementMap = (Map<String, Object>) bodyContentOriginal[originalIndex];
+            if (originalElementMap.containsKey('table')) {
+                Map<String, Object> originalTable = (Map<String, Object>) originalElementMap.get('table');
+                System.debug('Table=>'+originalTable);
+             
+                
+            }
+
+        }
+    
+
+        return requests;
+    }
+
+    
+
+    
+
+
+    
     
 }
