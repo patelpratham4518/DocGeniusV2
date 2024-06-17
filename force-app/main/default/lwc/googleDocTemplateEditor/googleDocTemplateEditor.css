@@ -330,7 +330,8 @@ iframe{
     /* height:10%; */
     width:10%;
 }
-.docName{
+/* original */
+/* .docName{
     font-family: Bahnschrift, 'Segoe UI', 'Segoe UI Web (West European)', -apple-system, BlinkMacSystemFont, Roboto, 'Helvetica Neue', sans-serif;
     font-size: 12px;
     font-weight: 500;
@@ -342,7 +343,30 @@ iframe{
     margin-left: 3%;
     display: flex;
     align-items: center;
+} */
+
+/* 2line */
+.docName {
+  font-family: Bahnschrift, 'Segoe UI', 'Segoe UI Web (West European)', -apple-system, BlinkMacSystemFont, Roboto, 'Helvetica Neue', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 13.2px;
+  text-align: left;
+  width: 88%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-left: 3%;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden; 
+  align-items: center;
 }
+
+
+
+
+
 
 .docSecondRow{
     background: #D9D9D980;
