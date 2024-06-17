@@ -434,20 +434,33 @@ input:focus{
     
 }
 .emptyIcon{
-    height: 25%;
-    width:25%;
+    height: 50%;
+   
 }
-.empty-text{
+
+.empty-text1{
     width:100%;
-    font-family: Bahnschrift, 'Segoe UI', 'Segoe UI Web (West European)', -apple-system, BlinkMacSystemFont, Roboto, 'Helvetica Neue', sans-serif;
-    font-size: xx-large;
     margin-top: 1%;
+    font-family: Bahnschrift, 'Segoe UI', 'Segoe UI Web (West European)', -apple-system, BlinkMacSystemFont, Roboto, 'Helvetica Neue', sans-serif;
+    /* font-family: Montserrat; */
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 25px;
+    text-align: center;
+    color:  #111824;
+
 }
 .empty-text2{
-    font-size: medium;
     margin-top: 1%;
     width:100%;
     font-family: Bahnschrift, 'Segoe UI', 'Segoe UI Web (West European)', -apple-system, BlinkMacSystemFont, Roboto, 'Helvetica Neue', sans-serif;
+    /* font-family: Montserrat; */
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 25px;
+    text-align: center;
+    color: #111824;
+
 
 }
 
