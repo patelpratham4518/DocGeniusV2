@@ -164,6 +164,8 @@ public with sharing class GoogleDocTemplateEditorController {
             Map<String, String> profile = new Map<String, String>();
             profile.put('username',authProvider.username__c);
             profile.put('email',authProvider.email__c);
+            profile.put('photolink',authProvider.photolink__c);
+
             return JSON.serialize(profile);
         } catch (Exception e) {
             return null;
