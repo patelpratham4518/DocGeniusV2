@@ -217,13 +217,7 @@
                         </div>
                     </div>
                     <div class="secondRow">
-                        <!-- <div class="search">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="searchIcon" viewBox="0 0 24 24" fill="none">
-                                <path d="M11 19C15.4183 19 19 15.4183 19 11C19 6.58172 15.4183 3 11 3C6.58172 3 3 6.58172 3 11C3 15.4183 6.58172 19 11 19Z" stroke="#ABB7C2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                <path d="M21 21L16.7 16.7" stroke="#ABB7C2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
-                            <input value={serachString} onkeyup={handleSearch}  placeholder="Search..." >
-                        </div> -->
+                  
                         <div class="seachContainer">
                           <svg class="iconSection" viewBox="0 0 44 44" fill="none">
                             <path d="M21 29C25.4183 29 29 25.4183 29 21C29 16.5817 25.4183 13 21 13C16.5817 13 13 16.5817 13 21C13 25.4183 16.5817 29 21 29Z" stroke="#ABB7C2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -404,8 +398,10 @@
                     </template>
  
                     <div class="footer">
-                        <div class="button cancel" onclick={cancel}>Cancel</div>
-                        <div class="button next" onclick={next}>Next</div>
+                        <!-- <div class="button cancel" onclick={cancel}>Cancel</div>
+                        <div class="button next" onclick={next} >Next</div> -->
+                        <button type="button" class="button cancel" onclick={cancel}>Cancel</button>
+                        <button type="button" class="button next" onclick={next} disabled>Next</button>
                     </div> 
                 </div>
             </div>

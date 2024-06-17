@@ -123,6 +123,11 @@ export default class GoogleDocTemplateEditor extends NavigationMixin(LightningEl
             let template = event.currentTarget 
             template.classList.add("selected")
             template.classList.remove("hover-effect") 
+
+           if (!selected) {
+                const next = this.template.querySelector('.next')
+                next.removeAttribute('disabled')
+           }
             
         } catch (error) {
             console.error(error);
@@ -159,20 +164,13 @@ export default class GoogleDocTemplateEditor extends NavigationMixin(LightningEl
 
     next(){
         try {
-            if (this.selectedTemplate) {
+
                 this.webViewLink = this.selectedTemplate.webViewLink
                 this.Google_Doc_Template_Id__c = this.selectedTemplate.id
                 this.closePopup()
                 this.isSpinner = true
                 this.save()
-            }else{
-                const errorToast = this.template.querySelector('c-message-popup')
-                errorToast.showMessagePopup({
-                    'title' : 'Please Select Template',
-                    'message' : 'To go ahead you must have to select a template.',
-                    'status' : 'error'
-                }) 
-            }
+        
         } catch (error) {
             console.error(error);
         }

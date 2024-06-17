@@ -258,14 +258,19 @@ iframe{
 }
 .button{
     height:2rem;
-    width:6rem;
+    width:7rem;
     border-radius: 6px;
-    font-size: 18px;
-    font-weight: 700;
+    /* font-size: 18px; */
+    font-size: 1rem;
     line-height: 20px;
     text-align: center;
     cursor: pointer;
-    padding-top: 0.6%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    /* border: none; */
+    border: 1px solid #00AEFF;
     font-family: Bahnschrift, 'Segoe UI', 'Segoe UI Web (West European)', -apple-system, BlinkMacSystemFont, Roboto, 'Helvetica Neue', sans-serif;
 }
 .cancel{
@@ -949,4 +954,11 @@ height: calc(100% - 2rem);
   font-size: 16px;
   color: rgb(46, 46, 46);
   margin-bottom: 0.5rem;
+}
+
+.button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+  background-color: #D3D3D3;
+  border: none;
 }
