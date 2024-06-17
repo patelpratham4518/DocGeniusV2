@@ -146,7 +146,7 @@ public with sharing class CreateGoogleDoc {
         // List<Object> requests = formatContentForBatchUpdate(bodyContentNew,bodyContentOriginal);
         List<Object> requests = insertTabletext(bodyContentOriginal);
         
-        // CreateGoogleDoc.updateDoc(newDocId,requests);
+        CreateGoogleDoc.updateDoc(newDocId,requests);
 
         // Attachment attachment = getPDF(newDocId);
         // deleteDoc(newDocId);
@@ -318,27 +318,54 @@ public with sharing class CreateGoogleDoc {
         return requests;
     }
 
+
+    
     public static List<Object> insertTabletext(List<Object> bodyContentOriginal) {
         System.debug('Insert text in table');
         List<Object> requests = new List<Object>();
-        
     
-        Integer originalIndex = 0;
-    
-        for (Object element : bodyContentOriginal) {            
-            Map<String, Object> originalElementMap = (Map<String, Object>) bodyContentOriginal[originalIndex];
+        for (Object originalElement : bodyContentOriginal) {
+            Map<String, Object> originalElementMap = (Map<String, Object>) originalElement;
             if (originalElementMap.containsKey('table')) {
                 Map<String, Object> originalTable = (Map<String, Object>) originalElementMap.get('table');
-                System.debug('Table=>'+originalTable);
-             
-                
+                Integer tableStartLocation = (Integer) originalElementMap.get('startIndex');
+                List<Object> originalTableRows = (List<Object>) originalTable.get('tableRows');
+                Map<String, Object> thirdRow = (Map<String, Object>) originalTableRows[2];
+                List<Object> tableCells = (List<Object>) thirdRow.get('tableCells');
+    
+                // Adjusting for the insertion index
+                Integer insertionOffset = 0;
+                for (Object tableCell : tableCells) {
+                    Map<String, Object> tableCellMap = (Map<String, Object>) tableCell;
+                    Integer tableCellStartIndex = (Integer) tableCellMap.get('startIndex') + insertionOffset;
+    
+                    // Create the insertText request
+                    Map<String, Object> insertTextRequest = new Map<String, Object>{
+                        'insertText' => new Map<String, Object>{
+                            'text' => 'Pratham',
+                            'location' => new Map<String, Object>{
+                                'segmentId' => '',
+                                'index' => tableCellStartIndex + 1
+                            }
+                        }
+                    };
+    
+                    requests.add(insertTextRequest);
+                    System.debug('Insert Request => ' + insertTextRequest);
+    
+                    // Update the insertion offset
+                    insertionOffset += 'Pratham'.length();
+                }
+    
+                System.debug('Third Row => ' + thirdRow);
             }
-
         }
     
-
         return requests;
     }
+    
+    
+    
 
     
 
