@@ -58,10 +58,10 @@
                 </div>
               </div>
             
-            <!-- <template if:false={isSpinner}> -->
+       
             <template lwc:if={webViewLink}>
                 <template if:false={showPopup}>
-                    <!-- <template if:true={contentTab}> -->
+                    
                             <div class="main">
                             <template lwc:if={webViewLink}>
                                 <iframe src={webViewLink} onloadstart={iframeLoadnig} onload={iframeLoaded}></iframe>
@@ -78,8 +78,7 @@
                               onclose={handleSaveNCloseIframe} 
                               ontogglemapping={showHideMappingContainer}></c-key-mapping-container>
                             </div>
-                        <!-- </template> -->
-                    <!-- <template if:true={basicTab}> -->
+                      
                         <div class="basicTab" >
 
                             <div class="desicionContainer updateDeatilContainer">

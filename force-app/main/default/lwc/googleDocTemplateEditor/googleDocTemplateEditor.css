@@ -64,7 +64,6 @@ iframe{
      top: 0px;
      left: 0px;
      margin-left: -0.75rem;
-     /* margin-top: -0.75rem; */
      z-index: 9999;
      display: flex;
      justify-content: center;
@@ -191,7 +190,6 @@ iframe{
       }
       .iconSection{      
         height: 100%;
-        /* width: 10%; */
         width: 15%;
         transition: all linear 0.4s;
       }
@@ -260,7 +258,6 @@ iframe{
     height:2rem;
     width:7rem;
     border-radius: 6px;
-    /* font-size: 18px; */
     font-size: 1rem;
     line-height: 20px;
     text-align: center;
@@ -269,7 +266,6 @@ iframe{
     justify-content: center;
     align-items: center;
 
-    /* border: none; */
     border: 1px solid #00AEFF;
     font-family: Bahnschrift, 'Segoe UI', 'Segoe UI Web (West European)', -apple-system, BlinkMacSystemFont, Roboto, 'Helvetica Neue', sans-serif;
 }
@@ -284,9 +280,7 @@ iframe{
     margin-left:0.5rem;
     background: #00AEFF;
     box-shadow: 0px 3px 12px 0px #4A3AFF2E;
-
 }
-
 
 .documents{
     
@@ -308,7 +302,6 @@ iframe{
 }
 .docs-container{
     border-radius: 6px;
-    
     height: 11rem;
     width:95%;    
     background: #FFFFFF;
@@ -322,12 +315,10 @@ iframe{
     margin: 5%;
     display: flex;
     flex-direction: row;
-    /* height: 10%; */
     height: 15%;
 }
 .small{
     height:100%;
-    /* height:10%; */
     width:10%;
 }
 /* original */
@@ -372,11 +363,6 @@ iframe{
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
 }
-
-
-
-
-
 
 
 .docSecondRow{
@@ -557,17 +543,17 @@ input:focus{
       /* ---- TAB SECTION CSS --- START ---- */
       .tabSection{
         width: calc(100% - 2rem);
-        /* width: calc(100% - 1.4rem); */
+        
         height: 2rem;
         display: flex;
         justify-content: start;
         align-items: center;
         padding-left: 1rem;
         background: linear-gradient(269.86deg, rgb(173 229 255) 0%, rgb(174 255 233) 100%);
-        /* box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px; */
+        
         position: relative;
         margin-inline: auto;
-        /* margin-top: 0.5rem; */
+        
         border-top-left-radius: 6px;
         border-top-right-radius: 6px;
         border-bottom: 1px solid #51c7ff;
@@ -575,14 +561,14 @@ input:focus{
      
       .tabSection_sub{
         width: fit-content;
-        /* background: white; */
+        
         height: 100%;
         display: flex;
         justify-content: flex-start;
         align-items: center;
         position: relative;
         z-index: 10;
-        /* border-bottom: 1px solid #00aeff; */
+        
       }
       .tabSection_sub:last-child{
         flex-grow: 1;
@@ -617,16 +603,16 @@ input:focus{
         transition: all linear 0.2s;
         
         &:hover{
-          /* border-radius: 16px; */
+          
           color: black;
           background: linear-gradient(0deg, #00aeff27 0%, transparent 117%);
-          /* background: linear-gradient(0deg, rgba(0, 174, 255, 0.106) 0%, rgba(0, 255, 187, 0.106) 100%); */
+          
         }
       }
       .activeT{
         background: linear-gradient(0deg, #00aeff27 0%, transparent 117%);
         color: black;
-        /* color: #06aeff; */
+        
       }
       .tab svg{
         width: 16px;
@@ -643,7 +629,7 @@ input:focus{
         left: 0px;
         position: absolute;
         background: linear-gradient(0deg, #00aeff 3%, #00aeff3b 0%, transparent 117%);
-        /* background: linear-gradient(0deg, #00aeff 3%, rgb(0 174 255 / 17%) 0%, rgb(0 255 186 / 20%) 100%); */
+        
         border-bottom: 1px solid #00aeff;
         transition: all linear 0.2s;
       }
@@ -657,13 +643,13 @@ input:focus{
         display: none;
       }
       .templateName{
-        /* flex-grow: 1; */
+        
         display: flex;
         align-items: center;
         justify-content: flex-end;
         gap: 0.75rem;
         margin-right: 1rem;
-        /* height: 100%; */
+        
         padding: 1px 1rem;
         border-radius: 6px;
         margin-left: auto;
@@ -699,11 +685,7 @@ input:focus{
 
 
 .basicTab{
-  /* height: calc(100% - 4rem);
-  margin: 1rem;
-  background-color:#FFFFFF; */
-  /* border: 1px solid rgb(210, 208, 206); */
-  /* border-radius: 6px; */
+
   display: none;
   height: 100%;
 }
@@ -711,19 +693,14 @@ input:focus{
 .updateDeatilContainer{
   height: calc(100% - 4rem);
   width: calc(100% - 2rem);
-  /* height : calc(100% - var(--toolbar_height) - 1.5rem); */
+  
   overflow: hidden;
   transition: all linear 0.5s;
   padding : 1rem;
   margin-top: 0.5rem;
 }
 
-/* .basicDetails{
-  flex-grow: 1;
-  padding: 1rem;
-  padding-top: 0rem;
-  width: 100%;
-} */
+
 
 
 .buttonSection{
@@ -737,7 +714,7 @@ input:focus{
   box-shadow: 0px 0px 11px 0px #00000040;
   border-radius: 6px;
   width: calc(100% - 2rem);
-  /* margin: 1rem; */
+  
   min-height: 3.25rem;
   max-height: 5rem;
   transition: all linear 0.5s;
@@ -777,13 +754,12 @@ input:focus{
 
 /* ============ =============== DETAIl EDIT Section -- START -- ================= ================ */
 .templateDetails{
-  /* width: 100%; */
+  
   width: 70%;
   min-width: 50%;
   height: 100%;
   padding-inline: 1rem;
-  /* border-right: 1px dashed black; */
-  /* overflow: auto; */
+ 
 }
 
 .detailHeader {
@@ -865,7 +841,7 @@ input:focus{
       height: 1.75rem;
       padding: 0.25rem;
       border-radius: 32px;
-      /* background-color: #FF310B; */
+      
       background-color: #adadad;
       transition: 0.4s cubic-bezier(0.18, 0.89, 0.35, 1.15) all;
       cursor: pointer;
