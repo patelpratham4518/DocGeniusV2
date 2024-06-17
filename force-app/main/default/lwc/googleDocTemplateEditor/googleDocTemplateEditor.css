@@ -172,19 +172,62 @@ iframe{
     margin-top:2%;
     align-items: center;
 }
-.search{
-    background: #FFFFFF;
-    box-shadow: 0px 0px 25px 0px #00000033;
-    font-family: Poppins;
-    font-size: 12px;
-    font-weight: 400;
-    line-height: 27px;
-    text-align: left;
-    border-radius: 6px;
-    width:35%;
-    height:100%;
-    margin-left:1%;
-}
+ /* ----- ------- ------- ------ ------ ------ ------ ------ -------  */
+      /* ----- ------ ------- ------- --- Search Section --------------- ------- ---------- */
+     
+    
+      .seachContainer{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0.5rem;
+      background: white;
+      border-radius: 0.5rem;
+      box-shadow: 0px 0px 15px 0px #00000033;
+      padding-inline: .5rem;
+      width:35%;
+      height:100%;
+      margin-left:1%;
+      }
+      .iconSection{      
+        height: 100%;
+        /* width: 10%; */
+        width: 15%;
+        transition: all linear 0.4s;
+      }
+      .iconSection path{
+        stroke: #ABB7C2;
+      }
+      .searchInput{
+        width: 100%;
+      
+        max-width: 100%;
+        height: 100%;
+        border: none;
+        flex-grow: 1;
+        transition: all linear 0.4s;
+
+      }
+      .searchInput::placeholder{
+        font-size: 18px;
+        color: #ABB7C2;
+        font-family: Poppins;
+        line-height: 26px;
+      }
+      .searchInput:focus-visible{
+        outline: none;
+        border: none;
+      }
+      .seachContainer .searchInput:focus-visible {
+        box-shadow: none;
+      }
+      
+      /* ----- ------ ------- ------- --- Search END Section --------------- ------- ---------- */
+  
+  /* ===== ===== ========== ===== ===== ========== ===== ===== ========== ===== ===== ==========  */
+
+
+
 .refresh-div{
     height: 100%;
     width:10%;
@@ -202,19 +245,7 @@ iframe{
     width:90%;
 }
 
-input{
-    border: none;
-    height: 100%;
-    width:80%;
-    font-family: Bahnschrift, 'Segoe UI', 'Segoe UI Web (West European)', -apple-system, BlinkMacSystemFont, Roboto, 'Helvetica Neue', sans-serif;
-    font:caption;
-}
 
-.searchIcon{
-    margin: 1%;
-    height: 60%;
-    width:10%;
-}
 
 .footer{
     height: 8%;

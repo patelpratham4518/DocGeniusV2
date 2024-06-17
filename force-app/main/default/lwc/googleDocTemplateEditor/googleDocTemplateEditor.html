@@ -214,19 +214,22 @@
                                 <div class="email">{profile.email}</div>
                             </div>
                             <img src={profile.photolink} alt="" srcset="" class="profileIcon">
-                            <!-- <svg xmlns="http://www.w3.org/2000/svg" class="profileIcon" viewBox="0 0 32 32" fill="none">
-                                <rect width="32" height="32" rx="16" fill="#00AEFF"/>
-                                <path fill-rule="evenodd" clip-rule="evenodd" d="M23 20.9584V21.6C23 22.3584 22.3583 23 21.6 23H10.4C9.64167 23 9 22.3584 9 21.6V20.9584C9 19.2667 10.9833 18.2167 12.85 17.4L13.025 17.3125C13.1708 17.2542 13.3167 17.2542 13.4625 17.3417C14.2208 17.8375 15.0667 18.1 15.9708 18.1C16.875 18.1 17.75 17.8084 18.4792 17.3417C18.625 17.2542 18.7708 17.2542 18.9167 17.3125L19.0917 17.4C21.0167 18.2167 23 19.2375 23 20.9584ZM16.0001 9C17.9251 9 19.4709 10.7208 19.4709 12.85C19.4709 14.9792 17.9251 16.7 16.0001 16.7C14.0751 16.7 12.5293 14.9792 12.5293 12.85C12.5293 10.7208 14.0751 9 16.0001 9Z" fill="white"/>
-                            </svg> -->
                         </div>
                     </div>
                     <div class="secondRow">
-                        <div class="search">
+                        <!-- <div class="search">
                             <svg xmlns="http://www.w3.org/2000/svg" class="searchIcon" viewBox="0 0 24 24" fill="none">
                                 <path d="M11 19C15.4183 19 19 15.4183 19 11C19 6.58172 15.4183 3 11 3C6.58172 3 3 6.58172 3 11C3 15.4183 6.58172 19 11 19Z" stroke="#ABB7C2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                                 <path d="M21 21L16.7 16.7" stroke="#ABB7C2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                             </svg>
                             <input value={serachString} onkeyup={handleSearch}  placeholder="Search..." >
+                        </div> -->
+                        <div class="seachContainer">
+                          <svg class="iconSection" viewBox="0 0 44 44" fill="none">
+                            <path d="M21 29C25.4183 29 29 25.4183 29 21C29 16.5817 25.4183 13 21 13C16.5817 13 13 16.5817 13 21C13 25.4183 16.5817 29 21 29Z" stroke="#ABB7C2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M31 31.0002L26.7 26.7002" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                          </svg>
+                          <input class="searchInput" placeholder="Search..." type="text" onkeyup={handleSearch} value={serachString}/>
                         </div>
                         <div class="refresh-div">
                             <svg xmlns="http://www.w3.org/2000/svg" class="refresh" onclick={refreshDocs} viewBox="0 0 87 24" fill="none">
