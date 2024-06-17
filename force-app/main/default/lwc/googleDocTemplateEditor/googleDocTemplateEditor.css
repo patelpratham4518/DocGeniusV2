@@ -405,6 +405,9 @@ input:focus{
         width: 40%;
         margin-left: 15%;
     }
+    .title{
+      font-size: 21px;
+    }
 }
 
 
