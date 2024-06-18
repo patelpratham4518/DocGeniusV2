@@ -344,17 +344,27 @@ export default class GoogleDocTemplateEditor extends NavigationMixin(LightningEl
 
         // ==== Toggle Tab Methods - START - ========
         activeTabName = "contentTab";
-        contentTab = true
-        basicTab = false
+        // contentTab = true
+        // basicTab = false
         activeTab(event){
             try {
-                let basicTab = this.template.querySelector(`.basicTab`).style
-                let mainStyle = this.template.querySelector(`.main`).style
+                
                 
                 if(event){
                     this.activeTabName = event.currentTarget.dataset.name;
                 }
                 this.setActiveTab();
+              
+            } catch (error) {
+                console.log('error in templateBuilder.activeTab : ', error.stack)
+            }
+        }
+    
+        setActiveTab(){
+            try {
+                //logic of changing tabs
+                let basicTab = this.template.querySelector(`.basicTab`).style
+                let mainStyle = this.template.querySelector(`.main`).style
                 if (this.activeTabName == "contentTab") {
                    
                     mainStyle.display = "flex"
@@ -364,13 +374,7 @@ export default class GoogleDocTemplateEditor extends NavigationMixin(LightningEl
                     basicTab.display = "block"
                     mainStyle.display = "none"
                 }
-            } catch (error) {
-                console.log('error in templateBuilder.activeTab : ', error.stack)
-            }
-        }
-    
-        setActiveTab(){
-            try {
+                //end of change tabs
                 console.log('activeTabName : ', this.activeTabName);
                 const activeTabBar = this.template.querySelector(`.activeTabBar`);
                 const tabS = this.template.querySelectorAll('.tab');
@@ -468,6 +472,9 @@ export default class GoogleDocTemplateEditor extends NavigationMixin(LightningEl
             getTemplateName({templateId :this.templateId}).then(response=>{
                 this.templateRecord = response
             })
+            this.activeTabName = "contentTab"
+            this.setActiveTab()
+
         }
     
 }

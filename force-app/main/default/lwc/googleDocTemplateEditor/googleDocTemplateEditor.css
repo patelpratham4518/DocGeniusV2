@@ -30,7 +30,8 @@ iframe{
     width:100%;
     margin: 0.5rem;
     border-radius: 6px;
-    border: 1px solid rgb(210, 208, 206);
+    /* border: 1px solid rgb(210, 208, 206); */
+    border: 1px solid #9ee0ff;
     margin-left: 1rem;
 
 }
@@ -494,7 +495,8 @@ input:focus{
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    border: 1px solid rgb(210, 208, 206);
+    /* border: 1px solid rgb(210, 208, 206); */
+    border: 1px solid #9ee0ff;
     border-radius: 6px;
     /* background: white; */
   }

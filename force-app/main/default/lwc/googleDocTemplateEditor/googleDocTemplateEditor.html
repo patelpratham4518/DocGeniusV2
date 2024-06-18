@@ -31,8 +31,8 @@
                     <div>Basic Details</div>
                   </div>
                  
-                  <div class="templateName">
-                    <div class="recordSVG" onclick={activeTab} data-name="basicTab">
+                  <div class="templateName" onclick={activeTab} data-name="basicTab">
+                    <div class="recordSVG" >
                       <svg viewBox="0 0 1024 1024">
                         <g stroke-width="0"></g>
                         <g stroke-linecap="round" stroke-linejoin="round"></g>
@@ -181,7 +181,7 @@
                                     icon-name="utility:close" icon-position="left"></lightning-button>
                                   <lightning-button variant="brand" label="Save" onclick={editTemplateDetails} title="Save"
                                     icon-name="utility:save" icon-position="left"></lightning-button> -->
-                                    <button type="button" class="button cancel" onclick={cancel}>Cancel</button>
+                                    <button type="button" class="button cancel" onclick={cancelEditTemplate}>Cancel</button>
                                     <button type="button" class="button next" onclick={editTemplateDetails}>Save</button>
                                 </div>
                               </div>
