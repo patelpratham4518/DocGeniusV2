@@ -649,7 +649,7 @@ input:focus{
         justify-content: flex-end;
         gap: 0.75rem;
         margin-right: 1rem;
-        
+        cursor: pointer;
         padding: 1px 1rem;
         border-radius: 6px;
         margin-left: auto;
@@ -755,11 +755,10 @@ input:focus{
 /* ============ =============== DETAIl EDIT Section -- START -- ================= ================ */
 .templateDetails{
   
-  width: 70%;
+  width: 100%;
   min-width: 50%;
   height: 100%;
   padding-inline: 1rem;
- 
 }
 
 .detailHeader {
