@@ -256,8 +256,10 @@ iframe{
     align-items: center;
 }
 .button{
-    height:2rem;
-    width:7rem;
+    /* height:2rem;
+    width:7rem; */
+    height: 2.5rem;
+    width: 10rem;
     border-radius: 6px;
     font-size: 1rem;
     line-height: 20px;
@@ -736,8 +738,8 @@ input:focus{
   
   width:100%;
   border-radius: 6px;
-  /* height: calc(100% - 4rem); */
-  height: calc(100% - 8rem);
+  height: calc(100% - 4rem);
+  /* height: calc(100% - 8rem); */
  
   padding: 1rem;
   padding-top: 0rem;
@@ -772,7 +774,7 @@ input:focus{
 .detailHeader {
     /* width: 100%; */
     text-align: center;
-    font-size: 25px;
+    font-size: 1rem;
     /* font-size: 16px; */
     /* color: rgb(46, 46, 46); */
     font-family: var(--fontFamily1);
@@ -782,8 +784,7 @@ input:focus{
     padding: 0.5rem;
     border-radius: 6px;
     color: #FFFF;
-    width: calc(100% - 6rem);
-    height: 4rem;
+    
     display: flex;
     justify-content: center;
     align-items: center;
@@ -933,6 +934,7 @@ input:focus{
 }
 .nonEditInput{
   width: 100%;
+  background-color: #f1f3f4;
   --lwc-heightInput: 2rem !important;
   --slds-g-color-neutral-base-95 : #70707014;   /* disable field background-color  */ 
   --slds-g-color-border-base-1 : #00000012;     /* disable field border-color  */ 
