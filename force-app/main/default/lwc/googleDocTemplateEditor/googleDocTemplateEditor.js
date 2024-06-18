@@ -468,7 +468,7 @@ export default class GoogleDocTemplateEditor extends NavigationMixin(LightningEl
 
         cancelEditTemplate(){
             this.template.querySelector('.next').removeAttribute('disabled')
-            this.template.querySelector(`.fieldInput[data-name="Template_Name__c"]`).classList.remove('error-border')
+            this.template.querySelector(`lightning-input[data-name="Template_Name__c"]`).classList.remove('error-border')
             getTemplateName({templateId :this.templateId}).then(response=>{
                 this.templateRecord = response
             })

@@ -89,16 +89,28 @@
                                           <div class="detailHeader">Template Basic Details</div>
                                           <div class="detailEditSection">
                                             <template lwc:if={showTempDetail}>
-                                              <div class="editName editField">
+                                              <div class="previewTwise">
+                                                <div class="previewField">
+                                                  <div class="previewLabel">Template Name</div>
+                                                  <lightning-input type="text"  value={templateRecord.Template_Name__c} variant="label-hidden" data-name="Template_Name__c" onkeyup={handleEditDetail} ></lightning-input>
+                                                </div>
+                                              </div>
+                                              <div class="previewTwise">
+                                                <div class="previewField">
+                                                  <div class="previewLabel">Description</div>
+                                                  <lightning-input type="text"  value={templateRecord.Description__c} variant="label-hidden" data-name="Description__c" onkeyup={handleEditDetail} ></lightning-input>
+                                                </div>
+                                              </div>
+                                              <!-- <div class="editName editField">
                                                 <div class="floatingLabel">Template Name</div>
                                               
                                                 <lightning-input type="text" class="fieldInput" value={templateRecord.Template_Name__c} variant="label-hidden" data-name="Template_Name__c" onkeyup={handleEditDetail} ></lightning-input>
-                                              </div>
-                                              <div class="editDescription editField">
+                                              </div> -->
+                                              <!-- <div class="editDescription editField">
                                                 <div class="floatingLabel">Description</div>
                                                 
                                                 <lightning-textarea class="descriptionInput" value={templateRecord.Description__c} variant="label-hidden" data-name="Description__c" onkeyup={handleEditDetail}></lightning-textarea>
-                                              </div>
+                                              </div> -->
                                               <div class="editStatus">
                                                 <span class="statusLabel">Status: </span>
                                                 <div class="tempToggle">
@@ -125,7 +137,6 @@
                                               <div class="previewTwise">
                                                 <div class="previewField">
                                                   <div class="previewLabel">Source Object</div>
-                                                 
                                                   <lightning-input type="text" class="nonEditInput" value={templateRecord.Object_API_Name__c} variant="label-hidden" disabled="true"></lightning-input>
                                                 </div>
                                                 <div class="previewField">

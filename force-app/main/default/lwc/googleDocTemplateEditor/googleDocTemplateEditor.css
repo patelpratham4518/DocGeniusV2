@@ -774,8 +774,8 @@ input:focus{
 .detailHeader {
     /* width: 100%; */
     text-align: center;
-    font-size: 1rem;
-    /* font-size: 16px; */
+    /* font-size: 1rem; */
+    font-size: 16px;
     /* color: rgb(46, 46, 46); */
     font-family: var(--fontFamily1);
     margin-bottom: 0.5rem;
@@ -784,7 +784,7 @@ input:focus{
     padding: 0.5rem;
     border-radius: 6px;
     color: #FFFF;
-    
+    font-weight: 700;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -933,10 +933,10 @@ input:focus{
   font-family: var(--fontFamily1);
 }
 .nonEditInput{
+
   width: 100%;
-  background-color: #f1f3f4;
   --lwc-heightInput: 2rem !important;
-  --slds-g-color-neutral-base-95 : #70707014;   /* disable field background-color  */ 
+  --slds-g-color-neutral-base-95 : #f1f3f4;  /* disable field background-color  */ 
   --slds-g-color-border-base-1 : #00000012;     /* disable field border-color  */ 
   --slds-g-color-neutral-base-50 : #747474;     /* disable field Text-color  */ 
 }
