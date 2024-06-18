@@ -432,9 +432,7 @@ export default class GoogleDocTemplateEditor extends NavigationMixin(LightningEl
                     }
                     else{
                         event.currentTarget.classList.remove("error-border")
-                        next.removeAttribute('disabled')
-
-                        
+                        next.removeAttribute('disabled')   
                     }
                 }
 
@@ -469,6 +467,8 @@ export default class GoogleDocTemplateEditor extends NavigationMixin(LightningEl
         }
 
         cancelEditTemplate(){
+            this.template.querySelector('.next').removeAttribute('disabled')
+            this.template.querySelector(`.fieldInput[data-name="Template_Name__c"]`).classList.remove('error-border')
             getTemplateName({templateId :this.templateId}).then(response=>{
                 this.templateRecord = response
             })
@@ -476,5 +476,7 @@ export default class GoogleDocTemplateEditor extends NavigationMixin(LightningEl
             this.setActiveTab()
 
         }
+
+       
     
 }
