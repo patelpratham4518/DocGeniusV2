@@ -45,7 +45,7 @@ public with sharing class GoogleDocTemplateEditorController {
            
         } catch (Exception e) {
             System.debug('Error In get all Docs ==> '+e.getMessage());
-            Log_Handler.store_Exception(e,'GoogleDriveTemplatesController','getAllDocs');
+            Log_Handler.store_Exception(e,'GoogleDocTemplateEditorController','getAllDocs');
             return null;
         }
     }
@@ -123,7 +123,7 @@ public with sharing class GoogleDocTemplateEditorController {
     
         } catch (Exception e) {
             System.debug('Error In get HTML of  Docs ==> '+e.getMessage());
-            Log_Handler.store_Exception(e,'GoogleDriveTemplatesController','getTemplateHTML');
+            Log_Handler.store_Exception(e,'GoogleDocTemplateEditorController','getTemplateHTML');
             return null;
         }
     }
@@ -138,7 +138,7 @@ public with sharing class GoogleDocTemplateEditorController {
             return JSON.serialize(templateData);
         } catch (Exception e) {
             System.debug('Error In getTemplate ==> '+e.getMessage());
-            Log_Handler.store_Exception(e,'GoogleDriveTemplatesController','getTemplate');
+            Log_Handler.store_Exception(e,'GoogleDocTemplateEditorController','getTemplate');
             return null;
         }
     }
@@ -151,7 +151,7 @@ public with sharing class GoogleDocTemplateEditorController {
             return template;
         } catch (Exception e) {
             System.debug('Error In getTemplateName ==> '+e.getMessage());
-            Log_Handler.store_Exception(e,'GoogleDriveTemplatesController','getTemplate');
+            Log_Handler.store_Exception(e,'GoogleDocTemplateEditorController','getTemplate');
             return null;   
         }
     }
@@ -168,6 +168,8 @@ public with sharing class GoogleDocTemplateEditorController {
 
             return JSON.serialize(profile);
         } catch (Exception e) {
+            System.debug('Error In getTemplateName ==> '+e.getMessage());
+            Log_Handler.store_Exception(e,'GoogleDocTemplateEditorController','getUsernameAndEmail');
             return null;
         }
     }
@@ -183,7 +185,7 @@ public with sharing class GoogleDocTemplateEditorController {
             insert templateData;
         } catch (Exception e) {
             System.debug('Error In saveTemplateData ==> '+e.getMessage());
-            Log_Handler.store_Exception(e,'GoogleDriveTemplatesController','saveTemplateData');
+            Log_Handler.store_Exception(e,'GoogleDocTemplateEditorController','saveTemplateData');
         }
     }
 
@@ -208,7 +210,7 @@ public with sharing class GoogleDocTemplateEditorController {
             return 'success';
         } catch (Exception e) {
             System.debug('Error In saveHTML ==> '+e.getMessage());
-            Log_Handler.store_Exception(e,'GoogleDriveTemplatesController','saveHTML');
+            Log_Handler.store_Exception(e,'GoogleDocTemplateEditorController','saveHTML');
             return 'fail';
         }
     }
@@ -242,7 +244,7 @@ public with sharing class GoogleDocTemplateEditorController {
             }
         } catch (Exception e) {
             System.debug('Error In divideAndSaveHTML ==> '+e.getMessage());
-            Log_Handler.store_Exception(e,'GoogleDriveTemplatesController','divideAndSaveHTML');
+            Log_Handler.store_Exception(e,'GoogleDocTemplateEditorController','divideAndSaveHTML');
         }
        
     }
@@ -260,7 +262,7 @@ public with sharing class GoogleDocTemplateEditorController {
             return objLabel;
         } catch (Exception e) {
             System.debug('Error In getLabel ==> '+e.getMessage());
-            Log_Handler.store_Exception(e,'GoogleDriveTemplatesController','getLabel');
+            Log_Handler.store_Exception(e,'GoogleDocTemplateEditorController','getLabel');
             return null;
         }
     }
@@ -273,7 +275,7 @@ public with sharing class GoogleDocTemplateEditorController {
                 update template;
             } catch (Exception e) {
                 System.debug('Error In editTemplate ==> '+e.getMessage());
-                Log_Handler.store_Exception(e,'GoogleDriveTemplatesController','editTemplate');
+                Log_Handler.store_Exception(e,'GoogleDocTemplateEditorController','editTemplate');
             }
        
     }
