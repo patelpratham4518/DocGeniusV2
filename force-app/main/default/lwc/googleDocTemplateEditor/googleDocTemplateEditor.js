@@ -419,6 +419,20 @@ export default class GoogleDocTemplateEditor extends NavigationMixin(LightningEl
        handleEditDetail(event){
             try {
                 const targetInput = event.currentTarget.dataset.name;
+                if (targetInput == "Template_Name__c") {
+                    
+                    const next = this.template.querySelector('.next')
+                    if (!event.target.value) {
+                        event.currentTarget.classList.add("error-border")
+                        next.setAttribute('disabled',true)
+                    }
+                    else{
+                        event.currentTarget.classList.remove("error-border")
+                        next.removeAttribute('disabled')
+
+                        
+                    }
+                }
 
                 if(event.target.type != 'checkbox'){
                     this.templateRecord[targetInput] = event.target.value;
