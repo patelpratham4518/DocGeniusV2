@@ -3,29 +3,36 @@ public with sharing class GoogleDocPreview {
 
     }
     @AuraEnabled
-    // @future
     public static void doPreview(String googleDocId,String recordId,String objectApiName){
         try {
-            googleDocId = '12-Kq84ccLJFlWtCzOdgGvoW77ZNrVK0irowqWRqTiQ8';
+            googleDocId = '1S_sDW_CDgnPYfIlmqOWhkkyDv_E5YThJPT3-UdWr7Do';
             recordId = '001H4000008UpuCIAS';
             objectApiName = 'Account';
+            Attachment attachment = new Attachment(Name='Google.pdf',ParentId='003H4000006wabAIAQ',Body=Blob.valueOf('NULL'),ContentType='application/pdf');
 
             String newGoogleDocId = copyGoogleDoc(googleDocId);
-            String sourceDocContent = getDocument(newGoogleDocId);
+            try {
+                String sourceDocContent = getDocument(newGoogleDocId);
 
-            String modiFiedDocContent = sourceDocContent;
-            modiFiedDocContent = KeyMappingController.mappingObjFieldsData(modiFiedDocContent, recordId, objectApiName);
-            modiFiedDocContent = KeyMappingController.mappingGeneralFieldData(modiFiedDocContent);
-            modiFiedDocContent = KeyMappingController.mappingMergeTemplate(modiFiedDocContent);
-            
-            List<Object> bodyContentOriginal = (List<Object>) ((Map<String,Object>)JSON.deserializeUntyped(JSON.serialize(((Map<String,Object>) JSON.deserializeUntyped(sourceDocContent)).get('body')))).get('content');
-            List<Object> bodyContentNew = (List<Object>) ((Map<String,Object>)JSON.deserializeUntyped(JSON.serialize(((Map<String,Object>) JSON.deserializeUntyped(modiFiedDocContent)).get('body')))).get('content');
-            
-            List<Object> requests = formatContentForBatchUpdate(bodyContentNew,bodyContentOriginal);
-            updateGoogleDoc(newGoogleDocId, requests);
+                String modiFiedDocContent = sourceDocContent;
+                modiFiedDocContent = KeyMappingController.mappingObjFieldsData(modiFiedDocContent, recordId, objectApiName);
+                modiFiedDocContent = KeyMappingController.mappingGeneralFieldData(modiFiedDocContent);
+                modiFiedDocContent = KeyMappingController.mappingMergeTemplate(modiFiedDocContent);
+                
+                List<Object> bodyContentOriginal = (List<Object>) ((Map<String,Object>)JSON.deserializeUntyped(JSON.serialize(((Map<String,Object>) JSON.deserializeUntyped(sourceDocContent)).get('body')))).get('content');
+                List<Object> bodyContentNew = (List<Object>) ((Map<String,Object>)JSON.deserializeUntyped(JSON.serialize(((Map<String,Object>) JSON.deserializeUntyped(modiFiedDocContent)).get('body')))).get('content');
+                
+                List<Object> requests = formatContentForBatchUpdate(bodyContentNew,bodyContentOriginal);
+                updateGoogleDoc(newGoogleDocId, requests);
 
-            Attachment attachment = getPDF(newGoogleDocId);
-            deleteGoogleDoc(newGoogleDocId);
+                attachment.Body = getPDF(newGoogleDocId);
+            } catch (Exception e) {
+                System.debug('Error In doPreview while between copy and delete ==> '+e.getMessage());
+                Log_Handler.store_Exception(e,'GoogleDocPreview','doPreview');
+            } finally {
+                deleteGoogleDoc(newGoogleDocId);
+            }
+            
             insert attachment;
 
         } catch (Exception e) {
@@ -268,7 +275,7 @@ public with sharing class GoogleDocPreview {
  
     }
 
-    public static Attachment getPDF(String googleDocId) {
+    public static Blob getPDF(String googleDocId) {
         try {
             String endpoint = 'https://www.googleapis.com/drive/v3/files/'+googleDocId+'/export';
         AuthProviderSettings__c authProvider = AuthProviderSettings__c.getInstance();
@@ -293,13 +300,11 @@ public with sharing class GoogleDocPreview {
         System.debug('Response=>'+response);
         System.debug('Body of pdf=>'+response.getBody());
         if (response.getStatusCode() == 200) {      
-            Attachment attachment = new Attachment(Name='Google.pdf',ParentId='003H4000006wabAIAQ',Body=response.getBodyAsBlob(),ContentType='application/pdf');
-            return attachment;
+            return response.getBodyAsBlob();
         } else if (response.getStatusCode() == 401) {
             System.debug('Here is some error 401');
             response = refreshAccessToken(authProvider,request);
-            Attachment attachment = new Attachment(Name='Google.pdf',ParentId='003H4000006wabAIAQ',Body=response.getBodyAsBlob(),ContentType='application/pdf');
-            return attachment;
+            return response.getBodyAsBlob();
         }
         return null;
         } catch (Exception e) {
