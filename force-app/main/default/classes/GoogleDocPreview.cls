@@ -7,6 +7,7 @@ public with sharing class GoogleDocPreview {
     public static void doPreview(String googleDocId,String recordId,String objectApiName){
         try {
             googleDocId = '118c3SPxIHCFqC_rPKn8ULBlK7DxSLhzz9q0JLnwjZkM';
+
             recordId = '001H4000008UpuCIAS';
             objectApiName = 'Account';
             Attachment attachment = new Attachment(Name='Google.pdf',ParentId='003H4000006wabAIAQ',Body=Blob.valueOf('NULL'),ContentType='application/pdf');
@@ -208,12 +209,15 @@ public with sharing class GoogleDocPreview {
                     Integer columns =Integer.valueOf(originalTable.get('columns')) ;
                   
                     Integer tableStartLocation = (Integer) originalElementMap.get('startIndex');
-                    System.debug('tableStartLocation=>'+tableStartLocation);
                     List<Object> originalTableRows = (List<Object>) originalTable.get('tableRows');
                     List<Object> newTableRows = (List<Object>) newTable.get('tableRows');
         
+                    
                     //Insert empty rows equal to number of records
-                    Integer numberOfRecords = 10;
+                    Map<String, Object> firstRow = (Map<String, Object>) originalTableRows[0];
+                    Map<String, Object> secondRow = (Map<String, Object>) originalTableRows[1];
+                    List<List<String>> tableRecords = getTableRecords(secondRow);
+                    Integer numberOfRecords = tableRecords.size();
                     for (Integer i = 1; i <= numberOfRecords; i++) {
 
                         Map<String, Object> insertTableRowRequest = new Map<String, Object>{
@@ -248,30 +252,29 @@ public with sharing class GoogleDocPreview {
                     tableRequests.add(deleteTableRowRequest);
 
                     // Insert Text in empty table rows
-                    Map<String, Object> firstRow = (Map<String, Object>) originalTableRows[0];
-                    System.debug('End of first row=>'+firstRow.get('endIndex'));
                     Integer insertCellTextIndex = Integer.valueOf(firstRow.get('endIndex')) ;
                     
-                    for (Integer row = 0; row < numberOfRecords; row++) {
+                    
+                    for (List<String> record : tableRecords) {
                         insertCellTextIndex++;
-                        for (Integer column = 0; column < columns; column++) {
-                            String insertionText = 'Pratham';
-                            Map<String, Object> insertTextRequest = new Map<String, Object>{
-                                    'insertText' => new Map<String, Object>{
-                                            'text' => insertionText,
-                                            'location' => new Map<String, Object>{
-                                                'segmentId' => '',
-                                                'index' => insertCellTextIndex+1
-                                            }
-                                    }
-                            };
-                            tableRequests.add(insertTextRequest);
-                            insertCellTextIndex += insertionText.length();          
-                            insertCellTextIndex += 2; 
+                        for (String columnText : record) {
+                            if (columnText != null) {
+                                String insertionText = columnText;
+                                Map<String, Object> insertTextRequest = new Map<String, Object>{
+                                        'insertText' => new Map<String, Object>{
+                                                'text' => insertionText,
+                                                'location' => new Map<String, Object>{
+                                                    'segmentId' => '',
+                                                    'index' => insertCellTextIndex+1
+                                                }
+                                        }
+                                };
+                                tableRequests.add(insertTextRequest);
+                                insertCellTextIndex += insertionText.length();          
+                            }
+                            insertCellTextIndex += 2;
                         }
-                       
                     }
-
                     // End table
                 }
         
@@ -393,6 +396,32 @@ public with sharing class GoogleDocPreview {
             Log_Handler.store_Exception(e,'GoogleDocPreview','deleteGoogleDoc');
         }
 
+    }
+
+    public static List<List<String>> getTableRecords(Map<String,Object> secondRow) {
+        
+        try {
+            System.debug('Second Row =>'+secondRow);
+            String queryString = 'SELECT Id,Name,MobilePhone,Email FROM Contact';
+            List<SObject> records = Database.query(queryString);
+            System.debug('Records ==>'+records);
+            List<List<String>> tableRecords = new LiSt<List<String>>();
+            for (SObject record : records) {
+                List<String> row = new List<String>();
+                row.add(String.valueOf(record.Id));
+                row.add(String.valueOf(record.get('Name')));
+                row.add(String.valueOf(record.get('MobilePhone')));
+                row.add(String.valueOf(record.get('Email')));
+                tableRecords.add(row);
+            }
+            
+            System.debug('tableRecords ==>'+tableRecords);
+            return tableRecords;
+        } catch (Exception e) {
+            System.debug('Error In getTableRecords ==> '+e.getMessage());
+            Log_Handler.store_Exception(e,'GoogleDocPreview','getTableRecords');
+            return null;
+        }
     }
     
 }
