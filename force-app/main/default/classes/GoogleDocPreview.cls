@@ -1,4 +1,5 @@
 public with sharing class GoogleDocPreview {
+    public static AuthProviderSettings__c authProvider;
     public GoogleDocPreview() {
 
     }
@@ -38,6 +39,7 @@ public with sharing class GoogleDocPreview {
             }
             
             insert attachment;
+            upsert authProvider;
 
         } catch (Exception e) {
             System.debug('Error In doPreview ==> '+e.getMessage());
@@ -69,7 +71,7 @@ public with sharing class GoogleDocPreview {
                     requestPending.setHeader('Authorization','Bearer '+newToken);
                     Http httpPending = new Http();
                     HttpResponse responsePending = httpPending.send(requestPending);
-                    upsert settings;
+                    // upsert settings;
                     return responsePending;
                 }
             }
@@ -88,7 +90,7 @@ public with sharing class GoogleDocPreview {
     public static String getDocument(String googleDocId) {
         try {
             String endpoint = 'https://docs.googleapis.com/v1/documents/'+googleDocId;
-            AuthProviderSettings__c authProvider = AuthProviderSettings__c.getInstance();
+            // AuthProviderSettings__c authProvider = AuthProviderSettings__c.getInstance();
             HttpRequest request = new HttpRequest();
             request.setEndpoint(endpoint);
             request.setMethod('GET');
@@ -115,7 +117,8 @@ public with sharing class GoogleDocPreview {
     public static String copyGoogleDoc(String googleDocId) {
         try {
             String endpoint = 'https://www.googleapis.com/drive/v3/files/'+googleDocId+'/copy';
-            AuthProviderSettings__c authProvider = AuthProviderSettings__c.getInstance();
+            // AuthProviderSettings__c authProvider = AuthProviderSettings__c.getInstance();
+            authProvider = AuthProviderSettings__c.getInstance();
 
             Map<String, Object> requestBody = new Map<String, Object>();
             requestBody.put('name', 'CopyOf'+googleDocId);
@@ -211,13 +214,8 @@ public with sharing class GoogleDocPreview {
                     List<Object> originalTableRows = (List<Object>) originalTable.get('tableRows');
                     List<Object> newTableRows = (List<Object>) newTable.get('tableRows');
         
-                    
-                    // Map<String, Object> firstRow = (Map<String, Object>) originalTableRows[0];
-                    // System.debug('End of first row=>'+firstRow.get('endIndex'));
-                    
-        
                     //Insert empty rows equal to number of records
-                    Integer numberOfRecords = 5;
+                    Integer numberOfRecords = 10;
                     for (Integer i = 1; i <= numberOfRecords; i++) {
 
                         Map<String, Object> insertTableRowRequest = new Map<String, Object>{
@@ -256,9 +254,6 @@ public with sharing class GoogleDocPreview {
                     System.debug('End of first row=>'+firstRow.get('endIndex'));
                     Integer insertCellTextIndex = Integer.valueOf(firstRow.get('endIndex')) ;
                     
-                    
-
-
                     for (Integer row = 0; row < numberOfRecords; row++) {
                         insertCellTextIndex++;
                         for (Integer column = 0; column < columns; column++) {
@@ -273,10 +268,8 @@ public with sharing class GoogleDocPreview {
                                     }
                             };
                             tableRequests.add(insertTextRequest);
-                            System.debug('InsertCellTextIndex ==>'+(insertCellTextIndex+1));  
                             insertCellTextIndex += insertionText.length();          
-                            insertCellTextIndex += 2;
-                                    
+                            insertCellTextIndex += 2; 
                         }
                        
                     }
@@ -300,7 +293,7 @@ public with sharing class GoogleDocPreview {
     public static void updateGoogleDoc(String googleDocId,List<Object> requests) {
         try {
             String endpoint = 'https://docs.googleapis.com/v1/documents/'+googleDocId+'/:batchUpdate';
-            AuthProviderSettings__c authProvider = AuthProviderSettings__c.getInstance();
+            // AuthProviderSettings__c authProvider = AuthProviderSettings__c.getInstance();
             Map<Object, Object> requestBody = new Map<Object, Object>();
             requestBody.put('requests', requests);   
             String jsonBody = JSON.serialize(requestBody);
@@ -333,7 +326,7 @@ public with sharing class GoogleDocPreview {
     public static Blob getPDF(String googleDocId) {
         try {
             String endpoint = 'https://www.googleapis.com/drive/v3/files/'+googleDocId+'/export';
-        AuthProviderSettings__c authProvider = AuthProviderSettings__c.getInstance();
+        // AuthProviderSettings__c authProvider = AuthProviderSettings__c.getInstance();
 
         Map<String, String> params = new Map<String, String>();
         params.put('mimeType','application/pdf');
@@ -373,7 +366,7 @@ public with sharing class GoogleDocPreview {
     public static void deleteGoogleDoc(String googleDocId) {
         try {
             String endpoint = 'https://www.googleapis.com/drive/v3/files/'+googleDocId;
-            AuthProviderSettings__c authProvider = AuthProviderSettings__c.getInstance();
+            // AuthProviderSettings__c authProvider = AuthProviderSettings__c.getInstance();
     
             Map<String, String> params = new Map<String, String>();
             
