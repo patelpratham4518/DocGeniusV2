@@ -5,7 +5,7 @@ public with sharing class GoogleDocPreview {
     @AuraEnabled
     public static void doPreview(String googleDocId,String recordId,String objectApiName){
         try {
-            googleDocId = '1S_sDW_CDgnPYfIlmqOWhkkyDv_E5YThJPT3-UdWr7Do';
+            googleDocId = '118c3SPxIHCFqC_rPKn8ULBlK7DxSLhzz9q0JLnwjZkM';
             recordId = '001H4000008UpuCIAS';
             objectApiName = 'Account';
             Attachment attachment = new Attachment(Name='Google.pdf',ParentId='003H4000006wabAIAQ',Body=Blob.valueOf('NULL'),ContentType='application/pdf');
@@ -26,6 +26,10 @@ public with sharing class GoogleDocPreview {
                 updateGoogleDoc(newGoogleDocId, requests);
 
                 attachment.Body = getPDF(newGoogleDocId);
+
+                
+
+                
             } catch (Exception e) {
                 System.debug('Error In doPreview while between copy and delete ==> '+e.getMessage());
                 Log_Handler.store_Exception(e,'GoogleDocPreview','doPreview');
@@ -98,7 +102,7 @@ public with sharing class GoogleDocPreview {
                 System.debug('Here is some error 401');
                 response = refreshAccessToken(authProvider,request);
                 // System.debug('Response ==>'+response.getBody());
-                 return response.getBody();
+                return response.getBody();
              }
              return null;
             } catch (Exception e) {
@@ -199,21 +203,23 @@ public with sharing class GoogleDocPreview {
                     // Logic for table
                     Map<String, Object> newTable = (Map<String, Object>) newElementMap.get('table');
                     Map<String, Object> originalTable = (Map<String, Object>) originalElementMap.get('table');
+
+                    Integer columns =Integer.valueOf(originalTable.get('columns')) ;
                   
                     Integer tableStartLocation = (Integer) originalElementMap.get('startIndex');
                     System.debug('tableStartLocation=>'+tableStartLocation);
                     List<Object> originalTableRows = (List<Object>) originalTable.get('tableRows');
                     List<Object> newTableRows = (List<Object>) newTable.get('tableRows');
         
-                    // Assuming we want to clone the first row
-                    Map<String, Object> firstRow = (Map<String, Object>) originalTableRows[0];
+                    
+                    // Map<String, Object> firstRow = (Map<String, Object>) originalTableRows[0];
                     // System.debug('End of first row=>'+firstRow.get('endIndex'));
                     
         
                     //Insert empty rows equal to number of records
                     Integer numberOfRecords = 5;
                     for (Integer i = 1; i <= numberOfRecords; i++) {
-                        
+
                         Map<String, Object> insertTableRowRequest = new Map<String, Object>{
                             'insertTableRow' => new Map<String, Object>{
                                 'tableCellLocation' => new Map<String, Object>{
@@ -244,6 +250,41 @@ public with sharing class GoogleDocPreview {
                         }
                     };
                     tableRequests.add(deleteTableRowRequest);
+
+                    // Insert Text in empty table rows
+                    Map<String, Object> firstRow = (Map<String, Object>) originalTableRows[0];
+                    System.debug('End of first row=>'+firstRow.get('endIndex'));
+                    Integer insertCellTextIndex = Integer.valueOf(firstRow.get('endIndex')) ;
+                    
+                    
+
+
+                    for (Integer row = 0; row < numberOfRecords; row++) {
+                        insertCellTextIndex++;
+                        for (Integer column = 0; column < columns; column++) {
+
+                            // Map<String, Object> insertTextRequest = new Map<String, Object>{
+                                //     'insertText' => new Map<String, Object>{
+                                    //         'text' => 'Pratham',
+                                    //         'location' => new Map<String, Object>{
+                                        //             'segmentId' => '',
+                                        //             'index' => insertCellTextIndex
+                                        //         }
+                                        //     }
+                                        // };
+                                        // tableRequests.add(insertTextRequest);
+                                    System.debug('InsertCellTextIndex ==>'+(insertCellTextIndex+1));
+                                    
+                                        
+                                        insertCellTextIndex += 2;
+                                    
+                        }
+                        //end of cell to end of row
+                        // insertCellTextIndex++;
+                        System.debug('End of row =>'+insertCellTextIndex);
+
+                    }
+
 
                     // End table
                 }
@@ -316,8 +357,8 @@ public with sharing class GoogleDocPreview {
         request.setHeader('Authorization','Bearer '+authProvider.access_token__c);
         Http http = new Http();
         HttpResponse response = http.send(request);
-        System.debug('Response=>'+response);
-        System.debug('Body of pdf=>'+response.getBody());
+        // System.debug('Response=>'+response);
+        // System.debug('Body of pdf=>'+response.getBody());
         if (response.getStatusCode() == 200) {      
             return response.getBodyAsBlob();
         } else if (response.getStatusCode() == 401) {
