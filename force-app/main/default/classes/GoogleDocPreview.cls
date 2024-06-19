@@ -262,29 +262,24 @@ public with sharing class GoogleDocPreview {
                     for (Integer row = 0; row < numberOfRecords; row++) {
                         insertCellTextIndex++;
                         for (Integer column = 0; column < columns; column++) {
-
-                            // Map<String, Object> insertTextRequest = new Map<String, Object>{
-                                //     'insertText' => new Map<String, Object>{
-                                    //         'text' => 'Pratham',
-                                    //         'location' => new Map<String, Object>{
-                                        //             'segmentId' => '',
-                                        //             'index' => insertCellTextIndex
-                                        //         }
-                                        //     }
-                                        // };
-                                        // tableRequests.add(insertTextRequest);
-                                    System.debug('InsertCellTextIndex ==>'+(insertCellTextIndex+1));
-                                    
-                                        
-                                        insertCellTextIndex += 2;
+                            String insertionText = 'Pratham';
+                            Map<String, Object> insertTextRequest = new Map<String, Object>{
+                                    'insertText' => new Map<String, Object>{
+                                            'text' => insertionText,
+                                            'location' => new Map<String, Object>{
+                                                'segmentId' => '',
+                                                'index' => insertCellTextIndex+1
+                                            }
+                                    }
+                            };
+                            tableRequests.add(insertTextRequest);
+                            System.debug('InsertCellTextIndex ==>'+(insertCellTextIndex+1));  
+                            insertCellTextIndex += insertionText.length();          
+                            insertCellTextIndex += 2;
                                     
                         }
-                        //end of cell to end of row
-                        // insertCellTextIndex++;
-                        System.debug('End of row =>'+insertCellTextIndex);
-
+                       
                     }
-
 
                     // End table
                 }
