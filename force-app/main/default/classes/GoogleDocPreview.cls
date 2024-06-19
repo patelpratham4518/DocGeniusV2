@@ -1,5 +1,5 @@
 public with sharing class GoogleDocPreview {
-    public static AuthProviderSettings__c authProvider;
+    public static AuthProviderSettings__c authProvider = AuthProviderSettings__c.getInstance();
     public GoogleDocPreview() {
 
     }
@@ -90,7 +90,7 @@ public with sharing class GoogleDocPreview {
     public static String getDocument(String googleDocId) {
         try {
             String endpoint = 'https://docs.googleapis.com/v1/documents/'+googleDocId;
-            // AuthProviderSettings__c authProvider = AuthProviderSettings__c.getInstance();
+            
             HttpRequest request = new HttpRequest();
             request.setEndpoint(endpoint);
             request.setMethod('GET');
@@ -117,9 +117,7 @@ public with sharing class GoogleDocPreview {
     public static String copyGoogleDoc(String googleDocId) {
         try {
             String endpoint = 'https://www.googleapis.com/drive/v3/files/'+googleDocId+'/copy';
-            // AuthProviderSettings__c authProvider = AuthProviderSettings__c.getInstance();
-            authProvider = AuthProviderSettings__c.getInstance();
-
+            
             Map<String, Object> requestBody = new Map<String, Object>();
             requestBody.put('name', 'CopyOf'+googleDocId);
             String jsonBody = JSON.serialize(requestBody);
@@ -293,7 +291,7 @@ public with sharing class GoogleDocPreview {
     public static void updateGoogleDoc(String googleDocId,List<Object> requests) {
         try {
             String endpoint = 'https://docs.googleapis.com/v1/documents/'+googleDocId+'/:batchUpdate';
-            // AuthProviderSettings__c authProvider = AuthProviderSettings__c.getInstance();
+            
             Map<Object, Object> requestBody = new Map<Object, Object>();
             requestBody.put('requests', requests);   
             String jsonBody = JSON.serialize(requestBody);
@@ -326,35 +324,34 @@ public with sharing class GoogleDocPreview {
     public static Blob getPDF(String googleDocId) {
         try {
             String endpoint = 'https://www.googleapis.com/drive/v3/files/'+googleDocId+'/export';
-        // AuthProviderSettings__c authProvider = AuthProviderSettings__c.getInstance();
 
-        Map<String, String> params = new Map<String, String>();
-        params.put('mimeType','application/pdf');
-        String paramString = '';
+            Map<String, String> params = new Map<String, String>();
+            params.put('mimeType','application/pdf');
+            String paramString = '';
 
-        for (String key : params.keySet()) {
-            if (!String.isEmpty(paramString)) {
-                paramString += '&';
+            for (String key : params.keySet()) {
+                if (!String.isEmpty(paramString)) {
+                    paramString += '&';
+                }
+                paramString += EncodingUtil.urlEncode(key, 'UTF-8') + '=' + EncodingUtil.urlEncode(params.get(key), 'UTF-8');
             }
-            paramString += EncodingUtil.urlEncode(key, 'UTF-8') + '=' + EncodingUtil.urlEncode(params.get(key), 'UTF-8');
-        }
 
-        HttpRequest request = new HttpRequest();
-        request.setEndpoint(endpoint + '?'+paramString);
-        request.setMethod('GET');
-        request.setHeader('Authorization','Bearer '+authProvider.access_token__c);
-        Http http = new Http();
-        HttpResponse response = http.send(request);
-        // System.debug('Response=>'+response);
-        // System.debug('Body of pdf=>'+response.getBody());
-        if (response.getStatusCode() == 200) {      
-            return response.getBodyAsBlob();
-        } else if (response.getStatusCode() == 401) {
-            System.debug('Here is some error 401');
-            response = refreshAccessToken(authProvider,request);
-            return response.getBodyAsBlob();
-        }
-        return null;
+            HttpRequest request = new HttpRequest();
+            request.setEndpoint(endpoint + '?'+paramString);
+            request.setMethod('GET');
+            request.setHeader('Authorization','Bearer '+authProvider.access_token__c);
+            Http http = new Http();
+            HttpResponse response = http.send(request);
+            // System.debug('Response=>'+response);
+            // System.debug('Body of pdf=>'+response.getBody());
+            if (response.getStatusCode() == 200) {      
+                return response.getBodyAsBlob();
+            } else if (response.getStatusCode() == 401) {
+                System.debug('Here is some error 401');
+                response = refreshAccessToken(authProvider,request);
+                return response.getBodyAsBlob();
+            }
+            return null;
         } catch (Exception e) {
             System.debug('Error In updateDoc ==> '+e.getMessage());
             Log_Handler.store_Exception(e,'GoogleDocPreview','getPDF');
@@ -366,8 +363,6 @@ public with sharing class GoogleDocPreview {
     public static void deleteGoogleDoc(String googleDocId) {
         try {
             String endpoint = 'https://www.googleapis.com/drive/v3/files/'+googleDocId;
-            // AuthProviderSettings__c authProvider = AuthProviderSettings__c.getInstance();
-    
             Map<String, String> params = new Map<String, String>();
             
             String paramString = '';
