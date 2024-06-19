@@ -195,39 +195,58 @@ public with sharing class GoogleDocPreview {
                             }
                         }
                     }
-                } //else if (newElementMap.containsKey('table') && originalElementMap.containsKey('table')) {
-                //     // Logic for table
-                //     Map<String, Object> newTable = (Map<String, Object>) newElementMap.get('table');
-                //     Map<String, Object> originalTable = (Map<String, Object>) originalElementMap.get('table');
+                } else if (newElementMap.containsKey('table') && originalElementMap.containsKey('table')) {
+                    // Logic for table
+                    Map<String, Object> newTable = (Map<String, Object>) newElementMap.get('table');
+                    Map<String, Object> originalTable = (Map<String, Object>) originalElementMap.get('table');
                   
-                //     Integer tableStartLocation = (Integer) originalElementMap.get('startIndex');
-                //     System.debug('tableStartLocation=>'+tableStartLocation);
-                //     List<Object> originalTableRows = (List<Object>) originalTable.get('tableRows');
-                //     List<Object> newTableRows = (List<Object>) newTable.get('tableRows');
+                    Integer tableStartLocation = (Integer) originalElementMap.get('startIndex');
+                    System.debug('tableStartLocation=>'+tableStartLocation);
+                    List<Object> originalTableRows = (List<Object>) originalTable.get('tableRows');
+                    List<Object> newTableRows = (List<Object>) newTable.get('tableRows');
         
-                //     // Assuming we want to clone the first row
-                //     Map<String, Object> firstRow = (Map<String, Object>) originalTableRows[0];
-                //     // System.debug('End of first row=>'+firstRow.get('endIndex'));
+                    // Assuming we want to clone the first row
+                    Map<String, Object> firstRow = (Map<String, Object>) originalTableRows[0];
+                    // System.debug('End of first row=>'+firstRow.get('endIndex'));
                     
         
-                //     // Prepare a request to insert a new row below the first row
-                //     Map<String, Object> insertTableRowRequest = new Map<String, Object>{
-                //         'insertTableRow' => new Map<String, Object>{
-                //             'tableCellLocation' => new Map<String, Object>{
-                //                 'tableStartLocation' => new Map<String, Object>{
-                //                     'segmentId' => '',
-                //                     'index' => tableStartLocation
-                //                 },
-                //                 'rowIndex' => originalTableRows.size()-2, // The row index where the new row will be inserted (0-based index)
-                //                 // 'rowIndex' => 1, // The row index where the new row will be inserted (0-based index)
-                //                 'columnIndex' => 0 // This is required but can be 0 for row insertion
-                //             },
-                //             'insertBelow' => true
-                //         }
-                //     };
-                //     tableRequests.add(insertTableRowRequest);
-                //     // End table
-                // }
+                    //Insert empty rows equal to number of records
+                    Integer numberOfRecords = 5;
+                    for (Integer i = 1; i <= numberOfRecords; i++) {
+                        
+                        Map<String, Object> insertTableRowRequest = new Map<String, Object>{
+                            'insertTableRow' => new Map<String, Object>{
+                                'tableCellLocation' => new Map<String, Object>{
+                                    'tableStartLocation' => new Map<String, Object>{
+                                        'segmentId' => '',
+                                        'index' => tableStartLocation
+                                    },
+                                    'rowIndex' => i, // The row index where the new row will be inserted (0-based index)
+                                    'columnIndex' => 0 // This is required but can be 0 for row insertion
+                                },
+                                'insertBelow' => true
+                            }
+                        };
+                        tableRequests.add(insertTableRowRequest);
+                    }
+
+                    //Delete first row containing keys
+                    Map<String,Object> deleteTableRowRequest = new Map<String,Object>{
+                        'deleteTableRow' => new Map<String,Object>{
+                            'tableCellLocation' => new Map<String, Object>{
+                                'tableStartLocation' => new Map<String, Object>{
+                                    'segmentId' => '',
+                                    'index' => tableStartLocation
+                                },
+                                'rowIndex' => 1, // The row index where the new row will be inserted (0-based index)
+                                'columnIndex' => 0 // This is required but can be 0 for row insertion
+                            }
+                        }
+                    };
+                    tableRequests.add(deleteTableRowRequest);
+
+                    // End table
+                }
         
                 originalIndex++;
             }
