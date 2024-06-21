@@ -69,7 +69,6 @@ public with sharing class GoogleDocPreview {
                     requestPending.setHeader('Authorization','Bearer '+newToken);
                     Http httpPending = new Http();
                     HttpResponse responsePending = httpPending.send(requestPending);
-                    // upsert settings;
                     return responsePending;
                 }
             }
@@ -417,8 +416,10 @@ public with sharing class GoogleDocPreview {
             
             String crn = JSON.serialize(thirdRow).substringBetween('$crn:', '$');
             String limitOfRecords  = JSON.serialize(thirdRow).substringBetween('$limit:', '$');
-            if ((crn == null)||(limitOfRecords == null)) {
-                System.debug('return null from getTableRecords because either crn or limit is missing');
+            String filter  = JSON.serialize(thirdRow).substringBetween('$filter:', '$');
+
+            if (crn == null) {
+                System.debug('return null from getTableRecords because  crn  is missing');
                 return null;
             }
             
@@ -456,7 +457,18 @@ public with sharing class GoogleDocPreview {
                 columnNumber++;
             }
 
-            String queryString = 'SELECT Name, (SELECT '+String.join(keys,',')+' FROM '+crn+' LIMIT '+limitOfRecords+') FROM '+objectApiName+' WHERE Id=:recordId';
+            // String queryString = 'SELECT Name, (SELECT '+String.join(keys,',')+' FROM '+crn+' LIMIT '+limitOfRecords+') FROM '+objectApiName+' WHERE Id=:recordId';
+            String queryString = 'SELECT Name, (SELECT ' + String.join(keys, ',') + ' FROM ' + crn;
+            String whereClause = '';
+            if (String.isNotBlank(filter)) {
+                whereClause += ' WHERE ' + filter;
+            }
+            if (!String.isNotBlank(limitOfRecords)) {
+                whereClause += ' LIMIT ' + limitOfRecords;
+            }
+            queryString += whereClause + ') FROM ' + objectApiName + ' WHERE Id=:recordId';
+            
+            
         
             List<SObject> recordsMain = Database.query(queryString);
             List<Object> records = (List<Object>) recordsMain[0].getPopulatedFieldsAsMap().get(crn);
