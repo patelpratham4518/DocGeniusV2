@@ -167,6 +167,12 @@ public with sharing class GoogleDocPreview {
                 if (newElementMap.containsKey('paragraph') && originalElementMap.containsKey('paragraph')) {
                     Map<String, Object> newParagraph = (Map<String, Object>) newElementMap.get('paragraph');
                     Map<String, Object> originalParagraph = (Map<String, Object>) originalElementMap.get('paragraph');
+                    //optimization
+                    if (JSON.serialize(newParagraph) == JSON.serialize(originalParagraph)) {
+                        originalIndex++;
+                        continue;
+                    }
+                    //end optimization
                     List<Object> newElements = (List<Object>) newParagraph.get('elements');
                     List<Object> originalElements = (List<Object>) originalParagraph.get('elements');
         
@@ -408,28 +414,50 @@ public with sharing class GoogleDocPreview {
     public static List<List<String>> getTableRecords(Map<String,Object> secondRow,Map<String,Object> thirdRow,String recordId,String objectApiName) {
         
         try {
-            System.debug('Third Row=>'+thirdRow);
+            
             String crn = JSON.serialize(thirdRow).substringBetween('$crn:', '$');
             String limitOfRecords  = JSON.serialize(thirdRow).substringBetween('$limit:', '$');
             if ((crn == null)||(limitOfRecords == null)) {
-                System.debug('return null from getTableRecords');
+                System.debug('return null from getTableRecords because either crn or limit is missing');
                 return null;
             }
-         
             
             List<String> keys  = new  List<String>();
+            Map<Integer,String> absolutes = new Map<Integer,String>();
             String keyString = '';
             List<Object> cells = (List<Object>) secondRow.get('tableCells');
+            Integer columnNumber = 0;
+
             for (Object cell : cells) {
                 String key = JSON.serialize(cell).substringBetween('{{$', '}}');
-                keys.add(key);
+                if (key != null) {
+                    keys.add(key);
+                } else {
+                    Map<String,Object> cellMap = (Map<String,Object>) JSON.deserializeUntyped(JSON.serialize(cell));
+                    List<Object> content = (List<Object>) cellMap.get('content');
+                    
+                    for (Object c : content) {
+                        Map<String,Object> cMap = (Map<String,Object>) JSON.deserializeUntyped(JSON.serialize(c));
+                        Map<String,Object> paragraph = (Map<String,Object>) cMap.get('paragraph');
+                        List<Object> elements =(List<Object>) paragraph.get('elements');
+                        for (Object element : elements) {
+                            Map<String,Object> elementMap = (Map<String,Object>) JSON.deserializeUntyped(JSON.serialize(element));
+                            if (elementMap.containsKey('textRun')) {
+                                Map<String,Object> textRun = (Map<String,Object>) JSON.deserializeUntyped(JSON.serialize(elementMap.get('textRun')));
+                                String absoluteText = String.valueOf(textRun.get('content'));
+                                absoluteText =  absoluteText.trim();
+                                if (String.isNotBlank(absoluteText)) {                                    
+                                    absolutes.put(columnNumber, absoluteText);
+                                }
+                            }
+                        }
+                    }
+                }
+                columnNumber++;
             }
-            
+
             String queryString = 'SELECT Name, (SELECT '+String.join(keys,',')+' FROM '+crn+' LIMIT '+limitOfRecords+') FROM '+objectApiName+' WHERE Id=:recordId';
-
-            System.debug('Query String ==>'+queryString);
-         
-
+        
             List<SObject> recordsMain = Database.query(queryString);
             List<Object> records = (List<Object>) recordsMain[0].getPopulatedFieldsAsMap().get(crn);
             
@@ -440,6 +468,19 @@ public with sharing class GoogleDocPreview {
                     row.add(String.valueOf(((Map<String,Object>) JSON.deserializeUntyped(JSON.serialize(record))).get(column)));
                 }
                 tableRecords.add(row);
+            }
+            
+            for (Integer column : absolutes.keySet()) {
+                String absoluteText = absolutes.get(column);
+                System.debug('Absolute Text=>'+absoluteText);
+                for (List<String> record : tableRecords) {
+                    System.debug(column+absoluteText);
+                    if (column < tableRecords.size()) {
+                        record.add(column,absoluteText);
+                    }else {
+                        record.add(absoluteText);
+                    }
+                }
             }
             
             return tableRecords;

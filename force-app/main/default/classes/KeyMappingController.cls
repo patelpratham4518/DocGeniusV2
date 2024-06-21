@@ -386,7 +386,24 @@ public with sharing class KeyMappingController {
                 fieldMapping.isFormatReq = false; 
             }
 
-            // fieldMapping.isSearchable = field.isFilterable();
+            // Check if the field is a picklist
+            if(field.getType() == Schema.DisplayType.PICKLIST || field.getType() == Schema.DisplayType.MULTIPICKLIST) {
+                // Get picklist values
+                List<String> picklistValues = new List<String>();
+                Schema.PicklistEntry[] picklistEntries = field.getPicklistValues();
+                if(picklistEntries != null && picklistEntries.size() > 0) {
+                    for(Schema.PicklistEntry entry : picklistEntries) {
+                        picklistValues.add(entry.getLabel());
+                    }
+                }
+                // Add picklist values to the field wrapper
+                fieldMapping.picklistValues = picklistValues;
+            } else {
+                // For non-picklist fields, set picklist values to null
+                fieldMapping.picklistValues = null;
+            }
+
+            fieldMapping.isSearchable = field.isFilterable();
 
             return fieldMapping;
         } catch (Exception e) {
@@ -1086,6 +1103,7 @@ public with sharing class KeyMappingController {
         @AuraEnabled public Boolean isCheckbox;
         @AuraEnabled public Boolean isPhone;
         @AuraEnabled public Boolean isURL;
+        @AuraEnabled public List<String> picklistValues;
     }
 
     public class RelatedObjInfo{
