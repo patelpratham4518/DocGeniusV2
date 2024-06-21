@@ -216,6 +216,8 @@ public with sharing class GoogleDocPreview {
                     Map<String, Object> thirdRow = (Map<String, Object>) originalTableRows[2];
                     List<List<String>> tableRecords = getTableRecords(secondRow,thirdRow,recordId,objectApiName);
                     if (tableRecords == null) {
+                        System.debug('Null Table records');
+                        originalIndex++;
                         continue;
                     }
                     Integer numberOfRecords = tableRecords.size();
@@ -410,6 +412,7 @@ public with sharing class GoogleDocPreview {
             String crn = JSON.serialize(thirdRow).substringBetween('$crn:', '$');
             String limitOfRecords  = JSON.serialize(thirdRow).substringBetween('$limit:', '$');
             if ((crn == null)||(limitOfRecords == null)) {
+                System.debug('return null from getTableRecords');
                 return null;
             }
          
