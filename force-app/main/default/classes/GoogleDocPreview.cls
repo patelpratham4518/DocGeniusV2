@@ -28,20 +28,25 @@ public with sharing class GoogleDocPreview {
                 updateGoogleDoc(newGoogleDocId, requests);
 
                 attachment.Body = getPDF(newGoogleDocId);
+
+
                 
             } catch (Exception e) {
                 System.debug('Error In doPreview while between copy and delete ==> '+e.getMessage());
-                Log_Handler.store_Exception(e,'GoogleDocPreview','doPreview');
+                // Log_Handler.store_Exception(e,'GoogleDocPreview','doPreview');
             } finally {
-                deleteGoogleDoc(newGoogleDocId);
+                
+                Boolean googleDocDeleted = deleteGoogleDoc(newGoogleDocId);
+                System.debug('Result of Google Doc Deleted ==>'+googleDocDeleted);
+                insert attachment;
+                upsert authProvider;
+                
             }
-            
-            insert attachment;
-            upsert authProvider;
+           
 
         } catch (Exception e) {
             System.debug('Error In doPreview ==> '+e.getMessage());
-            Log_Handler.store_Exception(e,'GoogleDocPreview','doPreview');
+            // Log_Handler.store_Exception(e,'GoogleDocPreview','doPreview');
         }
     }
 
@@ -78,7 +83,7 @@ public with sharing class GoogleDocPreview {
             return null;
         } catch (Exception e) {
             System.debug('Error In refreshAccessToken ==> '+e.getMessage());
-            Log_Handler.store_Exception(e,'GoogleDocPreview','refreshAccessToken');
+            // Log_Handler.store_Exception(e,'GoogleDocPreview','refreshAccessToken');
             return null;
         }
 
@@ -106,7 +111,7 @@ public with sharing class GoogleDocPreview {
              return null;
             } catch (Exception e) {
                 System.debug('Error In getDocument ==> '+e.getMessage());
-                Log_Handler.store_Exception(e,'GoogleDocPreview','getDocument');
+                // Log_Handler.store_Exception(e,'GoogleDocPreview','getDocument');
                 return null;
         }
     }
@@ -147,7 +152,7 @@ public with sharing class GoogleDocPreview {
 
         } catch (Exception e) {
             System.debug('Error In copyGoogleDoc ==> '+e.getMessage());
-            Log_Handler.store_Exception(e,'GoogleDocPreview','copyGoogleDoc');
+            // Log_Handler.store_Exception(e,'GoogleDocPreview','copyGoogleDoc');
             return null;
         }
     }
@@ -297,7 +302,7 @@ public with sharing class GoogleDocPreview {
             return requests;
         } catch (Exception e) {
             System.debug('Error In formatContentForBatchUpdate ==> '+e.getMessage());
-            Log_Handler.store_Exception(e,'GoogleDocPreview','formatContentForBatchUpdate');
+            // Log_Handler.store_Exception(e,'GoogleDocPreview','formatContentForBatchUpdate');
             return null;
         }
 
@@ -331,7 +336,7 @@ public with sharing class GoogleDocPreview {
             System.debug('Response body of update doc ==>'+response.getBody());
         } catch (Exception e) {
             System.debug('Error In updateDoc ==> '+e.getMessage());
-            Log_Handler.store_Exception(e,'GoogleDocPreview','updateGoogleDoc');
+            // Log_Handler.store_Exception(e,'GoogleDocPreview','updateGoogleDoc');
         }
  
     }
@@ -369,13 +374,14 @@ public with sharing class GoogleDocPreview {
             return null;
         } catch (Exception e) {
             System.debug('Error In updateDoc ==> '+e.getMessage());
-            Log_Handler.store_Exception(e,'GoogleDocPreview','getPDF');
+            // Log_Handler.store_Exception(e,'GoogleDocPreview','getPDF');
             return null;
         }
         
     }
 
-    public static void deleteGoogleDoc(String googleDocId) {
+    public static Boolean deleteGoogleDoc(String googleDocId) {
+    // public static void deleteGoogleDoc(String googleDocId) {
         try {
             String endpoint = 'https://www.googleapis.com/drive/v3/files/'+googleDocId;
             Map<String, String> params = new Map<String, String>();
@@ -397,15 +403,26 @@ public with sharing class GoogleDocPreview {
             HttpResponse response = http.send(request);
             if (response.getStatusCode() == 204) {      
                //document deleted
+               System.debug('Response of delete google doc=>'+response);
+               System.debug('ResponseBody of delete google doc=>'+response.getBody());
+               return true;
             } else if (response.getStatusCode() == 401) {
                 System.debug('Here is some error 401');
                 response = refreshAccessToken(authProvider,request);
             }
             System.debug('Response of delete google doc=>'+response);
             System.debug('ResponseBody of delete google doc=>'+response.getBody());
+            if (response.getStatusCode() == 204) {      
+                //document deleted
+                return true;
+            }else {
+                return false;
+            }
+
         } catch (Exception e) {
             System.debug('Error In deleteGoogleDoc ==> '+e.getMessage());
-            Log_Handler.store_Exception(e,'GoogleDocPreview','deleteGoogleDoc');
+            // Log_Handler.store_Exception(e,'GoogleDocPreview','deleteGoogleDoc');
+            return false;
         }
 
     }
@@ -457,7 +474,7 @@ public with sharing class GoogleDocPreview {
                 columnNumber++;
             }
 
-            // String queryString = 'SELECT Name, (SELECT '+String.join(keys,',')+' FROM '+crn+' LIMIT '+limitOfRecords+') FROM '+objectApiName+' WHERE Id=:recordId';
+            
             String queryString = 'SELECT Name, (SELECT ' + String.join(keys, ',') + ' FROM ' + crn;
             String whereClause = '';
             if (String.isNotBlank(filter)) {
@@ -469,7 +486,6 @@ public with sharing class GoogleDocPreview {
             queryString += whereClause + ') FROM ' + objectApiName + ' WHERE Id=:recordId';
             
             
-        
             List<SObject> recordsMain = Database.query(queryString);
             List<Object> records = (List<Object>) recordsMain[0].getPopulatedFieldsAsMap().get(crn);
             
@@ -484,9 +500,9 @@ public with sharing class GoogleDocPreview {
             
             for (Integer column : absolutes.keySet()) {
                 String absoluteText = absolutes.get(column);
-                System.debug('Absolute Text=>'+absoluteText);
+                
                 for (List<String> record : tableRecords) {
-                    System.debug(column+absoluteText);
+                    
                     if (column < tableRecords.size()) {
                         record.add(column,absoluteText);
                     }else {
@@ -498,7 +514,7 @@ public with sharing class GoogleDocPreview {
             return tableRecords;
         } catch (Exception e) {
             System.debug('Error In getTableRecords ==> '+e.getMessage()+e.getStackTraceString());
-            Log_Handler.store_Exception(e,'GoogleDocPreview','getTableRecords');
+            // Log_Handler.store_Exception(e,'GoogleDocPreview','getTableRecords');
             return null;
         }
       }
