@@ -1,39 +1,48 @@
 import { LightningElement, api, track, wire } from "lwc";
-import { CloseActionScreenEvent } from 'lightning/actions';
-
+import { gql, graphql } from "lightning/uiGraphQLApi";
 export default class CustomCombobox extends LightningElement {
 
     // ***************************************************************************** //
-    // *                             APIs           
+    // *                             API Attributes           
     // * label              (attribute - label)
     // * multiselect        (attribute - multiselect)                          
     // * searchable         (attribute - searchable)                         
-    // * required           (attribute - required)                      
+    // * required           (attribute - required)
+    // * disabled           (attribute - disabled)                      
     // * showClearButton    (attribute - show-clear-button)                            
     // * showDescription    (attribute - show-description)                              
-    // * showIcon           (attribute - show-icon)                       
-    // * showName           (attribute - show-name)                       
     // * showHelpText       (attribute - show-helptext)      
+    // * showOptionIcon     (attribute - show-option-icon)
+    // * iconName           (attribute - icon-name)                       
     // * value              (attribute - value)      
     // * dropdownPosition   (attribute - dropdown-position)      
     // * placeholder        (attribute - placeholder) 
+    // * hideSearchIcon     (attribute - hide-search-icon)
 
-    // * options            (attribute - options)    [ ...Required Attribute... ]  
+    // * options            (attribute - options)               [ ...Required Attribute... ]  
     // * keys of options :
     // *     label : 'option label'               (Required), 
     // *     value : 'option unique value'        (Required), 
-    // *     description : 'option description'   (optional), 
-    // *     helptext : 'option helptext'         (optional),
-    // *     disable : true/false                 (optional),
-    
+    // *     description : 'option description'   (optional),       Note :  show-description must be TRUE
+    // *     helptext : 'option helptext'         (optional),       Note :  show-helptext must be TRUE
+    // *     disabled : true/false                (optional),
+
+
+    // * =========== dispatch events ============ 
+    // *
+    // * select (onselect)      -- Trigger when user select or remove selected option
+    // * focus (onfocus)        -- Trigger when user focus in input for searchable combo
+    // * blur (onblur)          -- Trigger when user blur from input for searchable combo
+    // * search (onsearch)      -- Trigger when user search value in input for searchable combo
+    // *
+
+    // ******** API Functions / Method -- Used from parent component...
     // * unselectOption     (method)                             
     // * clearValue         (method)                        
     // * resetValue         (method)                         
     // * isInvalidInput     (method)
     // *
     // ***************************************************************************** //
-
-
 
     
     _label;
@@ -43,36 +52,48 @@ export default class CustomCombobox extends LightningElement {
     // define comboBox is multi-select or not...
     isMultiSelect;      
     @api get multiselect(){ return this.isMultiSelect };
-    set multiselect(value){ this.isMultiSelect = value == 'true' ? true : false };
+    set multiselect(value){ this.isMultiSelect = (value == 'true' || value == true) ? true : false };
 
     // define comboBox is searchable or not...
     isSearchable;                 
     @api get searchable(){ return this.isSearchable};
-    set searchable(value){ this.isSearchable = value == 'true' ? true : false };
+    set searchable(value){ this.isSearchable = (value == 'true' || value == true) ? true : false };
 
     // define comboBox is required or not...
     isRequired;                 
     @api get required(){ return this.isRequired };
-    set required(value){ this.isRequired = value == 'true' ? true : false};
+    set required(value){ this.isRequired = (value == 'true' || value == true) ? true : false};
+
+    _disabled;
+    @api get disabled(){ return this._disabled };
+    set disabled(value){ this._disabled = (value == 'true' || value == true) ? true : false };
 
     // use to displays cross icon once option in selected...
     _showClearButton = true;
     @api get showClearButton(){ return this._showClearButton};
-    set showClearButton(value){ this._showClearButton = value == 'false' ? false : true};
+    set showClearButton(value){ this._showClearButton = (value == 'false' || value == false) ? false : true};
 
     // API to Show Hide Option Description...
     isDescription;
     @api get showDescription(){ return this.isDescription };
-    set showDescription(value){ this.isDescription = value == 'true' ? true : false };
-
-    @api iconName = "standard:account";
-    _showIcon;
-    @api get showIcon(){ return this._showIcon}
-    set showIcon(value){ this._showIcon = value == 'true' ? true : false}
+    set showDescription(value){ this.isDescription = (value == 'true' || value == true) ? true : false };
 
     _showHelpText;
     @api get showHelpText(){ return this._showHelpText };
-    set showHelpText(value){ this._showHelpText = value == 'true' ? true : false};
+    set showHelpText(value){ this._showHelpText = (value == 'true' || value == true) ? true : false};
+    
+    _showOptionIcon;
+    @api get showOptionIcon(){ return this._showOptionIcon}
+    set showOptionIcon(value){ this._showOptionIcon = (value == 'true' || value == true) ? true : false}
+    
+    _iconName = "standard:account";
+    @api get iconName(){ return this._iconName};
+    set iconName(value){ this._iconName = value ? value : this._iconName};
+
+    // use to hide search icon... and show native down arrow...Only for Searchable Combobox
+    _hideSearchIcon;
+    @api get hideSearchIcon(){ return this._hideSearchIcon};
+    set hideSearchIcon(value){ this._hideSearchIcon = (value == 'true' || value == true) ? true : false};
 
     optionsToSet;
     @api get options(){ return this.optionsToSet };
@@ -88,14 +109,14 @@ export default class CustomCombobox extends LightningElement {
 
     valueToSet;
     @api get value(){ return this.valueToSet };
-    set value(value){
+    set value(val){
         try {
-            this.valueToSet = value;
-            if(value && this.optionsToSet){
-                this.setDefaultSection();
+            this.valueToSet = val;
+            if(val && this.options && this.options.length){
+                this.setDefaultValue();
             }
             else{
-                this.selectedOptionLabel = null;
+                this.clearValue();
             }
         } catch (error) {
             console.log(error.stack);
@@ -126,7 +147,7 @@ export default class CustomCombobox extends LightningElement {
 
     @api get dropdownTop(){return this.setDropDownPosition };
     set dropdownTop(value){
-        if(value == 'true'){
+        if((value == 'true' || value == true)){
             this.setDropDownPosition = this.setDropDownPosition + `
                 top: auto !important;
                 bottom: 100% !important;
@@ -134,12 +155,22 @@ export default class CustomCombobox extends LightningElement {
         }
     }
 
-    @api placeholder;
+    _placeholder;
+    @api get placeholder(){ return this._placeholder };
+    set placeholder(value){ 
+        this._placeholder = value;
+        this.setPlaceHolder();
+     }
+    
     @track placeholderText = ''             // to set placeholder in markup as per multi select options
     
     @track displayOptions = [];              // to display option in dropdown
     @track selectedItems = [];              // to set store and send selected option to parent component
     @track selectedOptionLabel = null;      // to display selected option in markup (for single select)
+
+    get _selectedOptionLabel(){
+        return this.selectedOptionLabel;
+    }
     
     allOptions = [];                        // All Option List Modified Keys....
 
@@ -154,18 +185,32 @@ export default class CustomCombobox extends LightningElement {
         }
     }
 
+    // to display no result found when search result not found...
+    get isOptions(){
+        return this.displayOptions.length ? true : false;
+    }
+
+    get emptyOptionLabel(){
+        if(this.options && this.options.length){
+            return 'couldn\'t find any matches';
+        }
+        else{
+            return 'options are not available';
+        }
+    }
+
 
     connectedCallback(){
         try {
             this.setPlaceHolder();
         } catch (error) {
-            console.error('error inside connectedCallback in custom combobox : ', error.stack);
+            console.warn('error inside connectedCallback in custom combobox : ', error.stack);
         }
     }
 
     setDisplayOptions(){
         try {
-            if(this.options && this.options.length){
+            if(this.options ){
                 this.allOptions = JSON.parse(JSON.stringify(this.options));
     
                 var tempOptions = JSON.parse(JSON.stringify(this.options));
@@ -178,43 +223,57 @@ export default class CustomCombobox extends LightningElement {
                 this.displayOptions = tempOptions;
     
                 if(this.value){
-                    this.setDefaultSection();
+                    // this.setDefaultSection();
+                    this.setDefaultValue();
                 }
                 else{
+                    this.clearValue();
+                }
+            }
+
+        } catch (error) {
+            console.warn('error inside  in setDisplayOptions  in custom combobox : ', error.stack);
+        }
+    }
+    
+    // Set default value if user passes value...
+    setDefaultValue(){
+        try {
+            const valueToSet = typeof this.value == 'object' ? this.value : [this.value];
+
+            if(this.multiselect){
+                valueToSet.forEach(ele => {
+                    var matchedOption = this.displayOptions.find(option => option.value == ele);
+
+                    if(matchedOption && !matchedOption.disabled){
+                        (!matchedOption.isSelected) && this.selectedItems.push(matchedOption);
+                    }
+                    else{
+                        this.selectedItems = this.selectedItems.filter((ele) => {
+                            return ele != ele;
+                        });
+                    }
+                });
+
+                this.setPlaceHolder();
+            }
+            else{
+
+                // for single select took first one as default option...
+                var matchedOption = this.displayOptions.find(option => option.value == valueToSet[0]);
+                if(matchedOption && !matchedOption.disabled){
+                    this.selectedItems = [matchedOption];
+                    this.selectedOptionLabel = matchedOption.label;
+                }
+                else{
+                    this.selectedItems = [];
                     this.selectedOptionLabel = null;
                 }
             }
-
+            this.setSelection();
+            
         } catch (error) {
-            console.error('error inside  in setDisplayOptions  in custom combobox : ', error.stack);
-        }
-    }
-
-    // Set default value if user passes value...
-    setDefaultSection(){
-        try {
-            var currentOption = this.displayOptions.find(option => option.value == this.value)
-            if(currentOption && !currentOption.disabled){
-                if(this.multiselect){
-                    if(currentOption && !currentOption.isSelected){
-                        this.selectedItems.push(currentOption);
-                    }
-                    else{
-                        this.selectedItems = this.selectedItems.filter((selectedOption) => {
-                            return selectedOption.originalIndex != originalIndex;
-                        });
-                    }
-                }
-                else{
-                        this.selectedOptionLabel = currentOption ? currentOption.label : null;
-                            
-                        this.selectedItems = currentOption ? [currentOption] : [];
-                }
-                this.setSelection();
-                this.setPlaceHolder();
-            }
-        } catch (error) {
-            console.error('error in setDefaultSection custom combobox : ', error.stack);
+            console.warn('error in setDefaultValue custom combobox : ', error.stack);
         }
     }
 
@@ -237,7 +296,7 @@ export default class CustomCombobox extends LightningElement {
 			}
 
         } catch (error) {
-            console.error('error inside handleShowDropDown in custom combobox : ', error.stack);
+            console.warn('error inside handleShowDropDown in custom combobox : ', error.stack);
         }
     }
 
@@ -247,8 +306,6 @@ export default class CustomCombobox extends LightningElement {
 
     handleSearch(event){
         try {
-            // console.log('search Value : ', event.target.value);
-            // this.selectedOptionLabel = event.target.value;
             var searchValue = (event.target.value).toLowerCase();
             if(searchValue == null || searchValue.trim() == '' || searchValue == undefined){
                 this.displayOptions = this.allOptions;
@@ -257,11 +314,15 @@ export default class CustomCombobox extends LightningElement {
                 this.displayOptions = this.allOptions.filter((ele) => {
                     return ele.label.toLowerCase().includes(searchValue)
                 });
+
+                (!this.displayOptions.length) 
             };
+
+            (this.searchable) && this.dispatchEvent(new CustomEvent('search', {detail : event.target.value}));
             // sort After each Search
             this.sortDisplayItems();
         } catch (error) {
-            console.error('error inside handleSearch in custom combobox : ', error.stack);
+            console.warn('error inside handleSearch in custom combobox : ', error.stack);
         }
     }
 
@@ -270,8 +331,8 @@ export default class CustomCombobox extends LightningElement {
         try {
             // Use Original Index as unique Value and comparison...
             var originalIndex = event.currentTarget.dataset.oriindex;
-            const currentOption = JSON.parse(JSON.stringify(this.displayOptions.find(option => option.originalIndex == originalIndex)));
-            if(!currentOption.disabled){
+            const currentOption = this.displayOptions.find(option => option.originalIndex == originalIndex);
+            if(currentOption && !currentOption.disabled){
                 if(this.multiselect){
     
                     // Assign or remove clicked option from selected list...
@@ -305,12 +366,9 @@ export default class CustomCombobox extends LightningElement {
                     this.selectedItems = [currentOption];
                     this.setSelection();
     
-                    // this logic create a new variable of selected options with original values...(remove additonal key-values...)
-                    const selectedOption = this.options[currentOption.originalIndex].value;
-    
                     // if combobox is not multi-select it will return array with only one element...
                     this.dispatchEvent(new CustomEvent('select',{detail : 
-                        [selectedOption]
+                        [currentOption.value]
                     }));
                
                     this.closeDropDown();
@@ -320,7 +378,7 @@ export default class CustomCombobox extends LightningElement {
             }
             
         } catch (error) {
-            console.error('error inside handleItemClick in custom combobox : ', error.stack);
+            console.warn('error inside handleOptionClick in custom combobox : ', error.stack);
         }
     }
 
@@ -338,10 +396,16 @@ export default class CustomCombobox extends LightningElement {
                 []
             }));
 
+            if(this.searchable){
+                const searchInput = this.template.querySelector('[data-id="search-input"]');
+                searchInput && searchInput.focus();
+            }
+
+            this.clearSearch();
             this.setErrorBorder();
             this.setPlaceHolder();
         } catch (error) {
-            console.error('error in clearSelection custom combobox : ', error.stack);
+            console.warn('error in clearSelection custom combobox : ', error.stack);
         }
     }
 
@@ -363,7 +427,7 @@ export default class CustomCombobox extends LightningElement {
             this.sortDisplayItems();
 
         } catch (error) {
-            console.error('error inside closeDropDown in custom combobox : ', error.stack);
+            console.warn('error inside closeDropDown in custom combobox : ', error.stack);
         }
     }
 
@@ -373,7 +437,7 @@ export default class CustomCombobox extends LightningElement {
             this.displayOptions.forEach(options => { options.isSelected = this.selectedItems.length ? this.selectedItems.some(ele => ele.originalIndex == options.originalIndex) : false});
             this.allOptions.forEach(options => { options.isSelected = this.selectedItems.length ? this.selectedItems.some(ele => ele.originalIndex == options.originalIndex) : false});
         } catch (error) {
-            console.error('error in setSelection : ', error.stack);
+            console.warn('error in setSelection : ', error.stack);
         }
     }
 
@@ -404,7 +468,7 @@ export default class CustomCombobox extends LightningElement {
                 }
             }
         } catch (error) {
-            console.error('error in setErrorBorder in custom combobox  : ', error.stack);
+            console.warn('error in setErrorBorder in custom combobox  : ', error.stack);
         }
     }
 
@@ -433,7 +497,7 @@ export default class CustomCombobox extends LightningElement {
             this.displayOptions = displayOptions;
             
         } catch (error) {
-            console.error('error in sortDisplayItems in custom combobox : ', error.stack);
+            console.warn('error in sortDisplayItems in custom combobox : ', error.stack);
         }
     }
 
@@ -457,7 +521,7 @@ export default class CustomCombobox extends LightningElement {
             this.setErrorBorder();
             this.setPlaceHolder();
         } catch (error) {
-            console.error('error in unselectOption in custom combobox : ', error.stack);
+            console.warn('error in unselectOption in custom combobox : ', error.stack);
         }
     }
 
@@ -483,7 +547,7 @@ export default class CustomCombobox extends LightningElement {
                 }
             }
         } catch (error) {
-            console.error('error in clearAll in custom combobox : ', error.stack);
+            console.warn('error in clearAll in custom combobox : ', error.stack);
         }
     }
 
@@ -492,7 +556,21 @@ export default class CustomCombobox extends LightningElement {
     resetValue(){
         this.clearValue();
         if(this.value){
-            this.setDefaultSection();
+            // this.setDefaultSection();
+            this.setDefaultValue();
+        }
+    }
+
+    // ==== Clear search value of input element for searchable combobox...
+    @api 
+    clearSearch(){
+        try {
+            if(this.searchable){
+                const searchInput = this.template.querySelector('[data-id="search-input"]');
+                searchInput && (searchInput.value = '');
+            }
+        } catch (error) {
+            console.warn('error in clearSearch : custom combobox : ', error.stack);
         }
     }
 
@@ -513,8 +591,9 @@ export default class CustomCombobox extends LightningElement {
                 this.template.querySelector('.slds-combobox__input').style = '';
             }
         } catch (error) {
-            console.error('error in isInvalidInput : ', error.stack);
+            console.warn('error in isInvalidInput : custom combobox :', error.stack);
             
         }
     }
+
 }

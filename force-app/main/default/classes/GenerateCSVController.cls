@@ -30,7 +30,7 @@ public with sharing class GenerateCSVController {
     public static String getTemplateData(String templateId){
         String allData = '';
         try{
-            List<Template_Fields__c> tfList = [SELECT Id, CSV_Fields__c, CSV_Filter__c, CSV_Query__c, Template_Page__c FROM Template_Fields__c WHERE Template__c =:templateId ORDER BY Order_No_Simple__c asc NULLS Last LIMIT 1];
+            List<Template_Data__c> tfList = [SELECT Id, CSV_Fields__c, CSV_Filter__c, CSV_Query__c, Template_Page__c FROM Template_Data__c WHERE Template__c =:templateId ORDER BY Order_No_Simple__c asc NULLS Last LIMIT 1];
     
             if(!tfList.isEmpty()){
                 String fields = tfList[0].CSV_Fields__c;

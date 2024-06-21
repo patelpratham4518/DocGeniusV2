@@ -1,6 +1,9 @@
 :host{
     --pdfWidth : 72rem;
     --pdfActualPreviewWidth : calc(var(--pdfWidth) - 18.9rem);
+    --ff_Bahnschrift : Bahnschrift, 'Segoe UI', 'Segoe UI Web (West European)', -apple-system, BlinkMacSystemFont, Roboto, 'Helvetica Neue', sans-serif;
+    --ff_Montserrat : "Montserrat";
+    --ff_Poppins : Poppins;
 }
 
 .preview_mainDiv {
@@ -55,7 +58,7 @@
     align-items: center;
 
     font-size: 18px;
-    font-family: Bahnschrift, 'Segoe UI', 'Segoe UI Web (West European)', -apple-system, BlinkMacSystemFont, Roboto, 'Helvetica Neue', sans-serif;
+    font-family: var(--ff_Bahnschrift);
     letter-spacing: 1px;
     color: #00acff;
 
@@ -104,16 +107,16 @@
 }
 
 .iframe_outer{
-    width: var(--pdfActualPreviewWidth);
-    /* width: 60rem; */
+    /* width: var(--pdfActualPreviewWidth); */
+    width: 60rem;
     height: 100%;
     overflow: hidden;
     position: relative;
 }
 
 .preview_iframe{
-    width: var(--pdfWidth);
-    /* width: 100%; */
+    /* width: var(--pdfWidth); */
+    width: 100%;
     height: 100%;
     float: right;
     border: none;
@@ -130,6 +133,12 @@
 }
 .iframeToolbarSection.show{
     visibility: visible;
+}
+
+.intiImg{
+  width: min(35rem, 60%);
+  /* margin-bottom: 2rem; */
+  filter: drop-shadow(2px 2px 3px #7b7b7b);
 }
 
 
@@ -259,8 +268,9 @@
     left: 50%;
     transform: translate(-50%, 0px);
     font-size: 20px;
-    font-family: Bahnschrift, 'Segoe UI', 'Segoe UI Web (West European)', -apple-system, BlinkMacSystemFont, Roboto, 'Helvetica Neue', sans-serif;
-    color: #009aed;
+    font-family: var(--ff_Poppins);
+    color: #02afff;
+    text-transform: capitalize;
   }
 
 

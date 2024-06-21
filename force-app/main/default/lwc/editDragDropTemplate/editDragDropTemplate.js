@@ -1,8 +1,8 @@
 import { LightningElement, api, track } from 'lwc';
-import getTemplate from '@salesforce/apex/EditDragDropTemplateController.getTemplate';
+// import getTemplate from '@salesforce/apex/EditDragDropTemplateController.getTemplate';
 import getObjectSelectField from '@salesforce/apex/EditDragDropTemplateController.getObjectSelectField';
-import saveFields from '@salesforce/apex/EditDragDropTemplateController.saveFields';
-import getFields from '@salesforce/apex/EditDragDropTemplateController.getFields';
+// import saveFields from '@salesforce/apex/EditDragDropTemplateController.saveFields';
+// import getFields from '@salesforce/apex/EditDragDropTemplateController.getFields';
 
 
 export default class EditDragDropTemplate extends LightningElement {
@@ -23,26 +23,26 @@ export default class EditDragDropTemplate extends LightningElement {
     connectedCallback() {
         try {
             this.isSpinner = true;
-            getTemplate({ templateId: this.templateId })
-                .then((data) => {
-                    if (data) {
-                        this.templateName = data[0].Template_Name__c;
-                        this.templateRow = data[0].Row__c;
-                        this.templateColumns = data[0].Column__c;
-                        this.templateObject = data[0].Object_API_Name__c;
-                        this.baseOngetField();
-                        this.getTemplateField();
-                        // this.setTemplateData();
-                        // this.isSpinner = false;
-                    } else {
-                        this.isSpinner = false;
-                        console.error('Error fetching template data');
-                    }
-                })
-                .catch(error => {
-                    this.isSpinner = false;
-                    console.error('Error fetching template:', error);
-                });
+            // getTemplate({ templateId: this.templateId })
+            //     .then((data) => {
+            //         if (data) {
+            //             this.templateName = data[0].Template_Name__c;
+            //             this.templateRow = data[0].Row__c;
+            //             this.templateColumns = data[0].Column__c;
+            //             this.templateObject = data[0].Object_API_Name__c;
+            //             this.baseOngetField();
+            //             this.getTemplateField();
+            //             // this.setTemplateData();
+            //             // this.isSpinner = false;
+            //         } else {
+            //             this.isSpinner = false;
+            //             console.error('Error fetching template data');
+            //         }
+            //     })
+            //     .catch(error => {
+            //         this.isSpinner = false;
+            //         console.error('Error fetching template:', error);
+            //     });
                 // this.isSpinner = false;
         } catch (error) {
             console.log('Error connectedCallback :' + error.message);
@@ -70,16 +70,16 @@ export default class EditDragDropTemplate extends LightningElement {
     getTemplateField() {
         try {
             this.isSpinner = true;
-            getFields({ templateId: this.templateId })
-                .then(result => {
-                    console.log("result field list *** : ",result);
-                    this.templateFields = result;
-                    this.setTemplateData();
-                    this.isSpinner = false;
-                }).catch(error => {
-                    this.isSpinner = false;
-                    console.error('Error getFields:', error);
-                });
+            // getFields({ templateId: this.templateId })
+            //     .then(result => {
+            //         console.log("result field list *** : ",result);
+            //         this.templateFields = result;
+            //         this.setTemplateData();
+            //         this.isSpinner = false;
+            //     }).catch(error => {
+            //         this.isSpinner = false;
+            //         console.error('Error getFields:', error);
+            //     });
         } catch (error) {
             console.log('Error getTemplateField :' + error.message);
         }
@@ -215,27 +215,27 @@ export default class EditDragDropTemplate extends LightningElement {
 
     feildSave(fieldName,fieldAPI,srNo,sectionNo){
         this.isSpinner = true;
-        saveFields({ templateId: this.templateId, fieldName: fieldName, fieldAPI: fieldAPI, srNumber:srNo, sequenceNumber:sectionNo})
-        .then(result => {
-            console.log("result in save method *** : ",result);
-            if (result == 'success') {
-                // const row = this.templatedata.find(row => row.id == rowId);
-                // const column = row.columns.find(column => column.id == columnId);
-                let sequenceNumberList = [];
-                if (sectionNo != null && sectionNo != undefined && sectionNo != '') {
-                    sequenceNumberList = sectionNo.split('<!DG*)>');
-                }
-                let columnNum = sequenceNumberList[1];
-                let rowNum = sequenceNumberList[0];
-                const row = this.templatedata.find(row => row.rowId == rowNum);
-                const column = row.columns.find(column => column.columnId == columnNum);
-                // column.fields.push({ api: fieldAPI, label:fieldName, srNo: srNo});
-                this.isSpinner = false;
-            }
-        }).catch(error => {
-            this.isSpinner = false;
-            console.error('Error saveFields:', error.message);
-        });
+        // saveFields({ templateId: this.templateId, fieldName: fieldName, fieldAPI: fieldAPI, srNumber:srNo, sequenceNumber:sectionNo})
+        // .then(result => {
+        //     console.log("result in save method *** : ",result);
+        //     if (result == 'success') {
+        //         // const row = this.templatedata.find(row => row.id == rowId);
+        //         // const column = row.columns.find(column => column.id == columnId);
+        //         let sequenceNumberList = [];
+        //         if (sectionNo != null && sectionNo != undefined && sectionNo != '') {
+        //             sequenceNumberList = sectionNo.split('<!DG*)>');
+        //         }
+        //         let columnNum = sequenceNumberList[1];
+        //         let rowNum = sequenceNumberList[0];
+        //         const row = this.templatedata.find(row => row.rowId == rowNum);
+        //         const column = row.columns.find(column => column.columnId == columnNum);
+        //         // column.fields.push({ api: fieldAPI, label:fieldName, srNo: srNo});
+        //         this.isSpinner = false;
+        //     }
+        // }).catch(error => {
+        //     this.isSpinner = false;
+        //     console.error('Error saveFields:', error.message);
+        // });
     }
 
     // ==== ===== ==== Generetic Method to test Message Popup and Toast... === === === === === === ===

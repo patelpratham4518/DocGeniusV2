@@ -4,4 +4,9 @@
     <availableInTouch>false</availableInTouch>
     <confirmationTokenRequired>false</confirmationTokenRequired>
     <label>DocGeniusPDFGeneratorPage</label>
+    <packageVersions>
+        <majorNumber>5</majorNumber>
+        <minorNumber>4</minorNumber>
+        <namespace>mmdoc</namespace>
+    </packageVersions>
 </ApexPage>

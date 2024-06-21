@@ -13,19 +13,23 @@ import {navigationComps, nameSpace} from 'c/utilityProperties';
 
 export default class HomePage extends NavigationMixin(LightningElement) {
     @track isDisplayOption = false;
-    @track templateList = [];
     @track objectList = [];
     @track objPillToDisplay = null;
     @track templateTypeList = [];
     @track filterDateTypeList = [];
-
-    @track displayedTemplateList = [];
     
-    @track defaultFieldToSort = 'Template_Name__c';
-    @track sortAS = 'asc';
+    @track templateList = [];
+    @track filteredTemplateList = [];
+    @track displayedTemplateList = [];
+    @track maxTempToDisplay;
+    
+    @track defaultFieldToSort = 'LastModifiedDate';
+    @track sortAS = 'desc';
     @track filterOpts = {};
     @track selectedTemplateId;
     @track selectedObjectName;
+    @track isFilterApplied;
+
     @track selectedTemplate = {};
     @track dataLoaded = false; 
     @track isSpinner = false;
@@ -41,6 +45,8 @@ export default class HomePage extends NavigationMixin(LightningElement) {
     isEditSimpleTemplate = false;
     isEditCSVTemplate = false;
     isEditDnDTemplate = false;
+
+    lastScroll = 0;                             // User to identify scroll direction for lazy loading...
 
     @track sortingFiledList = [
         {label : 'Template Name', value : 'Template_Name__c'},
@@ -70,10 +76,7 @@ export default class HomePage extends NavigationMixin(LightningElement) {
     }
 
     imgSrc = {
-        'TemplateCardBg': '',
         'HomBg' : '',
-        'HomeNoRecordBg' : '',
-        'DocGeniusLogo' : '',
         'createTemplateImg': '',
         'emptyState' : '',
     };
@@ -95,7 +98,7 @@ export default class HomePage extends NavigationMixin(LightningElement) {
     }
 
     get enableFilterBtn(){
-        return Object.keys(this.filterOpts).length == 0 ? true : false;
+        return !this.isFilterApplied && Object.keys(this.filterOpts).length == 0 ? true : false;
     }
 
     get clearRangeDates(){
@@ -162,15 +165,18 @@ export default class HomePage extends NavigationMixin(LightningElement) {
                             ele['LastModifiedDate_Only'] = ele.LastModifiedDate.split('T')[0];
                         });
                         this.templateList = templateList;
-                        this.displayedTemplateList = JSON.parse(JSON.stringify(this.templateList));
-                        this.setSerialNumber();
-    
+                        this.filteredTemplateList = JSON.parse(JSON.stringify(this.templateList));
+                        
                         if(result.objectList.length > 0){
                             this.objectList = result.objectList;
                         }
                         if(result.dateFields.length > 0){
                             this.filterDateTypeList = result.dateFields;
                         }
+                        this.filteredTemplateList = this.setSerialNumber(this.filteredTemplateList);
+                        // Load only first 50 template in HTML on initial render...
+                        this.maxTempToDisplay = this.filteredTemplateList.length;
+                        this.displayedTemplateList = this.filteredTemplateList.slice(0, 50);
                         this.dataLoaded = true;
                         this.isSpinner = false;
                     }
@@ -200,7 +206,7 @@ export default class HomePage extends NavigationMixin(LightningElement) {
     }
 
     // ------- -------- --------- --------- Sorting, Filter and Searching Option Methos - START - -------- ----------- ----------
-    // Method to show/hidde options
+    // Method to show/hidden options
     toggleFilterOptions(){
         try {
             this.isDisplayOption = !this.isDisplayOption;
@@ -235,14 +241,14 @@ export default class HomePage extends NavigationMixin(LightningElement) {
             var filterOpt = event.currentTarget.dataset.name;
             var tempFilterOpts = JSON.parse(JSON.stringify(this.filterOpts));
             if(event.detail.length > 0){
-                if(event.currentTarget.multiselect == 'true'){
+                if(event.currentTarget.multiselect == 'true' || event.currentTarget.multiselect == true){
                     tempFilterOpts[filterOpt] = event.detail;
                 }
                 else{
                     tempFilterOpts[filterOpt] = event.detail[0];
                 }
 
-                //if user seletec any object...then Add selected object in List of Pill To Display
+                //if user selected any object...then Add selected object in List of Pill To Display
                 if(filterOpt == 'objectsToFilter'){
                     var objPillToDisplay = [];
                     event.detail.forEach(ele => {
@@ -255,6 +261,7 @@ export default class HomePage extends NavigationMixin(LightningElement) {
             }
             else if(tempFilterOpts.hasOwnProperty(filterOpt)){
                 delete tempFilterOpts[filterOpt];
+                this.objPillToDisplay = null;
             }
 
             this.filterOpts = tempFilterOpts;
@@ -372,15 +379,15 @@ export default class HomePage extends NavigationMixin(LightningElement) {
     }
 
     // When we remove select object from pills..
-    removeSelctedObj(event){
+    removeSelectedObj(event){
         try {
             var unselectedValue = event.currentTarget.dataset.value;
-
-            var unselectedOption = this.filterOpts['objectsToFilter'].find(ele => ele == unselectedValue);
 
             this.objPillToDisplay = this.objPillToDisplay.filter(obj => {
                 return obj.value != unselectedValue;
             });
+
+            console.log(`this.filterOpts['objectsToFilter'] : `, this.filterOpts['objectsToFilter']);
 
             this.filterOpts['objectsToFilter'] = this.filterOpts['objectsToFilter'].filter((option) => {
                 return option != unselectedValue;
@@ -392,9 +399,9 @@ export default class HomePage extends NavigationMixin(LightningElement) {
             }
 
 
-            this.template.querySelector(`[data-name="objectsToFilter"]`).unselectOption(unselectedOption);
+            this.template.querySelector(`[data-name="objectsToFilter"]`).unselectOption(unselectedValue);
         } catch (error) {
-            console.error('error inside removeSelctedObj in custome combobox : ', error.stack);
+            console.error('error inside removeSelectedObj : ', error.stack);
         }
     }
 
@@ -414,7 +421,6 @@ export default class HomePage extends NavigationMixin(LightningElement) {
 
     applyFilter(event){
         try {
-            // console.log('this.filterOpts : ', this.filterOpts);
 
             var isFilter = this.setErrorForRangeDate();
             if(isFilter){
@@ -422,7 +428,7 @@ export default class HomePage extends NavigationMixin(LightningElement) {
             }
             else{
     
-                this.displayedTemplateList = this.templateList.filter(ele => {
+                this.filteredTemplateList = this.templateList.filter(ele => {
                     var inObject = this.filterOpts['objectsToFilter'] ? this.filterOpts['objectsToFilter'].includes(ele.Object_API_Name__c) : true;
                     var inType = this.filterOpts['TempTypeToFilter'] ? this.filterOpts['TempTypeToFilter'].includes(ele.Template_Type__c) : true;
                     var inStatus = this.filterOpts['TempStatusToFilter'] ? this.filterOpts['TempStatusToFilter'].includes(ele.Template_Status__c.toString()) : true;
@@ -435,8 +441,16 @@ export default class HomePage extends NavigationMixin(LightningElement) {
                     return (inObject && inType && inStatus && inDate);
                 });
 
+                
                 this.sortDisplayTemplates();
-                this.setSerialNumber();
+                this.filteredTemplateList = this.setSerialNumber(this.filteredTemplateList);
+
+                // Load only first 50 template in HTML on after apply filters...
+                this.maxTempToDisplay = this.filteredTemplateList.length;
+                this.displayedTemplateList = this.filteredTemplateList.slice(0, 50);
+
+                // If There is No option available to filter after filtering... set "isFilterApplied" to false...
+                this.isFilterApplied = Object.keys(this.filterOpts).length == 0 ? false : true;
             }
         } catch (error) {
             console.error('error in applyFilter : ', error.stack);
@@ -447,7 +461,7 @@ export default class HomePage extends NavigationMixin(LightningElement) {
         try {
             var fieldToSort = this.filterOpts['fieldToSort'] ? this.filterOpts['fieldToSort'] : this.defaultFieldToSort;
             var sortAs = this.filterOpts['filterSortAS'] ? this.filterOpts['filterSortAS'] : this.defaultSortAS;
-            this.displayedTemplateList = this.displayedTemplateList.sort((a, b) => {
+            this.filteredTemplateList = this.filteredTemplateList.sort((a, b) => {
                 if(a[fieldToSort].toLowerCase() > b[fieldToSort].toLowerCase()){
                     return sortAs == 'asc' ? 1 : -1;
                 }
@@ -524,19 +538,53 @@ export default class HomePage extends NavigationMixin(LightningElement) {
         
     }
 
-    // Set Serial Number after Searching, Sorting and Filteration...
-    setSerialNumber(){
-        var displayedTemplateList = JSON.parse(JSON.stringify(this.displayedTemplateList));
-        displayedTemplateList.forEach(ele => {
-            ele['srNo'] = displayedTemplateList.indexOf(ele) + 1;
+    // Set Serial Number after Searching, Sorting and Filtration...
+    setSerialNumber(listToUpdate){
+        
+        listToUpdate.forEach(ele => {
+            ele['srNo'] = listToUpdate.indexOf(ele) + 1;
         });
-        this.displayedTemplateList = displayedTemplateList;
 
-        var templateList = JSON.parse(JSON.stringify(this.templateList));
-        templateList.forEach(ele => {
-            ele['srNo'] = templateList.indexOf(ele) + 1;
-        });
-        this.templateList = templateList;
+        return listToUpdate;
+    }
+
+    // Lazy loading Method to add and remove templates based in scroll position..
+    loadTemplates(event){
+        try {
+            const currentScroll = event.target.scrollTop;                                           // current scrolling position..
+            const offsetToBottom = event.target.scrollHeight - event.target.clientHeight - 600;     // add when scroll below this position..
+            const halfOffset = (event.target.scrollHeight / 2) - 300;                               // remove when scroll above this position...
+
+            // When Scrolling Downward... ADD template in bottom...
+            if(currentScroll >= this.lastScroll && currentScroll >= offsetToBottom){
+
+                if(this.displayedTemplateList.length < this.maxTempToDisplay){
+
+                    const firstIndex = this.displayedTemplateList.length;
+                    let lastIndex = this.displayedTemplateList.length + 50;
+                    lastIndex = lastIndex < this.maxTempToDisplay ? lastIndex : this.maxTempToDisplay;
+
+                    for(var i = firstIndex; i < lastIndex; i++){
+                        this.displayedTemplateList.push(this.filteredTemplateList[i]);
+                    }
+                }
+            }
+
+            //When Scrolling Upward... REMOVED templates from bottom...
+           else if(currentScroll < this.lastScroll && currentScroll < halfOffset){
+                if(this.displayedTemplateList.length > 50){
+                    let lastIndex = this.displayedTemplateList.length - 50;
+                    lastIndex = lastIndex < 50 ? 50 : lastIndex;
+    
+                    this.displayedTemplateList = this.filteredTemplateList.slice(0, lastIndex);
+                }
+            }
+
+            this.lastScroll = event.target.scrollTop;
+
+        } catch (error) {
+            console.log('error in loadTemplates : ', error.stack);
+        }
     }
 
     clearFilterOpts(){
@@ -568,17 +616,20 @@ export default class HomePage extends NavigationMixin(LightningElement) {
             if(customCombos.length > 0){
                 customCombos.forEach(ele => {
                     ele.resetValue();
+                    ele.clearSearch();
                 });
             }
 
             // remove all obj pills...
             this.objPillToDisplay = null;
 
-            // Untick all refrence time selection as well as 'FROM' and 'TO' dates...
+            // Un-tick all refrence time selection as well as 'FROM' and 'TO' dates...
             this.handleSetRangeDates();
 
             // apply filter after removing all options
             this.applyFilter();
+            
+            this.isFilterApplied = false;
         } catch (error) {
             console.log('error in clearFilterOpts : ', error.stack);
         }
@@ -587,12 +638,18 @@ export default class HomePage extends NavigationMixin(LightningElement) {
     searchTemplates(event){
         try {
             var searchValue = (event.target.value).toLowerCase();
+
+            var filteredTemplateList = [];
             
-            this.displayedTemplateList = this.templateList.filter((ele) => {
+            filteredTemplateList = this.filteredTemplateList.filter((ele) => {
                  return ele.Template_Name__c.toLowerCase().includes(searchValue);
             });
 
-            this.setSerialNumber();
+            // Load only first 50 template in HTML after searching...
+            this.maxTempToDisplay = filteredTemplateList.length;
+            this.displayedTemplateList = filteredTemplateList.slice(0, 50);
+
+            this.displayedTemplateList = this.setSerialNumber(this.displayedTemplateList);
             
         } catch (error) {
             console.error('error in searchTemplates : ', error.stack);
@@ -615,13 +672,14 @@ export default class HomePage extends NavigationMixin(LightningElement) {
             this.toggelTemplateId = event.currentTarget.dataset.id;
             this.isToggleStatus = true;
             if(!event.target.checked){
+                event.target.checked = !event.target.checked;
                 // If user try to inactive status... Show Confirmation Popup Message...
                 this.showMessagePopup('Warning', 'Warning !!!', 'Do you want to Inactive this Template');
             }
             else{
                 // update Status the template List to reflect on UI
-                var index = this.displayedTemplateList.findIndex(ele => ele.Id == this.toggelTemplateId);
-                this.displayedTemplateList[index].Template_Status__c = true;
+                var index = this.filteredTemplateList.findIndex(ele => ele.Id == this.toggelTemplateId);
+                this.filteredTemplateList[index].Template_Status__c = true;
 
                 var index2 = this.templateList.findIndex(ele => ele.Id == this.toggelTemplateId);
                 this.templateList[index2].Template_Status__c = true;
@@ -662,17 +720,18 @@ export default class HomePage extends NavigationMixin(LightningElement) {
         }
     }
 
-    // As recevied confirmation from child popup messge compoent...
-    handleConfimation(event){
+    // As received confirmation from child popup message component...
+    handleConfirmation(event){
         try {
             if(this.isToggleStatus){
                 const toggelInput = this.template.querySelector(`[data-toggel="${this.toggelTemplateId}"]`);
 
                 if(event.detail){
-                    // If recived Confirm from user ... 
+                    toggelInput.checked = !toggelInput.checked;
+                    // If received Confirm from user ... 
                     // update Status the template List to reflect on UI...
-                    var index = this.displayedTemplateList.findIndex(ele => ele.Id == this.toggelTemplateId);
-                    this.displayedTemplateList[index].Template_Status__c = toggelInput.checked;
+                    var index = this.filteredTemplateList.findIndex(ele => ele.Id == this.toggelTemplateId);
+                    this.filteredTemplateList[index].Template_Status__c = toggelInput.checked;
     
                     var index2 = this.templateList.findIndex(ele => ele.Id == this.toggelTemplateId);
                     this.templateList[index2].Template_Status__c = toggelInput.checked;
@@ -687,8 +746,6 @@ export default class HomePage extends NavigationMixin(LightningElement) {
                     })
                 }
                 else{
-                    // revert status change....
-                    toggelInput.checked = !toggelInput.checked;
                     this.isToggleStatus = false;
                     this.toggelTemplateId = null;
                 }
@@ -703,11 +760,12 @@ export default class HomePage extends NavigationMixin(LightningElement) {
                         console.log('result on deleteTemplate : ', result);
                         if(result == 'deleted'){
                             // Remove Template from TemplateList...
-                            this.displayedTemplateList = this.displayedTemplateList.filter(ele => ele.Id != this.deleteTemplateId);
+                            this.filteredTemplateList = this.filteredTemplateList.filter(ele => ele.Id != this.deleteTemplateId);
                             this.templateList = this.templateList.filter(ele => ele.Id != this.deleteTemplateId);
                             
                             // Set Serial Number after Deleting...
-                            this.setSerialNumber();
+                            this.filteredTemplateList = this.setSerialNumber(this.filteredTemplateList);
+                            this.templateList = this.setSerialNumber(this.templateList);
     
                             this.deleteTemplateId = null;
                             this.isDeleteTemplate = false;
@@ -728,7 +786,7 @@ export default class HomePage extends NavigationMixin(LightningElement) {
                 }
             }
         } catch (error) {
-            console.error('error in handleConfimation : ', error.stack);
+            console.error('error in handleConfirmation : ', error.stack);
         }
     }
 

@@ -42,7 +42,7 @@ public with sharing class EditCSVTemplateController {
                 field.isSearchable = a_Field_Description.isFilterable();
 
                 // Check if the field is a picklist
-                if(a_Field_Description.getType() == Schema.DisplayType.PICKLIST) {
+                if(a_Field_Description.getType() == Schema.DisplayType.PICKLIST || a_Field_Description.getType() == Schema.DisplayType.MULTIPICKLIST) {
                     // Get picklist values
                     List<String> picklistValues = new List<String>();
                     Schema.PicklistEntry[] picklistEntries = a_Field_Description.getPicklistValues();
@@ -83,12 +83,12 @@ public with sharing class EditCSVTemplateController {
         allData.fields = '';
         allData.filters = '';
         try {
-            List<Template_Fields__c> tf = new List<Template_Fields__c>([SELECT Id, CSV_Fields__c, CSV_Filter__c, CSV_Query__c, Template_Page__c FROM Template_Fields__c WHERE Template__c =:templateId ORDER BY Order_No_Simple__c asc NULLS Last]);
+            List<Template_Data__c> tf = new List<Template_Data__c>([SELECT Id, CSV_Fields__c, CSV_Filter__c, CSV_Query__c, Template_Page__c FROM Template_Data__c WHERE Template__c =:templateId ORDER BY Order_No_Simple__c asc NULLS Last]);
             System.debug('Template : ' + templateId);
-            // tf.addAll([SELECT Id, CSV_Fields__c, CSV_Filter__c, CSV_Query__c FROM Template_Fields__c  WHERE Template__c =:templateId ORDER BY Order_No_Simple__c asc NULLS Last]);
+            // tf.addAll([SELECT Id, CSV_Fields__c, CSV_Filter__c, CSV_Query__c FROM Template_Data__c  WHERE Template__c =:templateId ORDER BY Order_No_Simple__c asc NULLS Last]);
 
             if(tf.size() >0){
-                for (Template_Fields__c t : tf) {
+                for (Template_Data__c t : tf) {
                     if(t.CSV_Filter__c != null){
                         allData.filters += t.CSV_Filter__c;
                     }
@@ -96,7 +96,7 @@ public with sharing class EditCSVTemplateController {
                 }
                 allData.fields = tf[0].CSV_Fields__c;
             }
-            // for(Template_Fields__c t : tf){
+            // for(Template_Data__c t : tf){
             //     if(t.CSV_Filter__c != null){
             //         allData.filters += t.CSV_Filter__c;
             //     }
@@ -121,7 +121,7 @@ public with sharing class EditCSVTemplateController {
     @AuraEnabled
     public static void saveTemplateFields(String allFields, String templateId, String query, String filters){
         try {
-            List<Template_Fields__c> existingFields = new List<Template_Fields__c>([SELECT Id, CSV_Fields__c, CSV_Filter__c, CSV_Query__c, Template_Page__c FROM Template_Fields__c WHERE Template__c =:templateId ORDER BY Order_No_Simple__c asc NULLS Last]);
+            List<Template_Data__c> existingFields = new List<Template_Data__c>([SELECT Id, CSV_Fields__c, CSV_Filter__c, CSV_Query__c, Template_Page__c FROM Template_Data__c WHERE Template__c =:templateId ORDER BY Order_No_Simple__c asc NULLS Last]);
             List<Template_Page__c> existingPage = new List<Template_Page__c>([SELECT Id FROM Template_Page__c WHERE Template__c =:templateId]);
             List<String> filterParts = new List<String>();
 
@@ -157,17 +157,17 @@ public with sharing class EditCSVTemplateController {
             System.debug('List of filters ::: ' + filterParts);
 
 
-            // -=-=- if there is not any Template_Fields__c and Template_Page__c records for a template (i.e.- New Templates) -=-=-
+            // -=-=- if there is not any Template_Data__c and Template_Page__c records for a template (i.e.- New Templates) -=-=-
             if(existingPage.size() ==0 && existingFields.size() ==0){
                 Template_Page__c tp = new Template_Page__c();
                 tp.Page_Number__c =001;
                 tp.Template__c = templateId;
                 insert tp;
 
-                List<Template_Fields__c> tf = new List<Template_Fields__c>();
+                List<Template_Data__c> tf = new List<Template_Data__c>();
                 for (Integer i=0; i<filterParts.size() ; i++) {
                     String filterPart = filterParts[i];
-                    Template_Fields__c t = new Template_Fields__c();
+                    Template_Data__c t = new Template_Data__c();
                     t.Template__c = templateId;
                     t.CSV_Fields__c = allFields;
                     t.Template_Page__c = tp.id;
@@ -179,12 +179,12 @@ public with sharing class EditCSVTemplateController {
 
                 insert tf;
                 System.debug('Template Fields Saved : ' + tf);
-            // -=-=- If there a Template_Page__c but not any Template_Fields__c records -=-=-
+            // -=-=- If there a Template_Page__c but not any Template_Data__c records -=-=-
             }else if(existingPage.size() == 1 && existingFields.size() == 0){
-                List<Template_Fields__c> tf = new List<Template_Fields__c>();
+                List<Template_Data__c> tf = new List<Template_Data__c>();
                 for (Integer i=0; i<filterParts.size() ; i++) {
                     String filterPart = filterParts[i];
-                    Template_Fields__c t = new Template_Fields__c();
+                    Template_Data__c t = new Template_Data__c();
                     t.Template__c = templateId;
                     t.CSV_Fields__c = allFields;
                     t.Template_Page__c = existingPage[0].id;
@@ -196,35 +196,35 @@ public with sharing class EditCSVTemplateController {
                 
                 insert tf;
                 System.debug(tf + ' : emplate Fields Saved with Existing Page: ' + existingPage[0]);
-            // -=-=- If there are both Template_Page__c and Template_Fields__c records available -=-=-
+            // -=-=- If there are both Template_Page__c and Template_Data__c records available -=-=-
             }else{
                 Integer oldFLenght = existingFields.size();
                 Integer newFLenght = filterParts.size();
 
-                List<Template_Fields__c> tf = new List<Template_Fields__c>();
-                List<Template_Fields__c> tfToDelete = new List<Template_Fields__c>();
+                List<Template_Data__c> tf = new List<Template_Data__c>();
+                List<Template_Data__c> tfToDelete = new List<Template_Data__c>();
 
-                // -=-=- if the no. of existing Template_Fields__c records are only needed to store updated fielters -=-=-
+                // -=-=- if the no. of existing Template_Data__c records are only needed to store updated fielters -=-=-
                 if(newFLenght == oldFLenght){
                     for(Integer i =0; i< newFLenght; i++){
-                        Template_Fields__c t = existingFields[i];
+                        Template_Data__c t = existingFields[i];
                         t.CSV_Fields__c = allFields;
                         t.CSV_Query__c = query;
                         t.CSV_Filter__c = filterParts[i];
                         tf.add(t);
                     }
 
-                // -=-=- If we require new template_fields__c records to store the Updated Filters -=-=-
+                // -=-=- If we require new template_Data__c records to store the Updated Filters -=-=-
                 }else if(newFLenght > oldFLenght){
                     for(Integer i =0; i< oldFLenght; i++){
-                        Template_Fields__c t = existingFields[i];
+                        Template_Data__c t = existingFields[i];
                         t.CSV_Fields__c = allFields;
                         t.CSV_Query__c = query;
                         t.CSV_Filter__c = filterParts[i];
                         tf.add(t);
                     }
                     for(Integer i=oldFLenght; i< newFLenght; i++){
-                        Template_Fields__c t = new Template_Fields__c();
+                        Template_Data__c t = new Template_Data__c();
                         t.Template__c = templateId;
                         t.CSV_Fields__c = allFields;
                         t.Template_Page__c = existingPage[0].id;
@@ -234,17 +234,17 @@ public with sharing class EditCSVTemplateController {
                         tf.add(t);
                     }
                 
-                // -=-=- If we have enough old template_fields__c records to store filters string, we need to delete not used template fields records -=-=-
+                // -=-=- If we have enough old template_Data__c records to store filters string, we need to delete not used template fields records -=-=-
                 }else if(newFLenght < oldFLenght){
                     for(Integer i =0; i< newFLenght; i++){
-                        Template_Fields__c t = existingFields[i];
+                        Template_Data__c t = existingFields[i];
                         t.CSV_Fields__c = allFields;
                         t.CSV_Query__c = query;
                         t.CSV_Filter__c = filterParts[i];
                         tf.add(t);
                     }
                     for(Integer i=newFLenght; i< oldFLenght; i++){
-                        Template_Fields__c t = existingFields[i];
+                        Template_Data__c t = existingFields[i];
                         tfToDelete.add(t);
                     }
                 }
@@ -335,6 +335,32 @@ public with sharing class EditCSVTemplateController {
     @AuraEnabled
     public static String getSessionId(){
         return Page.UserSessionIdPage.getContent().toString();
+    }
+
+
+/*
+*********************************************************
+@description    : Method is used to update the basic details of the template
+@param templateId  : {String} - Id of the current template
+@param templateName : {String} - Name of the current template to update
+@param templateDescription : {String} - Type of the current template to update
+@param templateStatus  : {Boolean} - Status of the current template to update
+@return         : (Nothing will be returned)
+********************************************************
+*/
+    @AuraEnabled
+    public static void updateTemplate(String templateId, String templateName, String templateDescription, Boolean templateStatus){
+        try{
+            Template__c updatedTemplate = new Template__c(
+                Id = templateId,
+                Template_Name__c = templateName,
+                Description__c = templateDescription,
+                Template_Status__c = templateStatus
+            );
+            update updatedTemplate;
+        }catch(Exception e){
+            Log_Handler.store_Exception(e, 'EditCSVTemplateController', 'updateTemplate');
+        }
     }
 
     // -=-=- this method is used to test the query generated -=-=-

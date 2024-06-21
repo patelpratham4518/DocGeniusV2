@@ -18,7 +18,7 @@ export default class DocumentLoader extends LightningElement {
     @api get fixTop(){ return this._fixTop}
     set fixTop(value){ this._fixTop = value}
 
-	scaleOutTime = 500;
+	scaleOutTime = 250;
 	isInitial = true;
 
 	// ** === Custom Label - START - =====
@@ -45,6 +45,7 @@ export default class DocumentLoader extends LightningElement {
 		}
 		else if(value == false){
 			setTimeout(() => {
+				this.template.querySelector('.documentPage').classList.add('zoomOutEffect');
 				this.template.querySelector('.loader_mainDiv').classList.add('fadedTransitionEffect');
 			}, 300)
 			setTimeout(() => {

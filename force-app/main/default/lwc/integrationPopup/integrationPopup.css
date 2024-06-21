@@ -52,6 +52,7 @@ section {
 .image-div {
     padding: 0.625rem;
     width: 50%;
+    padding-left: 30px;
     display: flex; 
     justify-content: center; 
     align-items: center; 
@@ -119,6 +120,7 @@ section {
     top: -0.875rem;
     color: #00AEFF;
 }
+
 
 /* .label-float input:focus + label,
 .label-float input:not(:placeholder-shown) + label {
@@ -270,19 +272,25 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 .save-btn {
-    cursor: pointer;
-    background: #00AEFF;
-    color: white;
     border: none;
-    border-radius: 0.5rem;
+    border-radius: 6px;
     width: 50%;
     font-size: 1rem;
-    height: 2.5rem;
+    padding-block: 8px;
 }
 
-.save-btn:hover {
-    background-color: #008eed;
+.auth-btn {
+    background-color: #00AEFF;
+    border-radius: 6px;
+    font-size: 1rem;
+    padding-block: 5px;
+    color: white;
+    border: 0px;
 }
+
+/* .save-btn:hover {
+    background-color: #008eed;
+} */
 
 @media only screen and (min-width: 48rem) and (max-width: 64rem) {
     .image-div{

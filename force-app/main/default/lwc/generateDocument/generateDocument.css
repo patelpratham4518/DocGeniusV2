@@ -1,8 +1,3 @@
-:host {
-    --background-image-url: 'default.jpg';
-
-}
-
 .main-div {
     border-radius: 0.5rem;
     text-align: center;
@@ -10,12 +5,18 @@
     height: 100%;
     padding: 1.5rem;
     background-color: white;
-    background-image: var(--background-image-url);
-    background-size: contain;
+    background-image: url(/resource/homePageImgs/HomBg.png);
+    background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
-    overflow-y: scroll;
+    overflow-y: hidden;
     overflow-x: hidden;
+    user-select: none;
+    position: absolute;
+    height: 94%;
+    width: calc(100% + 30%);
+    top: 3%;
+    left: -15%;
 }
 
 .header-div{
@@ -37,6 +38,23 @@
     border-radius: 0.5rem;
 } */
 
+.main-container {
+    display: flex;
+    flex-direction: column;
+    max-height: calc(100% - 7.5rem);
+    overflow-y: scroll;
+    padding: 0 0.5rem 0.5rem 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.template-select{
+    --inputAreaBorderWidth: 1px;
+    --inputAreaBorderColor : white;
+    --inputAreaHeight : 3rem;
+    --inputAreaBorderRadius : 0.5rem;
+    font-size: 1rem;
+}
+
 .title-text {
     width: 100%;
     height: 2.5rem;
@@ -54,11 +72,22 @@
 .template-select{
     width: calc( 100% - 13.75rem );
     cursor:default ;
+    user-select: unset;
 }
 
 .edit-btn{
     width: 200px !important;
     border: none;
+}
+
+.disabled-button{
+    background-color: lightgray !important;
+    cursor: not-allowed !important;
+}
+
+.disabled-button:hover{
+    background-color: lightgray !important;
+    box-shadow: 0px 0px 10px 0px #00000040;
 }
 
 .grid-div{
@@ -75,6 +104,7 @@
     gap: 1rem;
     text-align: left;
     font-size: 1rem;
+    padding: 0.3rem 0 0 0;
 }
 
 .grid-item, .flex-item{
@@ -91,9 +121,13 @@
     cursor: pointer;
 }
 
+.grid-item:hover, .edit-btn:hover {
+    box-shadow: 0 0 5px 0 lightgray;
+}
+
+
 .flex-item{
     justify-content: center;
-    color: #00AEFF;
     padding: 0;
 }
 
@@ -102,19 +136,31 @@
     font-size: 0.9rem;
 }
 
-.btn-div, .control-btns{
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    color: white;
-    font-size: 1rem;
-    margin-top: 1rem;
-    gap: 1rem;
+.select-tick-div {
+    flex-grow: 1;
+    text-align: right;
+}
+
+.select-tick-div svg {
+    width: 20px !important;
+    height: 15px !important;
 }
 
 .control-btns{
-    margin-top: 0;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 1rem;
+    padding: 1rem 0;
+    gap: 5rem;
+    box-shadow: 0 0 15px lightgray;
+    clip-path: inset(-15px 0px 0px 0px);
+    width: calc(100% + 3rem);
+    position: relative;
+    right: 1.5rem;
+    background: white;
 }
 
 .bottom-btn{
@@ -125,6 +171,11 @@
     border-radius: 0.5rem;
     font-size: 1.15rem;
     box-shadow: 0px 0px 10px 0px #00000040;
+}
+
+.bottom-btn:hover {
+    box-shadow: 0 0 5px 0 lightgray;
+    transform: scale(1.02);
 }
 
 .send-mail-btn{
@@ -143,6 +194,13 @@ svg{
     width: 1.5rem;
 }
 
+.email-create-div {
+    background-color: #d5ebff;
+    padding: 1rem;
+    margin: 0.5rem 0;
+    border-radius: 0.5rem;
+}
+
 .email-svg-div {
     position: absolute;
     background: white;
@@ -157,6 +215,8 @@ svg{
     flex-direction: column;
     padding-top: 0.5rem;
     text-align: left;
+    user-select: unset;
+    position: relative;
 }
 
 .email-element span {
@@ -164,20 +224,308 @@ svg{
     text-align: start;
     display: flex;
     align-items: center;
+    user-select: none;
 }
 
 .email-element input {
     width: 100%;
     border-radius: 8px;
-    border: 1.5px gray solid;
+    border: 1px darkgray solid;
     height: 2.5rem;
     padding-left: 1rem;
+    outline: none !important;
 }
 
+.input-error-border{
+    border: 1px solid red !important;
+}
 
-.template-select{
-    --inputAreaBorderWidth: 1px;
-    --inputAreaBorderColor : white;
-    --inputAreaHeight : 3rem;
-    --inputAreaBorderRadius : 0.5rem;
+.error-div{
+    display: flex;
+    width: 100%;
+    padding: 0.2rem 0;
+    color: red;
+}
+
+.added-emails-div {
+    display: flex;
+    gap: 0.5rem;
+    flex-grow: 1;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-top: 0.2rem;
+}
+
+.added-mail {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    background-color: #ffffff;
+    padding: 0.2rem 0.5rem;
+    border-radius: 0.5rem;
+    border: 1px solid lightgray;
+}
+
+.remove-mail-btn {
+    background-color: #d5ebff;
+    border-radius: 50%;
+    width: 1rem;
+    height: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.remove-mail-btn svg:hover{
+    cursor: pointer;
+    fill: black;
+}
+
+.cc-bcc-div {
+    position: absolute;
+    display: flex;
+    right: 1rem;
+    top: 2.3rem;
+}
+
+.cc-bcc-div div {
+    background-color: white;
+    border-radius: 0.3rem;
+    padding: 0 0.5rem;
+    color: #00aeff;
+}
+
+.cc-bcc-div div:hover{
+    transform: scale(1.1);
+    transition: 0.2s all;
+    cursor: pointer;
+}
+
+.not-display-div{
+    visibility: hidden !important;
+}
+/* 
+.cc-bcc-selected{
+    background-color: #00aeff !important;
+    color: white !important;
+    transition: 0.2s all;
+}
+
+.cc-bcc-selected:hover{
+    transform: scale(1.1);
+    transition: 0.2s all;
+    cursor: pointer;
+} */
+
+.cc-bcc-input-div {
+    display: flex;
+    padding: 0.2rem 0 0 0;
+    flex-direction: column;
+}
+.email-element input:focus{
+    border: 1px #00AEFF solid;
+}
+
+.body-div lightning-input-rich-text{
+    --slds-g-color-border-base-4 : darkgray;
+    --lwc-borderRadiusMedium:0.5rem;
+    outline: none !important;
+}
+
+.lightning-error-div{
+    --slds-g-color-border-base-4 : red !important;
+}
+
+/* All templates Section */
+
+.all-templates-div {
+    height: 80%;
+}
+
+.sub-header-div {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.search-field-div{
+    width: 30%;
+    margin-left: auto;
+    position: relative;
+}
+
+.field-search-input{
+    width: 100%;
+    height: 2.5rem;
+    border-radius: 0.5rem;
+    border: none;
+    padding-left: 2.4rem;
+    -webkit-box-shadow: 0 0 5px 1px lightgray;
+    -moz-box-shadow: 0 0 5px 1px lightgray;
+    box-shadow: 0 0 5px 1px lightgray;
+}
+
+.field-search-input:focus{
+    border: #00AEFF 0.063rem solid;
+}
+
+.field-search-input:focus-visible{
+    outline: none;
+}
+
+.search-img{
+    position: absolute;
+    border-radius: 0.5rem 0 0 0.5rem;
+    width: 2.5rem;
+    height: 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.template-selection-div{
+    background-color: #d5ebff;
+    border-radius: 0.5rem;
+    padding: 0.3rem 0.5rem;
+    height: 100%;
+}
+
+.title-div{
+    font-weight: 500;
+    color: #00AEFF;
+    font-size: 1.5rem;
+    margin: 1rem 0;
+    width: fit-content !important;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.title-div svg{
+    border-radius: 0.3rem;
+    padding: 0.2rem;
+    height: 2rem;
+    width: 2.4rem;
+    background: white;
+    border: 1px solid #00aeff;
+}
+
+.title-div svg:hover{
+    transition: ease-in-out 0.2s;
+    cursor: pointer;
+    background: #d5ebff !important;
+    border: none !important;
+}
+
+.template-selection-div .select-template-option{
+    margin: 0.6rem 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: white;
+    border-radius: 0.5rem;
+    padding: 0.2rem;
+}
+
+.template-selection-div .header-flex-div{
+    height: 3rem;
+    background: #00aeff;
+    color: white;
+    font-size: 1rem;
+    margin-bottom: 0.6rem;
+}
+
+.header-item{
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: white !important;
+    margin: 0.5rem;
+}
+
+.template-selection-div .option-prop{
+    display: block;
+    margin: 0.5rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.select-template-option .index{
+    width: 3%;
+}
+
+.props-div .index{
+    background: #a3e2ff;
+    border-radius: 0.3rem;
+    margin: auto 0.2rem;
+    padding: 0.3rem;
+}
+
+.select-template-option .name{
+    width: 20%;
+}
+.select-template-option .status{
+    width: 7%;
+    border-radius: 0.3rem;
+    color: black;
+    padding: 0.3rem;
+    margin: 0;
+}
+.select-template-option .last-modified{
+    width: 20%
+}
+.select-template-option .type{
+    width: 20%
+}
+.select-template-option .version{
+    width: 20%
+}
+.select-template-option .redirect{
+    width: 10%;
+}
+
+.select-template-option .active-status {
+    background: #a3e2ff;
+}
+.select-template-option .inactive-status {
+    background: #d5d5d5;
+}
+
+.no-results{
+    height: 84%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.no-result-svg{
+    width: 160px !important;
+    height: 210px !important;
+}
+
+.template-selection-div button{
+    
+    background-color: white;
+    color: #00aeff;
+    border: 1px solid #00aeff;
+    width: fit-content;
+    font-size: 12px;
+    border-radius: 0.3rem;
+    padding: .25rem .5rem;
+    font-weight: 500;
+}
+
+.template-selection-div button:hover{
+    background-color: #00AEFF;
+    color: white;
+    box-shadow: 0 0 2px 0 gray;
+    transition: 0.2s all;
+}
+
+.bold-text{
+    font-weight: 700;
+    user-select: none;
+    font-size: 1.3rem;
 }

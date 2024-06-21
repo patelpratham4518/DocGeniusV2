@@ -1699,6 +1699,51 @@ a.note-dropdown-item:hover {
                 --tabSection_Height : 2rem;
                 --toolbar_height : 4rem;
             }
+            .note-editor.note-frame h1{
+                font-size: 34px;
+                font-weight: 600;
+                line-height: 34px;
+                display: block;
+            }
+            .note-editor.note-frame h2{
+                font-size: 30px;
+                font-weight: 600;
+                line-height: 32px;
+                display: block;
+            }
+            .note-editor.note-frame h3{
+                font-size: 24px;
+                font-weight: 600;
+                line-height: 26px;
+                display: block;
+            }
+            .note-editor.note-frame h4{
+                font-size: 20px;
+                font-weight: 600;
+                line-height: 22px;
+                display: block;
+            }
+            .note-editor.note-frame h5{
+                font-size: 18px;
+                font-weight: 600;
+                line-height: 20px;
+                display: block;
+            }
+            .note-editor.note-frame h6{
+                font-size: 16px;
+                font-weight: 600;
+                line-height: 18px;
+                display: block;
+            }
+
+
+            input[type=number]::-webkit-inner-spin-button, 
+            input[type=number]::-webkit-outer-spin-button { 
+                -webkit-appearance: none;
+                -moz-appearance: none;
+                appearance: none;
+                margin: 0; 
+            }
                 /* full editor container css */
             .note-editor.note-frame,
             .note-editor.note-airframe {
@@ -1961,8 +2006,6 @@ a.note-dropdown-item:hover {
             .note-handle .note-control-selection .note-control-holder {
                 border: 3px solid #3ca9ff;
             }
-
-
             
             .note-editor .note-editing-area .note-editable table td,
             .note-editor .note-editing-area .note-editable table th {
@@ -2004,7 +2047,11 @@ a.note-dropdown-item:hover {
                 padding-top: 1px;
                 padding-bottom: 9px;
             }
-            
+
+            /* Insert Image URL Input  */
+            .note-group-image-url{
+                display: none;
+            }
 
 
 
@@ -2215,148 +2262,6 @@ a.note-dropdown-item:hover {
             }
 
 
-            /* ========================= page Setup popup css ================================= */
-            /* .pageSetupBackdrop{
-                width: 100%;
-                height: 100%;
-                position: absolute;
-                top: 0%;
-                bottom: 0%;
-                display: none;
-                justify-content: center;
-                align-items: center;
-                background: rgba(0, 0, 0, 0.175);
-            }
-            .setupContainer{
-                min-width: max-content;
-                height: max-content;
-            }
-            .setupContainer_sub{
-                min-width: max-content;
-                height: max-content;
-                background: white;
-                border-radius: 6px;
-            }
-            .setUpTitleSection{
-                display: flex;
-                justify-content: center;
-                align-items: center;
-            }
-            .setUpTitle{
-                flex-grow: 1;
-                padding: 0.5rem 0.5rem;
-                font-size: 16px;
-                font-family: Verdana, Geneva, Tahoma, sans-serif;
-                letter-spacing: 1px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-            }
-            .setupCloseBtn{
-                height: 100;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                padding-inline: 0.75rem;
-                cursor: pointer;
-            }
-            .setupCloseBtn svg{
-                width: 20px;
-                height: 20px;
-                fill: currentColor;
-            }
-            .setUpOptions{
-                padding-bottom: 1rem;
-                display: flex;
-                justify-content: center;
-                align-items: flex-start;
-            }
-            .setupOption{
-                width: fit-content;
-                height: fit-content;
-            }
-            .setupOption:not(:last-child){
-                border-right: 1px solid rgba(0, 0, 0, 0.26);
-            }
-            .optionTitle{
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                color: #767676;
-                font-size: 14px;
-                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            }
-            .setUpinputs{
-                width: 8rem;
-                min-width: max-content;
-                height: 6.75rem;
-                padding-inline: 0.75rem;
-            }
-            .setUpIcon{
-                display: flex;
-                justify-content: center;
-                padding-block: 0.5rem;
-            }
-            .msIcon{
-                width: 40px;
-                height: 40px;
-                margin-inline: auto;
-            }
-            .msIcon svg > path.OfficeIconColors_HighContrast:not([class*="OfficeIconColors_m"]) {
-                fill: transparent;
-            }
-            svg>path.OfficeIconColors_m20 {
-                fill: #FAFAFAFF;
-            }
-            svg>path.OfficeIconColors_m22 {
-                fill: #3A3A38FF;
-            }
-            svg>path.OfficeIconColors_m24 {
-                fill: #1E8BCDFF;
-            }
-
-            .inputContainer{
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                gap: 0.25rem;
-                margin-block: 0.25rem;
-                position: relative;
-            }
-            .oriantationInputs .inputContainer{
-                justify-content: flex-start;
-            }
-            .sizeInputs .inputContainer{
-                justify-content: flex-start;
-            }
-            .inputLabel{
-                font-size: 14px;
-                font-family: 'Courier New', Courier, monospace;
-            }
-            .pageMarginInput{
-                border-radius: 6px;
-                min-width: 1rem;
-                width: 2.5rem;
-                border: 0.5px solid #a6a6a6;
-                padding: 0.2rem;
-                position: relative;
-            }
-            .pageMarginInput:focus-visible{
-                outline: none;
-            }
-            .subLabel{
-                font-size: 12px;
-                color: rgb(150 150 150);
-                letter-spacing: 0px;
-                font-family: math;
-                margin-left: 0.5rem;
-            } */
-            /* ========================= page Setup popup css - END - ================================= */
-
-
-
-
-
 /* ========= =======  ========= ============ Media Query ======= ======== ========= ========= ============ */
 @media only screen and (max-width: 1440px){
     .note-editor .note-editing-area {
@@ -2367,7 +2272,7 @@ a.note-dropdown-item:hover {
     .note-editor .note-editing-area {
         margin-right: 0%;
         margin-inline: auto;
-        max-width: 100%;
+        max-width: calc(100% - 2rem);
     }
     .note-custom_title{
         display: none !important;

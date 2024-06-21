@@ -98,13 +98,13 @@ export default class GenerateCSV extends LightningElement {
 // -=-=- Used to handle the change in checkbox for the additional details in the CSV -=-=-
     handleTemplateDetailsToggle(event){
         this.showTemplateDetails = event.target.checked;
-        console.log('Show Template Details:: ' + this.showTemplateDetails);
+        // console.log('Show Template Details:: ' + this.showTemplateDetails);
     }
 
 // -=-=- Used to handle the file name change -=-=-
     handleFileNameChange(event){
         this.csvFileName = event.target.value;
-        console.log('CSV File Name:: ' + this.csvFileName);
+        // console.log('CSV File Name:: ' + this.csvFileName);
     }
 
 // -=-=- Used to fetch all the data related to a particular template like query, sessionId and selected fields  -=-=-

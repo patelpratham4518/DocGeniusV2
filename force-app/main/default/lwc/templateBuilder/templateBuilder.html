@@ -4,7 +4,7 @@
       <div class="editorSection">
         <div class="tabSection">
           <div class="tabSection_sub">
-            <div class="homeBtn" onclick={closeEditTemplate}>
+            <button class="homeBtn" title="Home" onclick={closeEditTemplate}>
               <svg viewBox="0 0 24 24">
                 <g stroke-width="0"></g>
                 <g stroke-linecap="round" stroke-linejoin="round"></g>
@@ -14,7 +14,7 @@
                   </path>
                 </g>
               </svg>
-            </div>
+            </button>
             <div class="tab" data-name="contentTab" onclick={activeTab}>
               <svg viewBox="0 0 24 24">
                 <path
@@ -23,7 +23,7 @@
               </svg>
               <div>Template Content</div>
             </div>
-            <div class="tab" data-name="headerFooterTab" onclick={activeTab}>
+            <!-- <div class="tab" data-name="headerFooterTab" onclick={activeTab}>
               <svg viewBox="0 0 24 24">
                 <path
                   d="M17 21V17H7V21H5V16C5 15.4477 5.44772 15 6 15H18C18.5523 15 19 15.4477 19 16V21H17ZM7 3V7H17V3H19V8C19 8.55228 18.5523 9 18 9H6C5.44772 9 5 8.55228 5 8V3H7ZM2 9L6 12L2 15V9ZM22 9V15L18 12L22 9Z">
@@ -38,17 +38,17 @@
                 </path>
               </svg>
               <div>Watermark</div>
-            </div>
+            </div> -->
             <div class="tab" data-name="basicTab" onclick={activeTab}>
               <svg viewBox="0 0 24 24">
                 <path
                   d="M20 22H4C3.44772 22 3 21.5523 3 21V3C3 2.44772 3.44772 2 4 2H20C20.5523 2 21 2.44772 21 3V21C21 21.5523 20.5523 22 20 22ZM19 20V4H5V20H19ZM7 6H11V10H7V6ZM7 12H17V14H7V12ZM7 16H17V18H7V16ZM13 7H17V9H13V7Z">
                 </path>
               </svg>
-              <div>Basic Deatils</div>
+              <div>Basic Details</div>
             </div>
-            <div class="templateName">
-              <div class="recordSVG" onclick={activeTab} data-name="basicTab">
+            <div class="templateName" onclick={activeTab} data-name="basicTab" title="Edit Template Detail">
+              <div class="recordSVG">
                 <svg viewBox="0 0 1024 1024">
                   <g stroke-width="0"></g>
                   <g stroke-linecap="round" stroke-linejoin="round"></g>
@@ -81,11 +81,19 @@
             <div data-name="headerEditor"></div>
             <div data-name="footerEditor"></div>
           </div>
-          <c-key-mapping-container class="fieldMappingContainer desicionContainer" object-name={objectName}
-            show-full-height-button="true" save-button-label="Save" preview-button-label="Save &#38; Preview"
-            cancel-button-label="Save &#38; Close" onsave={saveTemplateData} onpreview={handleSaveNPreview}
-            onclose={handleSaveNClose} onfullheight={toggleMappingContainerHeight}
-            ontogglemapping={showHideMappingContainer}></c-key-mapping-container>
+          <c-key-mapping-container 
+              class="fieldMappingContainer desicionContainer" 
+              object-name={objectName}
+              show-full-height-button="true" 
+              save-button-label="Save" 
+              preview-button-label="Save &#38; Preview"
+              cancel-button-label="Close" 
+              onsave={saveTemplateData} 
+              onpreview={handleSaveNPreview}
+              onclose={closeEditTemplate} 
+              onfullheight={toggleMappingContainerHeight}
+              ontogglemapping={showHideMappingContainer}
+              onopengenchildtable={openGenChildTablePopup}></c-key-mapping-container>
           <div class="waterMarkSection tabArea deactiveTabs" data-section="waterMarkTab">
             <div class="nonEditor_toobar_outer">
               <div class="nonEditor_toobar">
@@ -123,7 +131,7 @@
               </div>
             </div>
           </div>
-          <div class="basicxDetailCetion tabArea deactiveTabs" data-section="basicTab">
+          <div class="basicDetailSetion tabArea deactiveTabs" data-section="basicTab">
             <div class="nonEditor_toobar_outer">
               <div class="nonEditor_toobar">
                 <div class="logoSection">
@@ -135,111 +143,205 @@
               <div class="basicDetails">
                 <div class="basicDetails_sub">
                   <div class="templateDetails">
-
+                    <div class="detailHeader">Template Basic Detail</div>
+                    <div class="detailEditSection">
+                      <template lwc:if={showTempDetail}>
+                        <div class="editName editField">
+                          <div class="floatingLabel">Template Name</div>
+                          <lightning-input type="text" class="fieldInput" value={templateRecord.Template_Name__c} variant="label-hidden" data-name="Template_Name__c" onkeyup={handleEditDetail} ></lightning-input>
+                        </div>
+                        <div class="editDescription editField">
+                          <div class="floatingLabel">Description</div>
+                          <lightning-textarea class="descriptionInput" value={templateRecord.Description__c} variant="label-hidden" data-name="Description__c" onkeyup={handleEditDetail}></lightning-textarea>
+                        </div>
+                        <div class="editStatus">
+                          <span class="statusLabel">Status: </span>
+                          <div class="tempToggle">
+                            <template lwc:if={templateRecord.Template_Status__c}>
+                              <input class="checkBox checked" type="checkbox" id={templateRecord.Id} data-name="Template_Status__c" onchange={handleEditDetail} style="display: none;" checked/>
+                            </template>
+                            <template lwc:else>
+                              <input class="checkBox" type="checkbox" id={templateRecord.Id} data-name="Template_Status__c" onchange={handleEditDetail} style="display: none;"/>
+                            </template>
+                            <label for={templateRecord.Id}> 
+                              <div class="toggleDiv">
+                                <div class="toggleBtnBg">
+                                  <div class="StatusText">
+                                    <span>Active</span>
+                                    <span>Inactive</span>
+                                  </div>
+                                </div>
+                              </div>
+                            </label>
+                          </div>
+                        </div>
+                        <div class="previewTwise">
+                          <div class="previewField">
+                            <div class="previewLabel">Source Object</div>
+                            <lightning-input type="text" class="nonEditInput" value={templateRecord.Object_API_Name__c} variant="label-hidden" disabled="true"></lightning-input>
+                          </div>
+                          <div class="previewField">
+                            <div class="previewLabel">Template Type</div>
+                            <lightning-input type="text" class="nonEditInput" value={templateRecord.Template_Type__c} variant="label-hidden" disabled="true"></lightning-input>
+                          </div>
+                        </div>
+                        <div class="previewTwise">
+                          <div class="previewField ">
+                            <div class="previewLabel">Create Date and Time</div>
+                            <lightning-input type="datetime" class="nonEditInput" value={templateRecord.CreatedDate} variant="label-hidden" disabled="true"></lightning-input>
+                          </div>
+                          <div class="previewField">
+                            <div class="previewLabel">Last Modified Date and Time</div>
+                            <lightning-input type="datetime" class="nonEditInput" value={templateRecord.LastModifiedDate} variant="label-hidden" disabled="true"></lightning-input>
+                          </div>
+                        </div>
+                        <div class="previewTwise">
+                          <div class="previewField ">
+                            <div class="previewLabel">Create By</div>
+                            <lightning-input type="text" class="nonEditInput" value={templateRecord.CreatedBy.Name} variant="label-hidden" disabled="true"></lightning-input>
+                          </div>
+                          <div class="previewField">
+                            <div class="previewLabel">Last Modified By</div>
+                            <lightning-input type="text" class="nonEditInput" value={templateRecord.LastModifiedBy.Name} variant="label-hidden" disabled="true"></lightning-input>
+                          </div>
+                        </div>
+                      </template>
+                      </div>
                   </div>
+                  <div class="vertical-line"></div>
                   <div class="pageConfigs">
                     <div class="pageConfigTitle">Page Configurations</div>
                     <div class="pageConfig_sub">
                         <div class="pageConfigOptions">
                             <div class="pageConfigSections">
                                 <div class="pageOptiontitle">Page Margin</div>
-                                <div class="pageMarginConfig">
-                                  <div class="optionSVG">
-                                    <svg viewBox="0,0,2048,2048"><path type="path" class="OfficeIconColors_HighContrast"  d="M 256 128 h 1472 v 1792 h -1472 m 1088 -1728 h -704 v 256 h 704 m -704 64 v 1024 h 704 v -1024 m -1024 -320 v 256 h 256 v -256 m -256 320 v 1024 h 256 v -1024 m -256 1344 h 256 v -256 h -256 m 320 256 h 704 v -256 h -704 m 1024 256 v -256 h -256 v 256 m 256 -320 v -1024 h -256 v 1024 m 256 -1088 v -256 h -256 v 256 z"></path><path type="path" class="OfficeIconColors_m20" d="M 1693 1888 h -1405 v -1728 h 1405 z"></path><path type="path" class="OfficeIconColors_m22"  d="M 256 128 h 1472 v 1792 h -1472 m 1408 -64 v -1664 h -1344 v 1664 z"></path><path type="path" class="OfficeIconColors_m24"  d="M 1408 512 v 1024 h 256 v 64 h -256 v 256 h -64 v -256 h -704 v 256 h -64 v -256 h -256 v -64 h 256 v -1024 h -256 v -64 h 256 v -256 h 64 v 256 h 704 v -256 h 64 v 256 h 256 v 64 m -320 0 h -704 v 1024 h 704 z"></path></svg>
-                                    <select class="marginUnitOption" value={pageMarginUnit} onchange={handlePageMarginUnit}>
-                                      <option value="px">px</option>
-                                      <option value="cm">cm</option>
-                                      <option value="inch">inch</option>
-                                    </select>
-                                  </div>
+                                <div class="pageMarginConfig configOpt">
                                   <div class="optionInputs">
-                                    <div class="marginInputontainer">Top : <input class="pageMarginInput" type="text" onkeyup={changePageMargin}
-                                        data-name="top" /></div>
-                                    <div class="marginInputontainer">Left : <input class="pageMarginInput" type="text" onkeyup={changePageMargin}
-                                        data-name="left" /></div>
-                                    <div class="marginInputontainer">Bottom : <input class="pageMarginInput" type="text" onkeyup={changePageMargin}
-                                        data-name="bottom" /></div>
-                                    <div class="marginInputontainer">Right : <input class="pageMarginInput" type="text" onkeyup={changePageMargin}
-                                        data-name="right" /></div>
+                                    <template for:each={pageConfigs.pageMargins} for:item="margin">
+                                      <div class="marginInputontainer" key={margin.name}>{margin.name} : 
+                                        <input class="pageMarginInput" type="number" data-config="pageMargins" onkeyup={managePageConfigs} value={margin.value} data-name={margin.name} />
+                                      </div>
+                                    </template>
+                                    <div class="marginInputontainer">Unit : 
+                                      <select class="marginUnitOption" data-config="unitOptions" onchange={managePageConfigs}>
+                                        <template for:each={pageConfigs.unitOptions} for:item="option">
+                                          <option value={option.value} selected={option.selected} key={option.name}>{option.name}</option>
+                                        </template>
+                                      </select>
+                                    </div>
                                   </div>
                                 </div>
                             </div>
                             <div class="pageConfigSections">
-                                  <div class="pageOptiontitle">Page Size</div>
+                                <div class="pageOptiontitle">Page Size</div>
                                 <div class="pageSizeConfig">
-                                  <div class="optionSVG"><svg viewBox="0,0,2048,2048">  <path type="path" class="OfficeIconColors_HighContrast"    d="M 1536 896 v 1024 h -1088 v -1472 h 640 m 0 448 h 352 l -352 -348 m 384 412 h -448 v -448 h -512 v 1344 h 960 m 64 -1728 v 192 h -64 v -64 h -960 v 64 h -64 v -192 h 64 v 64 h 960 v -64 m -1344 320 h 192 v 64 h -64 v 1344 h 64 v 64 h -192 v -64 h 64 v -1344 h -64 z">  </path>  <path type="path" class="OfficeIconColors_m20"    d="M 1066 480 l 438 421 v 992 h -1029 v -1413 z"></path>  <path type="path" class="OfficeIconColors_m22"    d="M 1536 896 v 1024 h -1088 v -1472 h 640 m 0 448 h 352 l -352 -348 m 384 412 h -448 v -448 h -512 v 1344 h 960 z">  </path>  <path type="path" class="OfficeIconColors_m24"    d="M 1536 128 v 192 h -64 v -64 h -960 v 64 h -64 v -192 h 64 v 64 h 960 v -64 m -1344 320 h 192 v 64 h -64 v 1344 h 64 v 64 h -192 v -64 h 64 v -1344 h -64 z">  </path></svg></div>
                                   <div class="optionInputs pageSizeInout">
-                                    <div class="sizeInputContainer">
-                                      <input type="radio" id="A4" style="display : none;" checked="checked" name="pageSize" value="A4" data-size="A4"  />
-                                      <label for="A4">
-                                          <div class="sizeInputLable">A4<span class="subLabel"> (8.27" x 11.69")</span></div>
-                                      </label>
-                                  </div>
-                                  <div class="sizeInputContainer">
-                                      <input type="radio" id="A5" style="display : none;" checked="checked" name="pageSize" value="A4" data-size="A4"  />
-                                      <label for="A5">
-                                          <div class="sizeInputLable">A5<span class="subLabel"> (8.27" x 11.69")</span></div>
-                                      </label>
-                                  </div>                                
-                                  <div class="sizeInputContainer">
-                                      <input type="radio" id="A3" style="display : none;" checked="checked" name="pageSize" value="A4" data-size="A4"  />
-                                      <label for="A3">
-                                          <div class="sizeInputLable">A3<span class="subLabel"> (8.27" x 11.69")</span></div>
-                                      </label>
-                                  </div>
-                                  <div class="sizeInputContainer">
-                                      <input type="radio" id="Letter" style="display : none;" checked="checked" name="pageSize" value="A4" data-size="A4"  />
-                                      <label for="Letter">
-                                          <div class="sizeInputLable">Letter<span class="subLabel"> (8.27" x 11.69")</span></div>
-                                      </label>
-                                  </div>                                
-                                  <div class="sizeInputContainer">
-                                      <input type="radio" id="Legal" style="display : none;" checked="checked" name="pageSize" value="A4" data-size="A4"  />
-                                      <label for="Legal">
-                                          <div class="sizeInputLable">Legal<span class="subLabel"> (8.27" x 11.69")</span></div>
-                                      </label>
-                                  </div>
+                                    <template for:each={pageConfigs.pageSize} for:item="pageSize">
+                                      <div class="sizeInputContainer" key={pageSize.value}>
+                                        <input type="radio" id={pageSize.value} style="display : none;" checked={pageSize.selected} data-config="pageSize" value={pageSize.value} data-name={pageSize.name} onchange={managePageConfigs} />
+                                        <label for={pageSize.value}>
+                                            <div class="sizeInputLable">{pageSize.name}<span class="subLabel"> ({pageSize.size})</span></div>
+                                        </label>
+                                      </div>
+                                    </template>
                                   </div>
                                 </div>
                             </div>
                             <div class="pageConfigSections">
                             <div class="pageOptiontitle oriTitle">Page Orientation</div>
                             <div class="pageOrientationConfig">
-                              <div class="optionSVG"><svg viewBox="0,0,2048,2048"><path type="path" class="OfficeIconColors_HighContrast"  d="M 512 1920 v -1024 h 1024 l 384 384 v 640 m -384 -933 v 293 h 293 m -357 64 v -384 h -896 v 896 h 1280 v -512 m -1408 192 h -320 v -1408 h 639 l 385 384 v 320 h -64 v -256 h -384 v -384 h -512 v 1280 h 256 m 320 -960 h 293 l -293 -293 z"></path><path type="path" class="OfficeIconColors_m20"  d="M 448 1504 h -288 v -1344 h 597 l 363 363 v 309 h -672 m 1440 450 v 606 h -1344 v -960 h 986 z"></path><path type="path" class="OfficeIconColors_m22"  d="M 512 1920 v -1024 h 1024 l 384 384 v 640 m -384 -933 v 293 h 293 m -357 64 v -384 h -896 v 896 h 1280 v -512 m -1408 192 h -320 v -1408 h 639 l 385 384 v 320 h -64 v -256 h -384 v -384 h -512 v 1280 h 256 m 320 -960 h 293 l -293 -293 z"></path></svg></div>
                               <div class="optionInputs pageOriInputs">
-                                <div class="oriInputContainer">
-                                    <input type="radio" id="Portrait" checked="checked" style="display : none;" name="pageOriantation" value="portrait" data-oriantation="portrait"  />
-                                    <label for="Portrait">
-                                      <div class="sizeInputLable">Portrait</div>
+                                <template for:each={pageConfigs.pageOrientation} for:item="pageOri">
+                                  <div class="oriInputContainer" key={pageOri.value}>
+                                    <input type="radio" id={pageOri.value} checked={pageOri.selected} style="display : none;" data-config="pageOrientation" value={pageOri.value} data-oriantation={pageOri.value} data-name={pageOri.name} onchange={managePageConfigs} />
+                                    <label for={pageOri.value}>
+                                      <div class="sizeInputLable">{pageOri.name}</div>
                                       </label>
                                 </div>
-                                <div class="oriInputContainer">
-                                    <input type="radio" id="Landscape" checked="checked" style="display : none;" name="pageOriantation" value="portrait" data-oriantation="portrait"  />
-                                    <label for="Landscape">
-                                      <div class="sizeInputLable">Landscape</div>
-                                      </label>
-                                </div>
+                                </template>
                               </div>
                             </div>
                             </div>
                         </div>
-                        <!-- <div class="dummyPageContainer">
-                            <div class="dummyPage"></div>
-                        </div> -->
+                        <div class="dummyPageContainer">
+                            <div class="dummyPage">
+                              <div class="bar1"></div>
+                              <div class="bar2"></div>
+                              <div class="bar2"></div>
+                              <div class="bar2"></div>
+                              <div class="bar3"></div>
+                              <div class="bar2"></div>
+                              <div class="bar2"></div>
+                              <div class="bar2"></div>
+                              <div class="bar2"></div>
+                              <div class="bar2"></div>
+                            </div>
+                        </div> 
                     </div>
                   </div>
                 </div>
               </div>
               <div class="buttonSection">
-                <lightning-button variant="destructive" label="Cancel" title="Cancel" onclick={handleSaveNClose}
-                  icon-name="utility:close" icon-position="left"></lightning-button>
-                <lightning-button label="Preview" title="Preview" onclick={handleSaveNPreview}
-                  icon-name="utility:preview" icon-position="left"></lightning-button>
-                <lightning-button variant="brand" label="Save" onclick={saveTemplateData} title="Save"
-                  icon-name="utility:save" icon-position="left"></lightning-button>
+                <button class="footerBtn" title="Cancel" onclick={closeEditTemplate}>
+                  <svg viewBox="0 0 520 520" ><g><path d="M310 254l130-131c6-6 6-15 0-21l-20-21c-6-6-15-6-21 0L268 212a10 10 0 01-14 0L123 80c-6-6-15-6-21 0l-21 21c-6 6-6 15 0 21l131 131c4 4 4 10 0 14L80 399c-6 6-6 15 0 21l21 21c6 6 15 6 21 0l131-131a10 10 0 0114 0l131 131c6 6 15 6 21 0l21-21c6-6 6-15 0-21L310 268a10 10 0 010-14z"></path></g></svg>
+                  Close
+                </button>
+                <button class="footerBtn" title="Cancel" >
+                  <svg viewBox="0 0 24 24" ><path d="M5.82843 6.99955L8.36396 9.53509L6.94975 10.9493L2 5.99955L6.94975 1.0498L8.36396 2.46402L5.82843 4.99955H13C17.4183 4.99955 21 8.58127 21 12.9996C21 17.4178 17.4183 20.9996 13 20.9996H4V18.9996H13C16.3137 18.9996 19 16.3133 19 12.9996C19 9.68584 16.3137 6.99955 13 6.99955H5.82843Z"></path></svg>
+                  Cancel
+                </button>
+                <button class="footerBtn" title="Save" onclick={saveTemplateData}>
+                  <svg viewBox="0 0 520 520" ><g><path d="M371 40v136c0 10-8 19-19 19H139c-10 0-19-8-19-19V40H80a40 40 0 00-40 40v360a40 40 0 0040 40h360a40 40 0 0040-40V112l-72-72zm70 381c0 10-8 19-19 19H99c-10 0-19-8-19-19V254c0-10 8-19 19-19h323c10 0 19 8 19 19zM248 136c0 10 8 19 19 19h46c10 0 19-8 19-19V40h-83z" ></path></g></svg>
+                  Save
+                </button>
               </div>
             </div>
           </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div lwc:if={toggleGenChildTablePopup} class="genChildTablePopup">
+    <div class="genChildTablePopup_sub">
+      <div class="genChildHader">
+        <div class="genChilTitle">Generate a Table of Related List Object to Inset in Template</div>
+        <div class="closeGenChildTableBtn" title="close" onclick={closeGenChildTable}>
+          <svg viewBox="0 0 22 22"><path fill-rule="evenodd" clip-rule="evenodd" d="M20.7334 2.5537C20.8179 2.46918 20.885 2.36885 20.9307 2.25843C20.9765 2.14801 21 2.02966 21 1.91013C21 1.79061 20.9765 1.67226 20.9307 1.56184C20.885 1.45142 20.8179 1.35109 20.7334 1.26657C20.6489 1.18206 20.5486 1.11502 20.4382 1.06928C20.3277 1.02354 20.2094 1 20.0899 1C19.9703 1 19.852 1.02354 19.7416 1.06928C19.6311 1.11502 19.5308 1.18206 19.4463 1.26657L11 9.71469L2.5537 1.26657C2.46918 1.18206 2.36885 1.11502 2.25843 1.06928C2.14801 1.02354 2.02966 1 1.91013 1C1.79061 1 1.67226 1.02354 1.56184 1.06928C1.45142 1.11502 1.35109 1.18206 1.26657 1.26657C1.18206 1.35109 1.11502 1.45142 1.06928 1.56184C1.02354 1.67226 1 1.79061 1 1.91013C1 2.02966 1.02354 2.14801 1.06928 2.25843C1.11502 2.36885 1.18206 2.46918 1.26657 2.5537L9.71469 11L1.26657 19.4463C1.09589 19.617 1 19.8485 1 20.0899C1 20.3312 1.09589 20.5627 1.26657 20.7334C1.43726 20.9041 1.66875 21 1.91013 21C2.15152 21 2.38301 20.9041 2.5537 20.7334L11 12.2853L19.4463 20.7334C19.617 20.9041 19.8485 21 20.0899 21C20.3312 21 20.5627 20.9041 20.7334 20.7334C20.9041 20.5627 21 20.3312 21 20.0899C21 19.8485 20.9041 19.617 20.7334 19.4463L12.2853 11L20.7334 2.5537Z" fill="black" stroke="black"></path></svg>
+        </div>
+      </div>
+      <div class="childEditCsvComp genChildBody">
+        <c-edit-c-s-v-template object-name={objectName} is-child="true" onsave={handleChildTableInsert} onclose={closeGenChildTable}>
+        </c-edit-c-s-v-template>
+      </div>
+      <div class="genChildFooter">
+        <div class="generatedTable note-editor note-editing-area note-editable">
+          <table>
+            <tbody class="childTBody" data-name="childTBody">
+
+            </tbody>
+          </table>
+          <div lwc:if={noChildTable} class="ChildTablePlaceholder">Generate Table will display here...</div>
+        </div>
+        <div class="ChildTableOptions">
+          <div lwc:if={childTableQuery}  class="srNoOption">
+            <div class="srNoOption_label">Show Index</div>
+            <lightning-input
+            class="srNoOption_toggel"
+            type="toggle"
+            message-toggle-active=""
+            message-toggle-inactive=""
+            onchange={regenerateChildTable}
+            ></lightning-input>
+          </div>
+          <button class="copyButton" title="Copy Table" onclick={copyChildTable} disabled={noChildTable}>
+            <span>
+              <svg viewBox="0 0 55.699 55.699">
+                <g><path d="M51.51,18.001c-0.006-0.085-0.022-0.167-0.05-0.248c-0.012-0.034-0.02-0.067-0.035-0.1   c-0.049-0.106-0.109-0.206-0.194-0.291v-0.001l0,0c0,0-0.001-0.001-0.001-0.002L34.161,0.293c-0.086-0.087-0.188-0.148-0.295-0.197   c-0.027-0.013-0.057-0.02-0.086-0.03c-0.086-0.029-0.174-0.048-0.265-0.053C33.494,0.011,33.475,0,33.453,0H22.177   c-3.678,0-6.669,2.992-6.669,6.67v1.674h-4.663c-3.678,0-6.67,2.992-6.67,6.67V49.03c0,3.678,2.992,6.669,6.67,6.669h22.677   c3.677,0,6.669-2.991,6.669-6.669v-1.675h4.664c3.678,0,6.669-2.991,6.669-6.669V18.069C51.524,18.045,51.512,18.025,51.51,18.001z    M34.454,3.414l13.655,13.655h-8.985c-2.575,0-4.67-2.095-4.67-4.67V3.414z M38.191,49.029c0,2.574-2.095,4.669-4.669,4.669H10.845   c-2.575,0-4.67-2.095-4.67-4.669V15.014c0-2.575,2.095-4.67,4.67-4.67h5.663h4.614v10.399c0,3.678,2.991,6.669,6.668,6.669h10.4   v18.942L38.191,49.029L38.191,49.029z M36.777,25.412h-8.986c-2.574,0-4.668-2.094-4.668-4.669v-8.985L36.777,25.412z    M44.855,45.355h-4.664V26.412c0-0.023-0.012-0.044-0.014-0.067c-0.006-0.085-0.021-0.167-0.049-0.249   c-0.012-0.033-0.021-0.066-0.036-0.1c-0.048-0.105-0.109-0.205-0.194-0.29l0,0l0,0c0-0.001-0.001-0.002-0.001-0.002L22.829,8.637   c-0.087-0.086-0.188-0.147-0.295-0.196c-0.029-0.013-0.058-0.021-0.088-0.031c-0.086-0.03-0.172-0.048-0.263-0.053   c-0.021-0.002-0.04-0.013-0.062-0.013h-4.614V6.67c0-2.575,2.095-4.67,4.669-4.67h10.277v10.4c0,3.678,2.992,6.67,6.67,6.67h10.399   v21.616C49.524,43.26,47.429,45.355,44.855,45.355z"/></g>
+              </svg>
+            </span>
+            <span class="copyButton_label">Copy Table </span>
+          </button>
         </div>
       </div>
     </div>
@@ -251,40 +353,6 @@
   </template>
 
   <c-message-popup onconfirmation={handleConfimation}></c-message-popup>
-
-  <div class="setupDropDown">
-    <div class="setupTitle">Page Configurations</div>
-    <div class="pageSetupOptions">
-      <div class="pageMarginConfig">
-        customeIcon.pageMargin
-        <div class="marginInputs">
-          <div class="topMargin">
-            <div class="marginType">Top: </div>
-            <input type="number" class="marginInput" placeholder="Top Margin">
-          </div>
-          <div class="topMargin">
-            <div class="marginType">Bottom: </div>
-            <input type="number" class="marginInput" placeholder="Bottom Margin">
-          </div>
-          <div class="topMargin">
-            <div class="marginType">Left: </div>
-            <input type="number" class="marginInput" placeholder="Left Margin">
-          </div>
-          <div class="topMargin">
-            <div class="marginType">Right: </div>
-            <input type="number" class="marginInput" placeholder="Right Margin">
-          </div>
-        </div>
-      </div>
-      <!-- <div class="pageOriantionConfig"></div>
-      <div class="pageSizeConfig"></div>
-      <div class="pageColumnnConfig"></div> -->
-    </div>
-  </div>
-
-  <!-- <template lwc:if={isSpinner}>
-    <c-spinner></c-spinner>
-  </template> -->
 
   <c-document-loader display={isSpinner} label={loaderLabel}></c-document-loader>
 

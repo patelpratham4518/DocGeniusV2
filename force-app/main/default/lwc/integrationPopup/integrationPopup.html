@@ -17,15 +17,15 @@
                                                                    
                     </div>
                     <div class="title-div">
-                        <template if:true={isGoogleDrive}><p>Google Drive</p></template>
-                        <template if:true={isDropbox}><p>Dropbox</p></template>
-                        <template if:true={isOneDrive}><p>One Drive</p></template>
-                        <template if:true={isAws}><p>Aws</p></template>
+                        <template if:true={isGoogleDrive}><p>Connect Google Drive</p></template>
+                        <template if:true={isDropbox}><p>Connet Dropbox</p></template>
+                        <template if:true={isOneDrive}><p>Connect OneDrive</p></template>
+                        <template if:true={isAws}><p>Connect AWS</p></template>
                     </div>
-                    <template if:false={isAws}>
+                    <template if:true={isRedirectUri}>
                         <div class="label-float">
                             <input type="text" class="t-name copy" placeholder="Redirect Url" value={redirecturi}/>
-                            <label>Redirect Uri</label>
+                            <label>Redirect URI</label>
                         </div>
                         <div class="icon-copy">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="17" height="20" viewBox="0 0 17 20" fill="none" onclick={copyToClipboard}>
@@ -39,21 +39,34 @@
                             <label>Nickname</label>
                         </div>
                     </template>
-                    <div class="label-float">
-                        <input type="text" class="t-clientid" placeholder="Enter Client Id" onkeyup={handleClientId} onblur={handleClientId}/>
-                        <label>Client Id</label>
-                    </div>
-
-                    <div class="label-float">
-                        <input type="password" class="t-clientsecret" placeholder="Enter Client Secret" onkeyup={handleClientSecret} onblur={handleClientSecret}/>
-                        <label>Client Secret</label>
-                    </div>
+                    <template if:false={isGoogleDrive}>
+                        <div class="label-float">
+                            <input type="text" class="t-clientid" placeholder="Enter Client Id" onkeyup={handleClientId} onblur={handleClientId}/>
+                            <label>Client Id</label>
+                        </div>
+                    </template>
+                    <template if:false={isGoogleDrive}>
+                        <div class="label-float">
+                            <input type="password" class="t-clientsecret" placeholder="Enter Client Secret" onkeyup={handleClientSecret} onblur={handleClientSecret}/>
+                            <label>Client Secret</label>
+                        </div>
+                    </template>
                     <template if:true={isAws}>
                         <div class="label-float">
                             <input type="text" class="t-bucket" placeholder="Enter Bucket Name" onkeyup={handleBucket} onblur={handleBucket}/>
                             <label>Bucket Name</label>
                         </div>
                     </template>
+                    <div if:true={isGoogleDrive} style="width: 100%;">
+                        <button class="auth-btn" onclick={handleGenAuthCode} style="width: 100%;">Generate Authorization Code</button>
+                    </div>
+                    <template if:true={isGoogleDrive}>
+                        <div class="label-float">
+                            <input type="text" class="t-authorizationcode" placeholder="Enter Authorization code" onkeyup={handleAuthorizationCode} onblur={handleAuthorizationCode}/>
+                            <label>Authorization Code</label>
+                        </div>
+                    </template>
+                    
 
                     <!-- <div class="select-label-float">
                         <label>Source Object</label>
@@ -115,7 +128,7 @@
                         </div>
                     </div> -->
                     <div class="save-div">
-                        <button class="save-btn" onclick={authorize}>Authorize</button>
+                        <button class="save-btn slds-button slds-button_brand" disabled onclick={authorize}>Authorize</button>
                     </div>
                 </div>
             </div>

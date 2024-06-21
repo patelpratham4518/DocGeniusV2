@@ -68,7 +68,7 @@
 }
 .bar2{
     display: inline-block;
-    width: calc(100% - 1.6rem);
+    width: 100%;
     height: 0.6rem;
     border-radius: 1rem;
 }
@@ -78,12 +78,13 @@
     aspect-ratio: 1;
     width: auto;
     border-radius: 50%;
-    margin-inline: 0.75rem 0.25rem;
+    margin-inline: 0 0.25rem;
 }
 .bar3{
     width: 100%;
     height: 3rem;
-    border-radius: 0.5rem;
+    border-radius: 0.25rem;
+    position: relative;
 }
 .bar4{
     display: inline-block;
@@ -149,6 +150,50 @@
     fill: #bababa;
     opacity: 1;
 }
+.imgMoun{
+    position: absolute;
+    top: calc(50%);
+    left: calc(50%);
+    transform: translate(-50%, -50%);
+    width: 3rem;
+    height: 3rem;
+    fill: none;
+}
+.imgMoun path{
+    fill: #c7c7c7;
+    animation: shine2 4s cubic-bezier(0.34, 0.05, 0.12, 0.95) infinite 0s forwards;;
+    
+}
+
+.floatDot{
+    width: 0.75rem;
+    height: 0.75rem;
+    border-radius: 50%;
+    background: #c7c7c7;
+    position: absolute;
+    top: calc(50%);
+    left: calc(50%);
+    transform: translateY(-50%) translateX(-1000%);
+    opacity: 0;
+    /* transition: all cubic-bezier(0, 0.75, 1, 0.25) 1.25s; */
+    animation: leftToRight 4s cubic-bezier(0, 0.75, 1, 0.25) 2s infinite forwards normal;
+}
+.fd1{
+    animation-timing-function: cubic-bezier(0, 0.50, 1, 0.50);
+}
+.fd3{
+    animation-timing-function: cubic-bezier(0, 1, 1, 0.0);
+}
+
+/* .fd1{
+    left: calc(45%);
+    background: red;
+}
+.fd3{
+    left: calc(55%);
+    background: rgb(4, 0, 255);
+} */
+
 
 
 .barIcon{
@@ -173,8 +218,8 @@
     text-transform: uppercase;
     max-width: 40%;
     overflow: hidden;
-    white-space: none;
     text-overflow: ellipsis;
+    text-align: center;
 }
 
 .scanBar{
@@ -277,6 +322,19 @@
     }
 }
 
+.zoomOutEffect{
+    animation: zoomOut var(--scaleOutTime) linear 0s 1 forwards normal;
+}
+
+@keyframes zoomOut {
+    0%{
+        scale: 1;
+    }
+    100%{
+        scale: 1.04;
+    }
+}
+
 .rotateEffect{
     animation:  scaleUp 1.25s cubic-bezier(0, 0, 0.25, 0.95) 0s 1 normal forwards,
                 rotate 4s cubic-bezier(0.34, 0.05, 0.12, 0.95) infinite 0s forwards;
@@ -335,5 +393,39 @@
         transform: rotate(-720deg);
         fill: #bababa;
         filter: drop-shadow(0px 0px 0px transparent);
+    }
+}
+
+@keyframes shine2{
+    0% {
+        fill: #cecece;
+    }
+    15% {
+        fill: #d5d5d5b0;
+    }
+    50% {
+        fill: #cecece;
+    }
+    65% {
+        fill: #d5d5d5b0;
+    }
+    100% {
+        fill: #cecece;
+    }
+}
+
+@keyframes leftToRight{
+    0% {
+        opacity: 1;
+        transform: translateY(-50%) translateX(-1000%);
+    }
+    10% {
+        transform: translateY(-50%) translateX(-1000%);
+    }
+    90% {
+        transform: translateY(-50%) translateX(1000%);
+    }
+    100% {
+        transform: translateY(-50%) translateX(1000%);
     }
 }

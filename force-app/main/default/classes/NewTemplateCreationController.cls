@@ -48,6 +48,22 @@ public with sharing class NewTemplateCreationController {
     }
 
     @AuraEnabled
+    public static Boolean isGoogleIntegrated(){
+        Boolean isIntegrated = false;
+        try {
+            List<AuthProviderSettings__c> gIntegration= [SELECT Id, WorkingStatus__c FROM AuthProviderSettings__c];
+            if(gIntegration.size() > 0){
+                isIntegrated = gIntegration[0].WorkingStatus__c ;
+                }
+            System.debug('gIntegration.WorkingStatus__c : ' + isIntegrated);
+        } catch (Exception e) {
+            System.debug('Error in isGoogleIntegrated =>' + e.getMessage());
+            Log_Handler.store_Exception(e, 'NewTemplateCreationController', 'isGoogleIntegrated');
+        }
+        return isIntegrated;
+    }
+
+    @AuraEnabled
     public static String saveTemplate(String templateName, String templateDescription, String sourceObject, String templateType, Decimal columnValue, Decimal rowValue){
         String templateId;
         try {
@@ -64,6 +80,18 @@ public with sharing class NewTemplateCreationController {
             System.debug('The Template :: ' + template);
             insert template;
             templateId = template.Id;
+
+            // if(templateType == 'Simple Template'){
+            //     Template_Page__c page = new Template_Page__c();
+            //     page.Template__c = templateId;
+            //     page.Page_Number__c = 1;
+            //     page.Page_Margin__c = '1;1;1;1';
+            //     page.Page_Oriantation__c = 'portrait';
+            //     page.Page_Size__c = 'a4';
+            //     page.unit_of_page_configs__c = 'inch';
+            //     insert page;
+            // }
+
         } catch (Exception e) {
             System.debug('Error in saving Template =>' + e.getMessage());
             Log_Handler.store_Exception(e, 'NewTemplateCreationController', 'saveTemplate');

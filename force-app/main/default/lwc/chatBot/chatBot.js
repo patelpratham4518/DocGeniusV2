@@ -7,12 +7,12 @@ import Id from "@salesforce/user/Id";
 import fetchImageUrl from "@salesforce/apex/ChatBotController.getProfileUrl";
 import chatBot from "@salesforce/resourceUrl/chatBot";
 import chatUser from "@salesforce/resourceUrl/chatUser";
-import chatBotFAQs from '@salesforce/apex/ChatBotController.getFAQs';
-import chatBotSubFAQs from '@salesforce/apex/ChatBotController.getSubFAQs';
-import chatBotSolution from '@salesforce/apex/ChatBotController.getSolution';
-import chatBotNestedJson from '@salesforce/apex/ChatBotController.extractNestedJSON';
+// import chatBotFAQs from '@salesforce/apex/ChatBotController.getFAQs';
+// import chatBotSubFAQs from '@salesforce/apex/ChatBotController.getSubFAQs';
+// import chatBotSolution from '@salesforce/apex/ChatBotController.getSolution';
+// import chatBotNestedJson from '@salesforce/apex/ChatBotController.extractNestedJSON';
 import sendEmailWithAttachment from '@salesforce/apex/ChatBotController.sendEmailWithAttachment';
-import Email from '@salesforce/schema/Lead.Email';
+// import Email from '@salesforce/schema/Lead.Email';
 
 export default class ChatBot extends LightningElement {
     @track uploadedFiles = [];
@@ -99,10 +99,7 @@ export default class ChatBot extends LightningElement {
     }
 
     getJSON(){
-        chatBotNestedJson()
-        .then((result)=>{
             console.log('Fetched json');
-        });
     }
 
     checkEmailActive(){
@@ -449,6 +446,7 @@ export default class ChatBot extends LightningElement {
     }
 
     handleChat(){
+        console.log('inside handle chat');
         this.isIssue = false;
         this.isSol = false;
         this.issues = null;
@@ -466,7 +464,6 @@ export default class ChatBot extends LightningElement {
         this.toggleClear();
         this.connectedCallback();
         this.isTimer = false;
-        this.fetchingMainFAQS();
     }
 
     handleClearClose(){

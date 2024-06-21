@@ -3,6 +3,17 @@
     --mainThemeColor : #00AEFF;
     --fieldMappingWidth : 35rem;
     --edtAnimationDuration: ;
+    --ff_Bahnschrift : Bahnschrift, 'Segoe UI', 'Segoe UI Web (West European)', -apple-system, BlinkMacSystemFont, Roboto, 'Helvetica Neue', sans-serif;
+    --ff_SegoeUI : 'Segoe UI', 'Segoe UI Web (West European)', -apple-system, BlinkMacSystemFont, Roboto, 'Helvetica Neue', sans-serif;
+    --ff_Montserrat : "Montserrat";
+    --ff_Poppins : Poppins;
+}
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    margin: 0; 
 }
 .templateBuilder_Maindiv {
   position: absolute;
@@ -94,6 +105,9 @@
     }
     .homeBtn{
       margin-right: 0.5rem;
+      border: none;
+      outline: none;
+      background: transparent;
       cursor: pointer;
     }
     .homeBtn svg{
@@ -113,7 +127,7 @@
       justify-content: center;
       align-items: center;
       font-size: 12px;
-      font-family: Bahnschrift, 'Segoe UI', 'Segoe UI Web (West European)', -apple-system, BlinkMacSystemFont, Roboto, 'Helvetica Neue', sans-serif;
+      font-family: var(--ff_Bahnschrift);
       font-weight: 600;
       color: #595959;
       cursor: pointer;
@@ -181,10 +195,12 @@
       backdrop-filter: blur(13px);
       background: linear-gradient(93deg, rgb(199 255 242 / 57%) 0%, rgb(207 244 255) 100%);
       box-shadow: rgb(0 49 81 / 22%) 0px 0px 3px 0px, rgb(148 148 148 / 15%) 0px 0px 0px 1px;
+      cursor: pointer;
+
     }
     .templateNameText{
       font-size: 14px;
-      font-family: Bahnschrift, 'Segoe UI', 'Segoe UI Web (West European)', -apple-system, BlinkMacSystemFont, Roboto, 'Helvetica Neue', sans-serif;
+      font-family: var(--ff_Bahnschrift);
       font-weight: 600;
       color: black;
       text-overflow: ellipsis;
@@ -197,7 +213,8 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      cursor: pointer;
+      border: none;
+      outline: none;
     }
     .recordSVG svg{
       width: 16px;
@@ -244,6 +261,18 @@
       position: absolute;
       right: 0%;
       z-index: 101;
+    }
+    .floatingMapping{
+      position: absolute;
+      right: 0%;
+      margin-inline: 1rem 0rem;
+      border-top-right-radius: 0px;
+      border-bottom-right-radius: 0px;
+      transform: translateX(calc(100% + 0.5rem));
+      transition: all linear 0.325s;
+    }
+    .openFieldMapping{
+      transform: translateX(0px) !important;
     }
     .toggleFieldMapping{
       display: none;
@@ -911,157 +940,40 @@
       --slds-c-button-brand-color-border-hover: var(--mainThemeColor);
     }
 
+    .footerBtn{
+      width: max-content;
+      min-width: 6rem;
+      height: 2rem;
+      border: none;
+      outline: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--ff_Montserrat);
+      color: white;
+      background: #01aeff;
+      border-radius: 6px;
+      padding-inline: 1rem;
+      transition: all linear 0.1s;
+    }
+    .footerBtn:hover{
+      background: #0084c1;
+    }
+    .footerBtn svg{
+      width: 14px;
+      height: 14px;
+      margin-right: 0.5rem;
+      fill: white;
+    }
+
     .WatermarkOpttitle{
 
     }
 
-    /* ================= =============== Template Edit Section ============ ==================== */
-    .temp_DetailEdit_Section{
-      /* position: absolute;
-      top: 0%;
-      left: 0%; */
-      width: 100%;
-      height: 100%;
-      background-color: transparent;
-      /* z-index: 5; */
-      /* transition: all linear 0.2s; */
-      /* padding: 1rem; */
-    }
-    .label-float {
-        position: relative;
-        width: 100%;
-    }
-
-    .label-float input,
-    .label-float textarea{
-      border: 0.0625rem solid black;
-      border-radius: 0.5rem;
-      outline: none;
-      width: inherit;
-      padding: 0.75rem 1.25rem;
-      font-size: 13px;
-      transition: all 0.1s linear;
-      -webkit-transition: all 0.1s linear;
-      -moz-transition: all 0.1s linear;
-      -webkit-appearance: none;
-      background: transparent;
-    }
-
-    .label-float input:focus {
-        border: 0.0625rem solid #00AEFF;
-    }
-
-    .label-float input::placeholder {
-        color: transparent;
-    }
-
-    .label-float label {
-      font-size: 1rem;
-      pointer-events: none;
-      position: absolute;
-      top: -0.6rem;
-      left: 0.9375rem;
-      transition: all 0.1s linear;
-      -webkit-transition: all 0.1s linear;
-      -moz-transition: all 0.1s linear;
-      background: transparent;
-      backdrop-filter: blur(100px);
-      padding: 0px 4px;
-      box-sizing: border-box;
-      font-size: 0.8125rem;
-      color: #00AEFF;
-    }
-    .tempToggle {
-      width: fit-content;
-      height: max-content;
-      position: relative;
-      overflow: hidden;
-    }
-    .toggleDiv{
-      width: 7rem;
-      height: 1.75rem;
-      padding: 0.25rem;
-      border-radius: 32px;
-      background-color: #FF310B;
-      transition: 0.4s cubic-bezier(0.18, 0.89, 0.35, 1.15) all;
-      cursor: pointer;
-    }
-    .toggleBtnBg{
-      height: 100%;
-      width: 100%;
-      position: relative;
-    }
-    .toggleBtnBg::before{
-      position: absolute;
-      top: 0px;
-      left: auto;
-      transform: translateX(0%);
-      right: 0% !important;
-      content: "";
-      height: 100%;
-      aspect-ratio: 1;
-      border-radius: 50%;
-      background-color: #fff;
-      transition: 0.4s cubic-bezier(0.18, 0.89, 0.35, 1.15) all;
-    }
-    .StatusText{
-      width: 200%;
-      height: 100%;
-      position: absolute;
-      top: 0px;
-      left: 0px;
-      transform: translateX(-50%);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      transition: 0.4s cubic-bezier(0.18, 0.89, 0.35, 1.15) all;
-    }
-    .StatusText span{
-      width: 50%;
-      height: 100%;
-      color: white;
-      font-size: 14px;
-      display: flex;
-      justify-content: center;
-      align-items: flex-end;
-    }
-    .checkBox.checked + label .toggleBtnBg::before{
-      transform: translateX(100%);
-      right: 100% !important;
-    }
-    .checkBox.checked + label .StatusText{
-      transform: translateX(0%);
-    }
-
-    .checkBox.checked + label .toggleDiv{
-      background-color: #14AD00;
-    }
-    .nonEditable{
-
-    }
-    .fieldConteiner{
-      width: 100%;
-      /* background: #ffffff59; */
-      padding: 0.25rem 0.5rem;
-      border-radius: 8px;
-    }
-    .field_Label{
-      color: #00AEFF;
-      display: inline-block;
-      width: 30%;
-    }
-    .fieldValue{
-      font-size: 13px;
-    }
-    .btnGroup{
-      width: 100%;
-      display: flex;
-      justify-content: center;
-      gap: 1rem;
-    }
     /* ---- Basic Detail CSS -- START -------- */
     .basicDetails{
       flex-grow: 1;
+      height: calc(100% - 5rem);
       padding: 1rem;
       padding-top: 0rem;
       width: 100%;
@@ -1078,12 +990,186 @@
       padding: 1rem;
     }
 
+     /* ============ =============== DETAIl EDIT Section -- START -- ================= ================ */
     .templateDetails{
-      width: 50%;
+      width: 100%;
+      min-width: 50%;
       height: 100%;
-      border-right: 1px dashed black;
+      padding-inline: 1rem;
+      /* border-right: 1px dashed black; */
+      overflow: auto;
     }
 
+    .detailHeader {
+        width: 100%;
+        text-align: center;
+        font-size: 16px;
+        color: rgb(46, 46, 46);
+        font-family: var(--ff_Bahnschrift);
+        margin-bottom: 0.5rem;
+    }
+    
+    .detailEditSection {
+      --sds-c-input-shadow-focus : none !important;
+      --slds-c-textarea-shadow-focus : none !important;
+    }
+    
+    .editName {
+        /* Add your styles here */
+    }
+    
+    .editField {
+      width: 100%;
+      margin-block: 1rem;
+      position: relative;
+    }
+    
+    .floatingLabel {
+      position: absolute;
+      top: 0%;
+      left: 1rem;
+      transform: translateY(-50%);
+      z-index: 10;
+      font-size: 13px;
+      background: white;
+      padding-inline: 0.25rem;
+      color: #009ae1;
+      font-family: var(--ff_Bahnschrift);
+    }
+    .fieldInput {
+      --lwc-heightInput: 2.5rem !important;
+      --slds-c-input-color-border: #878787 !important;
+      width: 100%;
+    }
+    
+    .editDescription {
+      width: 100%;
+    }
+    
+    .descriptionInput {
+      width: 100%;
+    }
+    
+    .editStatus {
+        width: max-content;
+        margin-bottom: 1rem;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 1rem;
+    }
+    
+    .statusLabel {
+      font-size: 13px;
+      color: #009ae1;
+      font-family: var(--ff_Bahnschrift);
+    }
+
+        .tempToggle {
+          width: fit-content;
+          height: max-content;
+          position: relative;
+          overflow: hidden;
+        }
+        .toggleDiv{
+          width: 7rem;
+          height: 1.75rem;
+          padding: 0.25rem;
+          border-radius: 32px;
+          /* background-color: #FF310B; */
+          background-color: #adadad;
+          transition: 0.4s cubic-bezier(0.18, 0.89, 0.35, 1.15) all;
+          cursor: pointer;
+        }
+        .toggleBtnBg{
+          height: 100%;
+          width: 100%;
+          position: relative;
+        }
+        .toggleBtnBg::before{
+          position: absolute;
+          top: 0px;
+          left: auto;
+          transform: translateX(0%);
+          right: 0% !important;
+          content: "";
+          height: 100%;
+          aspect-ratio: 1;
+          border-radius: 50%;
+          background-color: #fff;
+          transition: 0.4s cubic-bezier(0.18, 0.89, 0.35, 1.15) all;
+        }
+        .StatusText{
+          width: 200%;
+          height: 100%;
+          position: absolute;
+          top: 0px;
+          left: 0px;
+          transform: translateX(-50%);
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          transition: 0.4s cubic-bezier(0.18, 0.89, 0.35, 1.15) all;
+        }
+        .StatusText span{
+          width: 45%;
+          height: 100%;
+          color: white;
+          font-size: 14px;
+          display: flex;
+          justify-content: center;
+          font-family: Bahnschrift, 'Segoe UI', 'Segoe UI Web (West European)', -apple-system, BlinkMacSystemFont, Roboto, 'Helvetica Neue', sans-serif;
+          user-select: none;
+          line-height: 22px;
+          letter-spacing: 0.5px;
+        }
+        .checkBox:checked + label .toggleBtnBg::before{
+          transform: translateX(100%);
+          right: 100% !important;
+        }
+        .checkBox:checked + label .StatusText{
+          transform: translateX(0%);
+        }
+
+        .checkBox:checked + label .toggleDiv{
+          background-color: #14AD00;
+          background-color: #00aeff;
+        }
+
+    .previewLabel{
+      font-size: 13px;
+      padding-inline: 0.25rem;
+      color: #009ae1;
+      font-family: var(--ff_Bahnschrift);
+    }
+    .nonEditInput{
+      width: 100%;
+      --lwc-heightInput: 2rem !important;
+      --slds-g-color-neutral-base-95 : #70707014;   /* disable field background-color  */ 
+      --slds-g-color-border-base-1 : #00000012;     /* disable field border-color  */ 
+      --slds-g-color-neutral-base-50 : #747474;     /* disable field Text-color  */ 
+    }
+    .previewTwise{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    .previewField {
+        width: 100%;
+        position: relative;
+    }
+    
+     /* ============ =============== DETAIl EDIT Section -- END -- ================= ================ */
+  
+     .vertical-line{
+      min-width: 0.125rem;
+      background: linear-gradient(0deg, rgba(255, 255, 255, 0) 0%, rgb(6 174 255 / 61%) 18%, rgb(6 174 255) 50%, rgb(6 174 255 / 67%) 82%, rgba(255, 255, 255, 0) 100%);
+      border-radius: 0.5rem;
+      height: 100%;
+    }
 
    /* =================== page configuration CSS -- START -- ================================= */
    .msIcon svg > path.OfficeIconColors_HighContrast:not([class*="OfficeIconColors_m"]) {
@@ -1100,170 +1186,195 @@
     }
 
     .pageConfigs{
-    width: 100%;
-    height: 100%;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      width: 50%;
+      min-width: 50%;
+      height: 100%;
+      font-family: var(--ff_Bahnschrift);
+      padding-left: 1rem;
+      overflow: auto;
+
     }
     .pageConfig_sub{
-    display: flex;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      height: calc(100% - 2rem);
     }
     .pageConfigSections{
-    margin-block: 1rem;
+      margin-bottom: 0.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px dashed rgb(106 211 255);
     }
     .pageConfigTitle{
-    text-align: center;
-    font-size: 20px;
-    font-weight: 600;
-    color: #009be3;
-    margin-bottom: 0.5rem;
+      width: 100%;
+      text-align: center;
+      font-size: 16px;
+      color: rgb(46, 46, 46);
+      margin-bottom: 0.5rem;
     }
     .pageConfigOptions{
-    width: 60%;
+      width: 100%;
     }
-    .pageMarginConfig{
-    display: grid;
-    grid-template-columns: 3rem 15rem;
-    align-items: start;
-    overflow: hidden;
-    justify-items: end;
-    height: max-content;
-    column-gap: 0.25rem;
+    .pageMarginConfig, .pageSizeConfig , .pageOrientationConfig{
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      gap: 1rem;
+      overflow: hidden;
+      justify-items: end;
+      height: max-content;
     }
     .pageOptiontitle{
-    text-align: center;
-    font-size: 16px;
-    font-weight: 600;
-    }
-    .optionSVG{
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-    align-items: center;
-    margin-bottom: 0.5rem;
-    padding-left: 5rem;
-    }
-    .optionSVG svg{
-    width: 2.5rem;
-    height: 2.5rem;
+      font-size: 14px;
+      color: #009ae1;
+      font-family: var(--ff_Bahnschrift);
+      padding-bottom: 0.5rem;
     }
     .marginUnitOption{
-    border-color: #a6a6a6;
-    border-radius: 2px;
+      border-color: #a6a6a6;
+      border-radius: 4px;
+      height: 1.5rem;
     }
     .marginUnitOption:focus-visible{
-    border-color: #01AEFF;
-    outline-color: #01AEFF;
+      border-color: #01AEFF;
+      outline-color: #01AEFF;
     }
     .optionInputs{
-    width: 100%;
-    display: grid;
-    grid-template-columns: auto auto;
-    height: 100%;
+      width: fit-content;
+      display: flex;
+      height: 100%;
+      justify-content: flex-start;
+      gap: 1rem;
     }
     .marginInputontainer{
-    width: 100%;
-    display: grid;
-    grid-template-columns: 40% 15%;
-    justify-content: center;
-    align-items: center;
-    justify-items: stretch;
-    font-size: 12px;
+      width: fit-content;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      justify-items: stretch;
+      font-size: 12px;
+      gap: 0.5rem;
+      color: #5f5f5f;
+      text-transform: capitalize;
     }
     .pageMarginInput{
-    border-radius: 4px;
-    min-width: 1rem;
-    width: 2.25rem;
-    border: 0.5px solid #a6a6a6;
-    padding: 0.2rem;
-    position: relative;
+      border-radius: 4px;
+      min-width: 1rem;
+      width: 2.25rem;
+      height: 1.5rem;
+      border: 0.5px solid #a6a6a6;
+      padding: 0.2rem;
+      position: relative;
+      text-align: center;
     }
     .pageMarginInput:focus-visible{
-    outline: none;
+      outline: none;
+      border-color: rgb(27, 150, 255);
     }
     .marginUnit{
-    gap: 2rem;
-    width: 100%;
-    display: grid;
-    grid-template-columns: auto 19%;
-    justify-content: center;
-    align-items: center;
-    justify-items: start;
+      gap: 2rem;
+      width: 100%;
+      display: grid;
+      grid-template-columns: auto 19%;
+      justify-content: center;
+      align-items: center;
+      justify-items: start;
+      cursor: pointer;
+
     }
     .marginUnit option{
-    border-color: #cccccc;
-    border-radius: 6px;
+      border-color: #cccccc;
+      border-radius: 6px;
     }
-    .pageSizeConfig{
-    display: grid;
-    grid-template-columns: 3rem auto;
-    align-items: start;
-    overflow: hidden;
-    justify-items: end;
-    height: max-content;
-    column-gap: 2rem;
-    }
+
     .pageSizeInout{
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.25rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.25rem;
     }
-    .pageOrientationConfig{
-    display: grid;
-    grid-template-columns: 3rem 15rem;
-    align-items: start;
-    overflow: hidden;
-    gap: 0px;
-    justify-items: end;
-    height: max-content;
-    column-gap: 2rem;
-    }
+
     .oriTitle{
-    grid-column: 1 / span 2;
+      grid-column: 1 / span 2;
     }
 
     .sizeInputContainer{
-    width: fit-content;
-    font-size: 12px;
+      width: fit-content;
+      font-size: 12px;
     }
+
     .sizeInputLable{
-    min-width: fit-content;
-    font-size: 13px;
-    line-height: 13px;
-    padding: 0.25rem 0.5rem;
-    border-radius: 4px;
-    border: 1px solid rgb(201, 201, 201);
-    white-space: pre;
+      min-width: 100%;
+      font-size: 13px;
+      color: #5f5f5f;
+      line-height: 13px;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      border: 1px solid rgb(201, 201, 201);
+      white-space: pre;
+      cursor: pointer;
     }
     .subLabel{
-    font-size: 11px;
+      font-size: 11px;
     }
     input[type="radio"]:checked + label .sizeInputLable{
-    color: #01AEFF;
-    border-color: #01AEFF;
+      color: #01AEFF;
+      border-color: #01AEFF;
     }
     .pageOriInputs{
-    display: flex;
-    gap: 0.25rem;
-    align-items: flex-start;
+      display: flex;
+      gap: 0.25rem;
+      align-items: flex-start;
+      cursor: pointer;
+
     }
     .oriInputContainer{
-    display: flex;
-    align-items: center;
-    font-size: 12px;
+      display: flex;
+      align-items: center;
+      font-size: 12px;
     }
     .dummyPageContainer{
-    width: 40%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: auto 2rem;
+      width: auto;
+      height: 100%;
+      flex-grow: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
     .dummyPage{
-    width: 100%;
-    aspect-ratio: 0.707;
-    border: 1px solid rgb(188, 188, 188);
-    border-radius: 6px;
+      width: auto;
+      height: 10rem;
+      max-height: 10rem;
+      overflow: hidden;
+      aspect-ratio: 0.707;
+      border: 1px solid rgb(188, 188, 188);
+      border-radius: 6px;
+      transition: all linear 0.5s;
+      padding: 0.5rem;
+
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
     }
+    .bar1, .bar2, .bar3{
+      border-radius: 2px;
+      width: 100%;
+
+    }
+    .bar1{
+      height: 12%;
+      margin-bottom: 0.5rem;
+      background: #D6D7DB;
+    }
+    .bar2{
+      height: 6%;
+      background: #D6D7DB;
+    }
+    .bar3{
+      height: 6%;
+      margin-bottom: 0.25rem;
+      background: #D6D7DB;
+    }
+
  /* =================== page configuration CSS -- END -- ================================= */
 
 
@@ -1323,7 +1434,176 @@
       min-width: 25rem;
       width: calc(100% - (var(--pdfActualPreviewWidth) * 2));
     }
-/* ====== ========= ========= ========== Media Querys ======== ======== ======= ========= ========= ========= ======== ======= */
+
+    /* Generate Child Record Table Popup CSS */
+    .genChildTablePopup{
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 100;
+      background: rgba(0, 0, 0, 0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .genChildTablePopup_sub{
+      width: 80%;
+      height: 90%;
+      position: relative;
+      border-radius: 6px;
+      overflow: hidden;
+
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .genChildHader{
+      height: 3rem;
+      width: 100%;
+      border-bottom: 1px solid rgb(9 175 255);
+      background: white;
+      padding-inline: 1.5rem;
+
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      transition: all linear 0.2s;
+    }
+    .genChilTitle{
+      font-size: 18px;
+      font-weight: 600;
+      text-align: center;
+      flex-grow: 1;
+      color: #00aeff;
+      /* text-transform: capitalize; */
+    }
+    .closeGenChildTableBtn{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      float: right;
+      cursor: pointer;
+    }
+    .closeGenChildTableBtn svg{
+      width: 18px;
+      height: 18px;
+    }
+    .closeGenChildTableBtn:hover{
+      scale: 1.1;
+    }
+    .closeGenChildTableBtn:hover path{
+      fill: #da0000;
+      stroke: #da0000;
+    }
+    .childEditCsvComp{
+      width: 100%;
+      /* height: calc(100% - 10rem); */
+      flex-grow: 1;
+      overflow: hidden;
+      padding-block: 1rem;
+      background: white;
+    }
+    .genChildFooter{
+      min-height: 5rem;
+      height: max-content;
+      max-height: 15rem;
+      width: 100%;
+      border-top: 1px solid rgb(9 175 255);
+      background: white;
+      border-bottom-left-radius: 6px;
+      border-bottom-right-radius: 6px;
+      padding: 1rem;
+
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+    }
+    .generatedTable{
+      padding-block: 1rem;
+      position: relative;
+      flex-grow: 1;
+    }
+    .ChildTablePlaceholder{
+      font-size: 16px;
+      color: rgb(55, 55, 55);
+      position: absolute;
+      left: 1rem;
+      top: 0px;
+    }
+    .generatedTable table{
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+    }
+    .generatedTable td{
+      border: 1px solid #808080;
+      padding: 5px 3px;
+    }
+    .ChildTableOptions{
+      min-width: 12rem;
+      padding-inline: 1rem;
+      height: 100%;
+      border: 1px solid #02afff;
+      border-radius: 6px;
+      box-shadow: rgb(77 175 255) 0px 0px 2px;
+
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .srNoOption{
+      width: 100%;
+      height: 50%;
+      display: flex;
+      align-items: center;
+      flex-direction: row;
+    }
+    .srNoOption_label{
+      width: 100%;
+      margin-bottom: 0.25rem;
+    }
+    .srNoOption_toggel{
+      width: 100%;
+    }
+    .copyButton{
+      width: 100%;
+      text-align: center;
+      background: #02afff;
+      outline: none;
+      border: none;
+      border-radius: 6px;
+      padding: 0.25rem;
+      cursor: pointer;
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .copyButton:disabled{
+      background: rgb(214 214 214);
+      box-shadow: none;
+      color: #323232;
+      cursor: not-allowed;
+      border: 1px solid #cacaca;
+    }
+    .copyButton svg{
+      width: 1.5rem;
+      height: 1.5rem;
+      fill: white;
+    }
+    .copyButton_label{
+      color: white;
+      font-size: 15px;
+      font-family: var(--ff_Montserrat);
+    }
+/* ====== ========= ========= ========== Media Query ======== ======== ======= ========= ========= ========= ======== ======= */
+
 @media only screen and (max-width: 1440px){
   .fieldMappingContainer{
     width: 30rem;
@@ -1336,7 +1616,7 @@
 }
 
 @media only screen and (max-width: 1350px){
-  .fieldMappingContainer{
+  /* .fieldMappingContainer{
     position: absolute;
     right: 0%;
     width: 30rem;
@@ -1345,10 +1625,10 @@
     border-bottom-right-radius: 0px;
     transform: translateX(calc(100% + 0.5rem));
     transition: all linear 0.325s;
-  }
-  .openFieldMapping{
+  } */
+  /* .openFieldMapping{
     transform: translateX(0px) !important;
-  }
+  } */
   .toggleFieldMapping{
     display: flex;
     justify-content: center;
@@ -1371,7 +1651,7 @@
     user-select: none;
 
     font-size: 14px;
-    font-family: Bahnschrift, 'Segoe UI', 'Segoe UI Web (West European)', -apple-system, BlinkMacSystemFont, Roboto, 'Helvetica Neue', sans-serif;
+    font-family: var(--ff_Bahnschrift);
 
   }
 }

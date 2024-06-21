@@ -24,13 +24,10 @@ public with sharing class GoogleDocPreview {
                 List<Object> bodyContentOriginal = (List<Object>) ((Map<String,Object>)JSON.deserializeUntyped(JSON.serialize(((Map<String,Object>) JSON.deserializeUntyped(sourceDocContent)).get('body')))).get('content');
                 List<Object> bodyContentNew = (List<Object>) ((Map<String,Object>)JSON.deserializeUntyped(JSON.serialize(((Map<String,Object>) JSON.deserializeUntyped(modiFiedDocContent)).get('body')))).get('content');
                 
-                List<Object> requests = formatContentForBatchUpdate(bodyContentNew,bodyContentOriginal);
+                List<Object> requests = formatContentForBatchUpdate(bodyContentNew,bodyContentOriginal,recordId,objectApiName);
                 updateGoogleDoc(newGoogleDocId, requests);
 
                 attachment.Body = getPDF(newGoogleDocId);
-
-                
-
                 
             } catch (Exception e) {
                 System.debug('Error In doPreview while between copy and delete ==> '+e.getMessage());
@@ -156,7 +153,7 @@ public with sharing class GoogleDocPreview {
         }
     }
 
-    public static List<Object> formatContentForBatchUpdate(List<Object> bodyContentNew, List<Object> bodyContentOriginal) {
+    public static List<Object> formatContentForBatchUpdate(List<Object> bodyContentNew, List<Object> bodyContentOriginal,String recordId,String objectApiName) {
         try {
             List<Object> requests = new List<Object>();
             List<Object> tableRequests = new List<Object>();
@@ -216,7 +213,11 @@ public with sharing class GoogleDocPreview {
                     //Insert empty rows equal to number of records
                     Map<String, Object> firstRow = (Map<String, Object>) originalTableRows[0];
                     Map<String, Object> secondRow = (Map<String, Object>) originalTableRows[1];
-                    List<List<String>> tableRecords = getTableRecords(secondRow);
+                    Map<String, Object> thirdRow = (Map<String, Object>) originalTableRows[2];
+                    List<List<String>> tableRecords = getTableRecords(secondRow,thirdRow,recordId,objectApiName);
+                    if (tableRecords == null) {
+                        continue;
+                    }
                     Integer numberOfRecords = tableRecords.size();
                     for (Integer i = 1; i <= numberOfRecords; i++) {
 
@@ -398,30 +399,57 @@ public with sharing class GoogleDocPreview {
 
     }
 
-    public static List<List<String>> getTableRecords(Map<String,Object> secondRow) {
+    public static List<List<String>> getTableRecords(Map<String,Object> secondRow,Map<String,Object> thirdRow,String recordId,String objectApiName) {
         
         try {
-            System.debug('Second Row =>'+secondRow);
-            String queryString = 'SELECT Id,Name,MobilePhone,Email FROM Contact';
-            List<SObject> records = Database.query(queryString);
-            System.debug('Records ==>'+records);
+            System.debug('Third Row=>'+thirdRow);
+            String crn = JSON.serialize(thirdRow).substringBetween('$crn:', '$');
+            String limitOfRecords  = JSON.serialize(thirdRow).substringBetween('$limit:', '$');
+            if ((crn == null)||(limitOfRecords == null)) {
+                return null;
+            }
+            System.debug('CRN==>'+crn);
+            System.debug('limitOfRecords==>'+limitOfRecords);
+            
+            List<String> keys  = new  List<String>();
+            String keyString = '';
+            List<Object> cells = (List<Object>) secondRow.get('tableCells');
+            for (Object cell : cells) {
+                String key = JSON.serialize(cell).substringBetween('{{$', '}}');
+                keys.add(key);
+            }
+            
+            String queryString = 'SELECT Name, (SELECT '+String.join(keys,',')+' FROM '+crn+' LIMIT '+limitOfRecords+') FROM '+objectApiName+' WHERE Id=:recordId';
+            // String queryString = 'SELECT (SELECT '+String.join(keys,',')+' FROM '+crn+' LIMIT '+limitOfRecords+') FROM '+objectApiName+' WHERE Id='+recordId;
+            System.debug('Query String ==>'+queryString);
+            // List<String> columns = new List<String>{'Id','Name','MobilePhone','Email'};
+            // String queryString = 'SELECT Id,Name,MobilePhone,Email FROM Contact';
+
+            List<SObject> recordsMain = Database.query(queryString);
+            System.debug('recordsMain=>'+recordsMain);
+            // System.debug('Contacts ==>'+recordsMain[0].get(crn));
+            List<Object> records = (List<Object>) recordsMain[0].getPopulatedFieldsAsMap().get(crn);
+            
+            // List<Object> records = (List<Object>) recordsMain[0].get(crn);
+            // System.debug('records=>'+records);
+            
+
+            
             List<List<String>> tableRecords = new LiSt<List<String>>();
-            for (SObject record : records) {
+            for (Object record : records) {
                 List<String> row = new List<String>();
-                row.add(String.valueOf(record.Id));
-                row.add(String.valueOf(record.get('Name')));
-                row.add(String.valueOf(record.get('MobilePhone')));
-                row.add(String.valueOf(record.get('Email')));
+                for (String column : keys) {
+                    row.add(String.valueOf(((Map<String,Object>) record).get(column)));
+                }
                 tableRecords.add(row);
             }
             
-            System.debug('tableRecords ==>'+tableRecords);
             return tableRecords;
         } catch (Exception e) {
-            System.debug('Error In getTableRecords ==> '+e.getMessage());
+            System.debug('Error In getTableRecords ==> '+e.getMessage()+e.getStackTraceString());
             Log_Handler.store_Exception(e,'GoogleDocPreview','getTableRecords');
             return null;
         }
-    }
+      }
     
 }

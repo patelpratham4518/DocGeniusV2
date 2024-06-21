@@ -117,6 +117,93 @@ export var customeIcons = {
     pageColumn : `<svg class="msIcon" viewBox="0,0,2048,2048" ><path type="path" class="OfficeIconColors_HighContrast" d="M 1728 128 v 1792 h -1408 v -1792 m 1344 64 h -1280 v 1664 h 1280 m -704 -704 h -384 v -64 h 384 m 0 256 v 64 h -384 v -64 m 384 -448 h -384 v -64 h 384 m 0 -192 h -384 v -64 h 384 m 128 512 h 384 v 64 h -384 m 0 192 h 384 v 64 h -384 m 384 -832 v 64 h -384 v -64 m 0 256 h 384 v 64 h -384 z"></path><path type="path" class="OfficeIconColors_m20" d="M 1696 1888 h -1344 v -1728 h 1344 z"></path><path type="path" class="OfficeIconColors_m22" d="M 1728 128 v 1792 h -1408 v -1792 m 1344 64 h -1280 v 1664 h 1280 z"></path><path type="path" class="OfficeIconColors_m24" d="M 960 1152 h -384 v -64 h 384 m 0 256 v 64 h -384 v -64 m 384 -448 h -384 v -64 h 384 m 0 -192 h -384 v -64 h 384 m 128 512 h 384 v 64 h -384 m 0 192 h 384 v 64 h -384 m 384 -832 v 64 h -384 v -64 m 0 256 h 384 v 64 h -384 z"></path></svg>`,
 }
 
+// All values are in (pt) unit...
+export var pageFormats = {
+    'a0': [2383.94, 3370.39],
+    'a1': [1683.78, 2383.94],
+    'a2': [1190.55, 1683.78],
+    'a3': [841.89, 1190.55],
+    'a4': [595.28, 841.89],
+    'a5': [419.53, 595.28],
+    'a6': [297.64, 419.53],
+    'a7': [209.76, 297.64],
+    'a8': [147.40, 209.76],
+    'a9': [104.88, 147.40],
+    'a10': [73.70, 104.88],
+    'b0': [2834.65, 4008.19],
+    'b1': [2004.09, 2834.65],
+    'b2': [1417.32, 2004.09],
+    'b3': [1000.63, 1417.32],
+    'b4': [708.66, 1000.63],
+    'b5': [498.90, 708.66],
+    'b6': [354.33, 498.90],
+    'b7': [249.45, 354.33],
+    'b8': [175.75, 249.45],
+    'b9': [124.72, 175.75],
+    'b10': [87.87, 124.72],
+    'c0': [2599.37, 3676.54],
+    'c1': [1836.85, 2599.37],
+    'c2': [1298.27, 1836.85],
+    'c3': [918.43, 1298.27],
+    'c4': [649.13, 918.43],
+    'c5': [459.21, 649.13],
+    'c6': [323.15, 459.21],
+    'c7': [229.61, 323.15],
+    'c8': [161.57, 229.61],
+    'c9': [113.39, 161.57],
+    'c10': [79.37, 113.39],
+    'dl': [311.81, 623.62],
+    'letter': [612, 792],
+    'government-letter': [576, 756],
+    'legal': [612, 1008],
+    'junior-legal': [576, 360],
+    'ledger': [1224, 792],
+    'tabloid': [792, 1224],
+    'credit-card': [153, 243],
+    'executive' : [522, 756],       // DocGenius Changes....
+    'statement' : [396, 594],       // DocGenius Changes....
+  }; 
+
+  // Unit conversion from pt to other unit...
+export  function unitMultiplier(unit){
+    switch (unit) {
+        case 'pt':
+          return 1;
+          break;
+    
+        case 'mm':
+          return 72 / 25.4;
+          break;
+    
+        case 'cm':
+          return 72 / 2.54;
+          break;
+    
+        case 'in':
+          return 72;
+          break;
+    
+        case 'px':
+          return 72 / 96;
+          break;
+    
+        case 'pc':
+          return 12;
+          break;
+    
+        case 'em':
+          return 12;
+          break;
+    
+        case 'ex':
+          return 6;
+          break;
+    
+        default:
+          return null;
+    }
+}
+
 export default class UtilityProperties extends LightningElement {
 
     styleLoaded = false;

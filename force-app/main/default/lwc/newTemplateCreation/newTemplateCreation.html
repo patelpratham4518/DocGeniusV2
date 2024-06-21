@@ -2,10 +2,11 @@
     <template if:true={showModel}>
         <section role="dialog" tabindex="-1" aria-modal="true" aria-labelledby="modal-heading-01" class="slds-modal slds-fade-in-open">
             <c-message-popup></c-message-popup>
-            <c-document-loader display={doShowSpinner}></c-document-loader>
             <!-- <div class="spinner-div" if:true={doShowSpinner}>
                 <c-spinner></c-spinner>
             </div> -->
+            <c-document-loader display={doShowSpinner} ></c-document-loader>
+
             <div class="main-div">
                 <div class="image-div">
                     <img class="image" onload={imageLoaded} src={templateImage} alt="New Template Image">
@@ -29,36 +30,45 @@
                         <label>Template Description</label>
                     </div>
                     <div class="select-label-float">
-                        <label>Source Object</label>
+                        <!-- <label>Source Object</label>
                         <select onchange={handleObjectChange} class="select-dropdown object-dd">
                             <option value="">--Select Object--</option>
                             <template for:each={objectNames} for:item="option">
-                                <option key={option.name} value={option.apiName}>{option.name}</option>
+                                <option key={option.label} value={option.value}>{option.label}</option>
                             </template>
-                        </select>
-                    </div>
-                    <!-- <div class="select-label-float">
-                        <label> Source Object 2</label>
-                        <c-custome-combo-box 
-                        label="Source Object 1"
+                        </select> -->
+                        <!-- <label>Source Object</label> -->
+                        <c-custom-combobox
+                        label="Source Object"
+                        class="select-dropdown object-dd"
+                        onselect={handleObjectChange}
                         options={objectNames}
-                        searchable="true"
-                        required="true"
+                        multiselect="false"
                         placeholder ="Select Source Object"
                         value ={selectedObject}
-                        onselect={handleObjectChange2}
-                        multiselect = "false"
-                        dropdown-position = "left"
-                        ></c-custome-combo-box>
-                    </div> -->
+                        dropdown-position="left"
+                        searchable="true"
+                        ></c-custom-combobox>
+                    </div>
                     <div class="select-label-float">
-                        <label>Template Type</label>
-                        <select onchange={handleTypeChange} class="select-dropdown type-dd">
+                        <!-- <label>Template Type</label> -->
+                        <!-- <select onchange={handleTypeChange} class="select-dropdown type-dd">
                             <option value="">--Select Template Type--</option>
                             <template for:each={templateTypes} for:item="option">
-                                <option key={option} value={option}>{option}</option>
+                                <option key={option.label} value={option.value}>{option.label}</option>
                             </template>
-                        </select>
+                        </select> -->
+                        <c-custom-combobox
+                        class="select-dropdown type-dd"
+                        label="Template Type"
+                        onselect={handleTypeChange}
+                        options={templateTypes}
+                        multiselect="false"
+                        dropdown-position="left"
+                        placeholder ="Select Template Type"
+                        value ={selectedTemplateType}
+                        searchable="true"
+                        ></c-custom-combobox>
                     </div>
                     <div class="drag-drop-div" if:true={showRowColumn}>
                         <div class="row ">

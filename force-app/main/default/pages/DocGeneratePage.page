@@ -1,0 +1,309 @@
+<apex:page controller="DocGenerateController"
+		   applyHtmlTag="false" showHeader="false" sidebar="false" standardStylesheets="false" cache="false" title="{!recordName}" >
+           
+    <html>
+        <head>
+            <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+            <style>
+                body{
+                    height: 100vh;
+                    overflow: hidden;
+                }         
+                .page-break {
+                    display:block;
+                    page-break-after:always;
+                }         
+                
+                /* **** ***** ****** Editor CSS -- START **** ***** ****** */
+                .note-editor.note-frame, .note-editor.note-airframe{
+                    padding-top: 0px !important;
+                    border: none !important;
+                    width: 100% !important;
+                    height: 100% !important;
+                    overflow: hidden !important;
+                    display: block !important;
+                }
+                .note-editor.note-frame .note-editing-area, .note-editor.note-airframe .note-editing-area{
+                    max-width: 100% !important;
+                    /* margin-right: calc(30% + 1.5rem); */
+                    height: 100% !important;
+                    flex-grow: 1 !important;
+                    max-height: max-content !important;
+                    min-height: auto !important;
+                    overflow: auto !important;
+                    overflow-y: auto !important;
+                    scrollbar-width: none !important;
+                    scrollbar-color: #00a4f1 #ff000000 !important;
+                }
+                .note-editor.note-frame .note-editing-area .note-editable, .note-editor.note-airframe .note-editing-area .note-editable{
+                    height: 100% !important;
+                    min-height: auto !important;
+                    background-color: white;
+                    padding: 0px !important;
+                    width: 100% !important;
+                    box-shadow: none !important;
+                    border: none !important;
+                    border-radius: none !important;
+                    margin-bottom: 0px !important;
+                }
+                /* **** ***** ****** Editor CSS -- END **** ***** ****** */
+
+            </style>
+            <!-- <xml>
+                <w:WordDocument>
+                <w:View>Print</w:View>
+                <w:Zoom>100</w:Zoom>
+                <w:DoNotOptimizeForBrowser/>
+                </w:WordDocument>
+            </xml> -->
+            <apex:styleSheet value="{!URLFOR($Resource.summerNote_Editor, '/summernote-lite.css')}"/>
+            <apex:includeScript value="{!URLFOR($Resource.pdfLibs, '/html2pdf.bundle.js')}"/>
+            <apex:includeScript value="{!URLFOR($Resource.pdfLibs, '/pdfJS/web/pdf.js')}"/>
+            <apex:includeScript value="{!URLFOR($Resource.pdfLibs, '/pdfobject.js')}"/>
+            <apex:includeScript value="{!$Resource.domToImg}"/>
+        </head>
+        <body>
+            <div class="note-editor note-frame" data-zone="templateContent">
+                <div class="note-editing-area">
+                    <div aria-multiline="true" role="textbox" class="note-editable">
+                        <apex:outputText value="{!displayText}" escape="false"/>
+                    </div>
+                </div>
+            </div>
+        </body>
+
+        <script type="text/javascript">
+                try {
+                        // ==== Page Size in (pt) unit...
+                        var pageFormats = {
+                            'a0': [2383.94, 3370.39],
+                            'a1': [1683.78, 2383.94],
+                            'a2': [1190.55, 1683.78],
+                            'a3': [841.89, 1190.55],
+                            'a4': [595.28, 841.89],
+                            'a5': [419.53, 595.28],
+                            'a6': [297.64, 419.53],
+                            'a7': [209.76, 297.64],
+                            'a8': [147.40, 209.76],
+                            'a9': [104.88, 147.40],
+                            'a10': [73.70, 104.88],
+                            'b0': [2834.65, 4008.19],
+                            'b1': [2004.09, 2834.65],
+                            'b2': [1417.32, 2004.09],
+                            'b3': [1000.63, 1417.32],
+                            'b4': [708.66, 1000.63],
+                            'b5': [498.90, 708.66],
+                            'b6': [354.33, 498.90],
+                            'b7': [249.45, 354.33],
+                            'b8': [175.75, 249.45],
+                            'b9': [124.72, 175.75],
+                            'b10': [87.87, 124.72],
+                            'c0': [2599.37, 3676.54],
+                            'c1': [1836.85, 2599.37],
+                            'c2': [1298.27, 1836.85],
+                            'c3': [918.43, 1298.27],
+                            'c4': [649.13, 918.43],
+                            'c5': [459.21, 649.13],
+                            'c6': [323.15, 459.21],
+                            'c7': [229.61, 323.15],
+                            'c8': [161.57, 229.61],
+                            'c9': [113.39, 161.57],
+                            'c10': [79.37, 113.39],
+                            'dl': [311.81, 623.62],
+                            'letter': [612, 792],
+                            'government-letter': [576, 756],
+                            'legal': [612, 1008],
+                            'junior-legal': [576, 360],
+                            'ledger': [1224, 792],
+                            'tabloid': [792, 1224],
+                            'credit-card': [153, 243],
+                            'executive' : [522, 756],       // DocGenius Changes....
+                            'statement' : [396, 594],       // DocGenius Changes....
+                        }; 
+
+                        const docType = `{!docType}`;   
+                        const pageMargins = '{!pageMargins}';
+                        const mArray = pageMargins.split(';');
+                        const pageWidth = pageFormats['{!pageSize}'][0];
+                        const pageHeight = pageFormats['{!pageSize}'][1];
+                        
+                    const promises = [];
+                    const dummyImgSrc = 'data:image/png;base64,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'
+                    
+                    const node = document.body;
+                    //  ==== Convert URL src into base64 =======
+                    const images = node.querySelectorAll('img');
+                    images.forEach(ele => {
+                        const width = ele.width;
+                        const height = ele.height;
+                        if(ele.src.startsWith('http')){
+                            // promises.push(convertImgToBase64(ele.src).then(base64Img => {
+                            //     ele.src = base64Img;
+                            // }));
+                            ele.src = dummyImgSrc;
+                        }
+                        ele.width = width;
+                        ele.height = height;
+                    });
+
+                // ==== ===  Function to convet URL src to base64 src using canvas APIs ==== =====
+                function convertImgToBase64(url) {
+                    return new Promise((resolve, reject) => {
+                        let img = new Image();
+                        img.crossOrigin = 'Anonymous';
+                        img.src = url;
+                        img.onload = function() {
+                            let canvas = document.createElement('canvas');
+                            canvas.width = img.width;
+                            canvas.height = img.height;
+                            let ctx = canvas.getContext('2d');
+                            ctx.drawImage(img, 0, 0);
+                            let dataURL = canvas.toDataURL('image/png');
+                            resolve(dataURL);
+                        };
+                        img.onerror = function() {
+                            // replace CORS Block Images with dummy IMAGE...
+                            resolve(dummyImgSrc);
+                        };
+                    })
+                }
+
+                // === Once all URL image src convet to base64 src ===  exectute further process....
+                Promise.all(promises).then(() => {
+                    // All Promise for convert to base64 are resolved...
+                    downloadFile();
+                })
+
+                // ========= ========= ============== =============
+
+
+
+                    function downloadFile(){
+                        if(docType == 'PDF'){
+                            downloadPDF();
+                        }
+                        else if(docType == 'DOC'){
+                            downloadDOC();
+                        }
+                        else if(docType == 'PPT'){
+                            
+                        }
+                    }
+
+                    function downloadPDF(){
+                        var opt = {
+                            // margin : [top, left, bottom, right]
+                            margin: [parseInt(mArray[0]), parseInt(mArray[2]), parseInt(mArray[1]), parseInt(mArray[3])],
+                            filename: 'docGenius-test.pdf',
+                            image: { type: 'jpeg', quality: 1 },
+                            html2canvas: { scale: 3 , useCORS: true , letterRendering: true},
+                            pagebreak: { mode: ['avoid-all', 'css', 'legacy'] },
+                            jsPDF: { unit: '{!pageConfigUnit}', format: '{!pageSize}', orientation: '{!pageOrientation}' }
+                        };
+    
+                        html2pdf().set(opt).from(document.body).save();
+                    }
+
+
+                    function downloadDOC(){
+                         //  _html_ will be replace with custom html
+                        var meta= "Mime-Version: 1.0\nContent-Base: " + location.href + "\nContent-Type: Multipart/related; boundary=\"NEXT.ITEM-BOUNDARY\";type=\"text/html\"\n\n--NEXT.ITEM-BOUNDARY\nContent-Type: text/html; charset=\"utf-8\"\nContent-Location: " + location.href + "\n\n<!DOCTYPE html>\n<html>\n_html_</html>";
+                        //  _styles_ will be replaced with custome css
+                        var head= "<head>\n<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">\n<style>\n_styles_\n</style>\n</head>\n";
+            
+                        var html = document.body.innerHTML;
+                        
+                        var blob = new Blob(['\ufeff', html], {
+                            type: 'application/msword'
+                        });
+                        
+                        var css = (
+                                `<style>
+                                    @page {
+                                        size: ${pageWidth}pt ${pageHeight}pt;
+                                        margin-top: ${parseInt(mArray[0])}{!pageConfigUnit};
+                                        margin-bottom: ${parseInt(mArray[1])}{!pageConfigUnit};
+                                        margin-left: ${parseInt(mArray[2])}{!pageConfigUnit};
+                                        margin-right: ${parseInt(mArray[3])}{!pageConfigUnit};
+                                        mso-page-orientation: {!pageOrientation};
+                                        mso-header: none;
+                                        mso-footer: none;
+                                    }
+                                    img {width:100%;}
+                                    table {border-collapse: collapse; border-spacing: 0;}
+                                    td{padding: 6px;}
+                                </style>`
+                            );
+
+                        //  Image Area %%%%
+                        var options = { maxWidth: 624};
+                        var images = Array();
+                        var img = document.body.querySelectorAll("img");
+                        for (var i = 0; i < img.length; i++) {
+                            // Calculate dimensions of output image
+                            // var w = Math.min(img[i].width, options.maxWidth);
+                            // var h = img[i].height * (w / img[i].width);
+                            var w = img[i].width;
+                            var h = img[i].height;
+                            // Create canvas for converting image to data URL
+                            var canvas = document.createElement("CANVAS");
+                            canvas.width = w;
+                            canvas.height = h;
+                            // Draw image to canvas
+                            var context = canvas.getContext('2d');
+                            context.drawImage(img[i], 0, 0, w, h);
+                            // Get data URL encoding of image
+                            var uri = canvas.toDataURL("image/png");
+                            img[i].setAttribute("src", img[i].src)
+                            img[i].width = w;
+                            img[i].height = h;
+                            // Save encoded image to array
+                            images[i] = {
+                                type: uri.substring(uri.indexOf(":") + 1, uri.indexOf(";")),
+                                encoding: uri.substring(uri.indexOf(";") + 1, uri.indexOf(",")),
+                                location: img[i].src,
+                                data: uri.substring(uri.indexOf(",") + 1)
+                            };
+                        }
+
+                        // Prepare bottom of mhtml file with image data
+                        var imgMetaData = "\n";
+                        for (var i = 0; i < images.length; i++) {
+                            imgMetaData += "--NEXT.ITEM-BOUNDARY\n";
+                            imgMetaData += "Content-Location: " + images[i].location + "\n";
+                            imgMetaData += "Content-Type: " + images[i].type + "\n";
+                            imgMetaData += "Content-Transfer-Encoding: " + images[i].encoding + "\n\n";
+                            imgMetaData += images[i].data + "\n\n";
+                            
+                        }
+                        imgMetaData += "--NEXT.ITEM-BOUNDARY--";
+                        // end Image Area %%
+
+                        var output = meta.replace("_html_", head.replace("_styles_", css) +  html) + imgMetaData;
+
+                        var url = 'data:application/vnd.ms-word;charset=utf-8,' + encodeURIComponent(output);
+
+                        filename = '{!recordName}' + '.doc' ;
+                        var downloadLink = document.createElement("a");
+                        document.body.appendChild(downloadLink);
+
+                        if (navigator.msSaveOrOpenBlob) {
+                            navigator.msSaveOrOpenBlob(blob, filename);
+                        } else {
+                            downloadLink.href = url;
+                            downloadLink.download = filename;
+                            downloadLink.click();
+                        }
+                        document.body.removeChild(downloadLink);
+                    }
+
+
+                } catch (error) {
+                    console.error('error in docGenerate JS : ', error.stack);
+                }
+
+        </script>
+
+        
+    </html>
+</apex:page>

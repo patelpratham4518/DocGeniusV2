@@ -5,6 +5,7 @@ import getMerginTemplateKeys from '@salesforce/apex/KeyMappingController.getMerg
 import getAllContentVersionImgs from '@salesforce/apex/KeyMappingController.getAllContentVersionImgs';
 import getChildObjects from '@salesforce/apex/KeyMappingController.getChildObjects';
 import formattingFieldKeys from '@salesforce/apex/KeyMappingController.formattingFieldKeys';
+import fetchImgBlob from '@salesforce/apex/KeyMappingController.fetchImgBlob';
 
 export default class KeyMappingContainer extends LightningElement {
 
@@ -37,20 +38,22 @@ export default class KeyMappingContainer extends LightningElement {
     @track trueValueReplacer = '';
     @track falseValueReplacer = '';
     @track disableRoundMode = false;
+    toggleBtn = false;
     numberFormat = {}
 
     mappingTypeTabs = [
         {label: 'Object Fields',        name: 'objectFields',
-            helpText : 'Select and Merger Base Object and Lookup (Related) Object\'s Fields Into The Template.',},
+            helpText : 'Insert Base Object and Lookup (Related) Object\'s Fields Int Template.',},
         {label: 'Related List Fields',  name: 'relatedListFields',
-            helpText : 'Select and Merge Related List (Child Object) Field Into The Template.',},
+            helpText : 'Insert Related List (Child Object) Field In Template as a Table Format.',},
         {label: 'General Fields',        name: 'generalFields',
-            helpText : 'Select and Merge Custom/Runtime (i.e., Dates, User Info, Organization Into, etc...) Field Into The This Template.',},
+            helpText : 'Insert & Add Document Creation Date, Document Creation User Info, Organization Info, etc... In Template',},
         {label: 'Merge Templates',      name: 'mergeTemplates',
-            helpText : 'Select and Merge another Templates Into The Template.'},
+            helpText : 'Merge Other Templates Into The Current Template'},
         {label: 'Salesforce Images',     name: 'sfImages',
-            helpText : 'Insert Salesforce images Into The Template.'},
+            helpText : 'Add Salesforce images Into The Template.'},
     ];
+
     @track activeMappingTabName = 'objectFields';
     @track selectedMappingType = this.mappingTypeTabs.find(ele =>  ele.name == this.activeMappingTabName);
 
@@ -133,14 +136,28 @@ export default class KeyMappingContainer extends LightningElement {
             return 'Search Fields...';
         }
         else if(this.activeMappingTabName == 'generalFields'){
-            return 'Search Fields...';
+            return 'Search General Fields...';
         }
         else if(this.activeMappingTabName == 'mergeTemplates'){
-            return 'Search Templates...';
+            return 'Search Templates by Name...';
         }
         else if(this.activeMappingTabName == 'sfImages'){
             return 'Search Images by Name or File Type...'
         }
+   }
+
+   get objectComboPlaceHolder(){
+       if(this.activeMappingTabName == 'objectFields'){
+           return 'Select Object...';
+        }
+        else if(this.activeMappingTabName == 'relatedListFields'){
+            console.log('activeMappingTabName : ', this.activeMappingTabName);
+            return 'Select Child Object...';
+        }
+        else if(this.activeMappingTabName == 'generalFields'){
+            return 'Select Field Type...';
+        }
+
    }
 
    get showComboDescription(){
@@ -199,6 +216,10 @@ export default class KeyMappingContainer extends LightningElement {
         }
    }
 
+   get setSelectFieldBtn(){
+        return this.selectedChildObjectName ? false : true;
+   }
+
 //    get formatPlaceholder(){
 //         return `Select format for your ${this.clickedFieldType} field...`
 //    }
@@ -212,10 +233,23 @@ export default class KeyMappingContainer extends LightningElement {
             this.fetchAllActiveTemps();
             this.fetchAllContentVersionImages();
             this.fetchFormatMappingKeys();
+            window.addEventListener('resize', this.resizeFunction);
         } catch (error) {
             console.log('error in FieldMappingKey.connectedCallback : ', error.stack);
         }
     }
+
+    renderedCallback(){
+        if(this.isInit){
+            this.resizeFunction();
+            this.isInit = false;
+        }
+    }
+
+    // Use Arrow Function...
+    resizeFunction = () => {
+
+    };
 
     fetchFieldMapping(){
         try {
@@ -380,8 +414,6 @@ export default class KeyMappingContainer extends LightningElement {
             var index = this.mappingTypeTabs.indexOf(this.mappingTypeTabs.find(ele => ele.name == this.activeMappingTabName));
             this.selectedMappingType = this.mappingTypeTabs[index];
 
-            console.log('this.this.mappingTypeTabs : ', this.mappingTypeTabs);
-
         } catch (error) {
             console.log('error in setMappingTab : ', error.stack);
         }
@@ -418,7 +450,16 @@ export default class KeyMappingContainer extends LightningElement {
     }
 
     handleChildObjSelection(event){
-        this.selectedChildObjectName = event.detail[0];
+        try {
+            if(event.detail && event.detail.length){
+                this.selectedChildObjectName = event.detail[0];
+            }
+            else{
+                this.selectedChildObjectName = null;
+            }
+        } catch (error) {
+            console.log('error in handleChildObjSelection : ', error.stack);
+        }
     }
 
     handleGeneralFieldTypeSelection(event){
@@ -541,6 +582,24 @@ export default class KeyMappingContainer extends LightningElement {
             toggleFieldMapping.style = this.isMappingOpen ? `width : 0px !important; padding: 0px; opacity : 0;` : '';
         }
         this.dispatchEvent(new CustomEvent('togglemapping'));
+    }
+
+    @api toggleMappingContainer(state){
+        this.toggleBtn = state;
+        var toggleFieldMapping =  this.template.querySelector('.toggleFieldMapping');
+        toggleFieldMapping.style = this.isMappingOpen ? `width : 0px !important; padding: 0px; opacity : 0;` : '';
+        this.setToggleBtnVisibility();
+    }
+
+    setToggleBtnVisibility(){
+        var toggleFieldMapping =  this.template.querySelector('.toggleFieldMapping');
+        if(window.innerWidth > 1350){
+            !this.toggleBtn && toggleFieldMapping && toggleFieldMapping.classList.remove('show');
+            this.toggleBtn && toggleFieldMapping && toggleFieldMapping.classList.add('show');
+        }
+        else{
+            toggleFieldMapping && toggleFieldMapping.classList.add('show');
+        }
     }
 
     toggleMappingContainerHeight(){
@@ -868,8 +927,16 @@ export default class KeyMappingContainer extends LightningElement {
         try {
             event.stopPropagation();
             console.log('event id : ', event.currentTarget.dataset.id);
-            let hostname = window.location.hostname;
-            console.log('hostname : ', hostname);
+
+            fetchImgBlob({imgId : event.currentTarget.dataset.id})
+            .then(result => {
+                if(result != null){
+                    console.log('image blob', result);
+                }
+            })
+            .catch(error => {
+                console.log('error to fetchImgBlob apex', error.stack);
+            })
 
             const ImgUrl = event.currentTarget.dataset.url;
 
@@ -879,6 +946,7 @@ export default class KeyMappingContainer extends LightningElement {
             textarea.select();
 
             const img = document.createElement('img');
+            img.style.width = '75%';
             img.setAttribute('src', ImgUrl);
             img.setAttribute('data-origin', 'sf');
             document.body.appendChild(img);
@@ -911,6 +979,13 @@ export default class KeyMappingContainer extends LightningElement {
         } catch (error) {
             console.log('error in copySFImgAsHTMl : ', error.stack);
         }
+    }
+
+    openChildSelection(){
+        this.dispatchEvent(new CustomEvent('opengenchildtable', {detail : {
+            relationshipName : this.selectedChildObjectName,
+            label : this.relatedChildObjects.find(ele => ele.value == this.selectedChildObjectName)?.label,
+        }}));
     }
 
     // Set Section Over TExt On Field Key Div....

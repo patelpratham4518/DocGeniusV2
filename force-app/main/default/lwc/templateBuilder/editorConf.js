@@ -19,7 +19,7 @@ export function initializeSummerNote(self, docGeniusLogoSvg, editorSelector){
                 return createFontResizer(note, context);
             }
 
-            var createBuilderTitle = function(context){
+            var createBuilderTitle = function(){
                 // var titleDiv = `<div class="docGeniusLogo">Template</br> Builder</div>`;
                 var titleImg = `<div class="docGeniusLogo"><img src=${docGeniusLogoSvg}></img></div>`
                 return titleImg;
@@ -184,7 +184,8 @@ export function initializeSummerNote(self, docGeniusLogoSvg, editorSelector){
                     onBeforeCommand: null,
                     onBlur: null,
                     onBlurCodeview: null,
-                    onChange: function(contents, context, $editable){
+                    onChange: function(){
+                      // function(contents, context, $editable)
                         setFontResizerValue(note);
                         // setFieldNameTagging(note, $editable);
                         
@@ -203,10 +204,10 @@ export function initializeSummerNote(self, docGeniusLogoSvg, editorSelector){
                     onKeydown: null,
                     onKeyup: null,
                     onMousedown: null,
-                    onMouseup: function(e) {
+                    onMouseup: function() {
                         setFontResizerValue(note);
                     },
-                    onPaste: function(event){
+                    onPaste: function(){
 
                       // // Get the clipboard data from the paste event
                       // var clipboardData = event.originalEvent.clipboardData || window.clipboardData
@@ -296,7 +297,7 @@ function toggleToolBar(event, cur_toolbar, cru_page ){
 // *** ======== ===== ======  Set Font Size Using Custom Button -- START ======== ===== ====== ========
 
 // Method to create and return custom fontResize BUTTON....
-function createFontResizer(note, context){
+function createFontResizer(note){
         var fontReiszerContanier = document.createElement('div');
         fontReiszerContanier.classList.add('fontResizer');
     
@@ -309,7 +310,7 @@ function createFontResizer(note, context){
         fontReiszerContanier.appendChild(minusBtn);
     
         var sizeInput = document.createElement('input');
-        sizeInput.setAttribute("type", "text");
+        sizeInput.setAttribute("type", "number");
         sizeInput.setAttribute("data-name", "font-input");
         sizeInput.value=13;
         sizeInput.classList.add('sizeInput');
@@ -715,90 +716,12 @@ function createPageSetupBtn(note, context){
     ]).render();
 }
 
-  function generatePageSetupOptions(){
-    return `
-            <div class="setupContainer">
-                <div class="setupContainer_sub">
-                    <div class="setUpTitleSection">
-                        <div class="setUpTitle">Page Configuraions</div>
-                        <div class="setupCloseBtn">
-                            <svg viewBox="0 0 24 24" fill="currentColor" lwc-1tsr6p0f0fe=""><path d="M11.9997 10.5865L16.9495 5.63672L18.3637 7.05093L13.4139 12.0007L18.3637 16.9504L16.9495 18.3646L11.9997 13.4149L7.04996 18.3646L5.63574 16.9504L10.5855 12.0007L5.63574 7.05093L7.04996 5.63672L11.9997 10.5865Z" lwc-1tsr6p0f0fe=""></path></svg>
-                        </div>
-                    </div>
-                    <div class="setUpOptions">
-                        <div class="bodyMarginSetup setupOption">
-                            <div class="optionTitle">Page Margin</div>
-                            <div class="setUpIcon"><svg class="msIcon" viewBox="0,0,2048,2048" ><path type="path" class="OfficeIconColors_HighContrast" d="M 256 128 h 1472 v 1792 h -1472 m 1088 -1728 h -704 v 256 h 704 m -704 64 v 1024 h 704 v -1024 m -1024 -320 v 256 h 256 v -256 m -256 320 v 1024 h 256 v -1024 m -256 1344 h 256 v -256 h -256 m 320 256 h 704 v -256 h -704 m 1024 256 v -256 h -256 v 256 m 256 -320 v -1024 h -256 v 1024 m 256 -1088 v -256 h -256 v 256 z"></path><path type="path" class="OfficeIconColors_m20" d="M 1693 1888 h -1405 v -1728 h 1405 z"></path><path type="path" class="OfficeIconColors_m22" d="M 256 128 h 1472 v 1792 h -1472 m 1408 -64 v -1664 h -1344 v 1664 z"></path><path type="path" class="OfficeIconColors_m24" d="M 1408 512 v 1024 h 256 v 64 h -256 v 256 h -64 v -256 h -704 v 256 h -64 v -256 h -256 v -64 h 256 v -1024 h -256 v -64 h 256 v -256 h 64 v 256 h 704 v -256 h 64 v 256 h 256 v 64 m -320 0 h -704 v 1024 h 704 z"></path></svg></div>
-                            <div class="setUpinputs">
-                                <div class="inputContainer">
-                                    <div class="inputLabel">Left:</div>
-                                    <input type="number" class="pageMarginInput" value="0.5" max="10" data-margin="left" data-name="pageMargin"/>
-                                </div>
-                                <div class="inputContainer">
-                                    <div class="inputLabel">Right:</div>
-                                    <input type="number" class="pageMarginInput" value="0.5" max="10" data-margin="right" data-name="pageMargin"/>
-                                </div>
-                                <div class="inputContainer">
-                                    <div class="inputLabel">Top:</div>
-                                    <input type="number" class="pageMarginInput" value="0.5" max="10" data-margin="top" data-name="pageMargin"/>
-                                </div>
-                                <div class="inputContainer">
-                                    <div class="inputLabel">Bottom</div>
-                                    <input type="number" class="pageMarginInput" value="0.5" max="10" data-margin="bottom" data-name="pageMargin"/>
-                                </div>
-
-                            </div>
-                        </div>
-                        <div class="pageOriantationSetup setupOption">
-                            <div class="optionTitle">Page Oriantion</div>
-                            <div class="setUpIcon"><svg class="msIcon" viewBox="0,0,2048,2048" ><path type="path" class="OfficeIconColors_HighContrast" d="M 512 1920 v -1024 h 1024 l 384 384 v 640 m -384 -933 v 293 h 293 m -357 64 v -384 h -896 v 896 h 1280 v -512 m -1408 192 h -320 v -1408 h 639 l 385 384 v 320 h -64 v -256 h -384 v -384 h -512 v 1280 h 256 m 320 -960 h 293 l -293 -293 z"></path><path type="path" class="OfficeIconColors_m20" d="M 448 1504 h -288 v -1344 h 597 l 363 363 v 309 h -672 m 1440 450 v 606 h -1344 v -960 h 986 z"></path><path type="path" class="OfficeIconColors_m22" d="M 512 1920 v -1024 h 1024 l 384 384 v 640 m -384 -933 v 293 h 293 m -357 64 v -384 h -896 v 896 h 1280 v -512 m -1408 192 h -320 v -1408 h 639 l 385 384 v 320 h -64 v -256 h -384 v -384 h -512 v 1280 h 256 m 320 -960 h 293 l -293 -293 z"></path></svg></div>
-                            <div class="setUpinputs oriantationInputs">
-                                <div class="inputContainer">
-                                    <input type="radio" checked="checked" name="pageOriantation" value="portrait" data-oriantation="portrait"  />
-                                    <div class="inputLabel">Portrait</div>
-                                </div>
-                                <div class="inputContainer">
-                                    <input type="radio" checked="checked" name="pageOriantation" value="landscape" data-oriantation="landscape" />
-                                    <div class="inputLabel">Landscape</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="pageSizeSetup setupOption">
-                            <div class="optionTitle">Page Size</div>
-                            <div class="setUpIcon"><svg class="msIcon" viewBox="0,0,2048,2048" ><path type="path" class="OfficeIconColors_HighContrast" d="M 1536 896 v 1024 h -1088 v -1472 h 640 m 0 448 h 352 l -352 -348 m 384 412 h -448 v -448 h -512 v 1344 h 960 m 64 -1728 v 192 h -64 v -64 h -960 v 64 h -64 v -192 h 64 v 64 h 960 v -64 m -1344 320 h 192 v 64 h -64 v 1344 h 64 v 64 h -192 v -64 h 64 v -1344 h -64 z"></path><path type="path" class="OfficeIconColors_m20" d="M 1066 480 l 438 421 v 992 h -1029 v -1413 z"></path><path type="path" class="OfficeIconColors_m22" d="M 1536 896 v 1024 h -1088 v -1472 h 640 m 0 448 h 352 l -352 -348 m 384 412 h -448 v -448 h -512 v 1344 h 960 z"></path><path type="path" class="OfficeIconColors_m24" d="M 1536 128 v 192 h -64 v -64 h -960 v 64 h -64 v -192 h 64 v 64 h 960 v -64 m -1344 320 h 192 v 64 h -64 v 1344 h 64 v 64 h -192 v -64 h 64 v -1344 h -64 z"></path></svg>                            </div>
-                            <div class="setUpinputs sizeInputs">
-                                <div class="inputContainer">
-                                    <input type="radio" checked="checked" name="pageSize" value="A4" data-size="A4"  />
-                                    <div class="inputLabel">A4<span class="subLabel">(8.27" x 11.69")</span></div>
-                                </div>
-                                <div class="inputContainer">
-                                    <input type="radio" checked="checked" name="pageSize" value="A3" data-size="A3"  />
-                                    <div class="inputLabel">A3<span class="subLabel">(8.27" x 11.69")</span></div>
-                                </div>                                <div class="inputContainer">
-                                    <input type="radio" checked="checked" name="pageSize" value="A5" data-size="A5"  />
-                                    <div class="inputLabel">A5<span class="subLabel">(8.27" x 11.69")</span></div>
-                                </div>
-                                <div class="inputContainer">
-                                    <input type="radio" checked="checked" name="pageSize" value="Letter" data-size="Letter"  />
-                                    <div class="inputLabel">Letter<span class="subLabel">(8.27" x 11.69")</span></div>
-                                </div>                                <div class="inputContainer">
-                                    <input type="radio" checked="checked" name="pageSize" value="Legal" data-size="Legal"  />
-                                    <div class="inputLabel">Legal<span class="subLabel">(8.27" x 11.69")</span></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-    `;
-  }
-
- function createTruncateBtn(note, context){
+ function createTruncateBtn(note){
     var ui = $.summernote.ui;
-    var options = context.options;
+    // var options = context.options;
     // var lang = context.options.langInfo;
     // lang.truncate = 'Truncate Text';
-    var editable = context.layoutInfo.editable;
+    // var editable = context.layoutInfo.editable;
 
     return ui.button({
         // className: 'truncate-btn',
@@ -815,16 +738,7 @@ function createPageSetupBtn(note, context){
     }).render();
  }
 
- export function setFieldMappingKeyisConfig(fielMappingKeysList){
-    try{
-      ListOfFielMappingKeys = fielMappingKeysList;
-    }
-    catch(error){
-      console.warn('error in editorConfig > setFieldMappingKeyisConfig : ', error.stack);
-    }
- }
-
- function setFieldNameTagging(note, context){
+ function setFieldNameTagging(note){
   try {
       var pattern = /{{#(.*?)}}/;
       var makeActive;

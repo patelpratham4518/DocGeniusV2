@@ -24,7 +24,7 @@ public class GenerateCSVControllerTest {
         );
         insert tp;
 
-        Template_Fields__c templateField= new Template_Fields__c(
+        Template_Data__c templateField= new Template_Data__c(
             Template__c = template.Id,
             CSV_Fields__c = 'Name,Id',
             Template_Page__c = tp.id,
@@ -41,7 +41,7 @@ public class GenerateCSVControllerTest {
     static void testGenerateCSV(){
 
         Template__c template = [SELECT Id FROM Template__c][0];
-        template_fields__c tf = [SELECT Id, CSV_Query__c FROM Template_Fields__c][0];
+        template_Data__c tf = [SELECT Id, CSV_Query__c FROM Template_Data__c][0];
         
         Test.startTest();
         

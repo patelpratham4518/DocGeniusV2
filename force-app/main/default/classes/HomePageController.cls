@@ -6,7 +6,7 @@ public class HomePageController {
 
             List<Template__c> tempList = [  SELECT Id, IsDeleted, Name, Object_API_Name__c, Template_Name__c, Template_Type__c, Template_Status__c, Description__c, CreatedDate, LastModifiedDate, Column__c, Row__c, Don_t_show_Header_Footer_on_First_Page__c, Header_Text__c, Logo__c,  Type_of_Header__c, Watermark__c 
                                             FROM Template__c 
-                                            ORDER BY Template_Name__c ASC, CreatedDate ASC, Object_API_Name__c ASC];
+                                            ORDER BY LastModifiedDate DESC, Template_Name__c ASC, Object_API_Name__c ASC];
 
             if (tempList.size() > 0) {
                 // Store Object API Name of create Templates...

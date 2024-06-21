@@ -3,9 +3,6 @@
         <section role="dialog" tabindex="-1" aria-modal="true" aria-labelledby="modal-heading-01" class="slds-modal slds-fade-in-open">
             <c-message-popup></c-message-popup>
             <c-document-loader display={doShowSpinner}></c-document-loader>
-            <!-- <div class="spinner-div" if:true={doShowSpinner}>
-                <c-spinner></c-spinner>
-            </div> -->
             <div class="main-div">
                 <div class="image-div">
                     <img class="image" onload={imageLoaded} src={templateImage} alt="New Template Image">
@@ -25,87 +22,32 @@
                             <label>Template Name</label>
                         </div>
                         <div class="label-float">
-                            <!-- <textarea name="description" cols="20" rows="2" onkeyup={handleTemplateNameChange}></textarea> -->
                             <input type="text" class="t-description" data-name="temp-description" placeholder="Template is about.." value={templateDescription} onkeyup={handleTemplateDescriptionChange}/>
                             <label>Template Description</label>
                         </div>
-    
-                        <div class="label-float">
-                            <input type="text" class="t-name" data-name="temp-object" placeholder="" value={trmplateObject} disabled/>
-                            <label>Source Object</label>
-                        </div>
-    
-                        <div class="label-float">
-                            <input type="text" class="t-name" placeholder="" data-name="temp-type" value={templateType} disabled/>
-                            <label>Template Type</label>
+                        <div class="text-box"><b>Source Object: </b> {trmplateObject}</div>
+                        <div class="text-box"><b>Template Type: </b> {templateType}</div>
+                        <div class="slds-grid slds-wrap">
+                            <div class="slds-form-element slds-col slds-size_1-of-2 check-box">
+                                <lightning-input data-name="templateBody" type="checkbox" label="Template Body" name="templateBody"  checked=""></lightning-input>
+                            </div>
+                            <div class="slds-form-element slds-col slds-size_1-of-2 check-box">
+                                <lightning-input data-name="watermark" type="checkbox" label="Watermark" name="watermark"  checked=""></lightning-input>
+                            </div>
+                            <div class="slds-form-element slds-col slds-size_1-of-2 check-box">
+                                <lightning-input data-name="header" type="checkbox" label="Header" name="header"  checked=""></lightning-input>
+                            </div>
+                            <div class="slds-form-element slds-col slds-size_1-of-2 check-box">
+                                <lightning-input data-name="pageConfiguration" type="checkbox" label="Page Configuration" name="pageConfiguration"  checked=""></lightning-input>
+                            </div>
+                            <div class="slds-form-element slds-col slds-size_1-of-2 check-box">
+                                <lightning-input data-name="footer" type="checkbox" label="Footer" name="footer" checked=""></lightning-input>
+                            </div>
                         </div>
                         <div class="save-div">
-                            <button class="save-btn" onclick={nextPage}>Next</button>
+                            <button class="save-btn" onclick={cloneTemplate}>Clone</button>
                         </div>
-                    </template>
-                    <template if:true={showSelectData}>
-                        <div class="title-div">
-                            <p>Select Data Template</p>
-                        </div>
-                        <div class='input-cover'>
-                            <div class="slds-form-element input-height">
-                                <label class="slds-checkbox_toggle slds-grid">
-                                    <span class="slds-form-element__label slds-m-bottom_none">Template Body</span>
-                                    <input type="checkbox" data-name="templateBody" name="checkbox-toggle-18" value={} aria-describedby="checkbox-toggle-18" checked={templateBody} />
-                                    <span id="checkbox-toggle-18" class="slds-checkbox_faux_container">
-                                        <span class="slds-checkbox_faux"></span>
-                                        <span class="slds-checkbox_on">Copy</span>
-                                    </span>
-                                </label>
-                            </div>
-                            <div class="slds-form-element input-height">
-                                <label class="slds-checkbox_toggle slds-grid">
-                                    <span class="slds-form-element__label slds-m-bottom_none">Header</span>
-                                    <input type="checkbox" data-name="header" name="checkbox-toggle-18" value="checkbox-toggle-18" aria-describedby="checkbox-toggle-18" checked={header} />
-                                    <span id="checkbox-toggle-20" class="slds-checkbox_faux_container">
-                                        <span class="slds-checkbox_faux"></span>
-                                        <span class="slds-checkbox_on">Copy</span>
-                                    </span>
-                                </label>
-                            </div>
-                            <div class="slds-form-element input-height">
-                                <label class="slds-checkbox_toggle slds-grid">
-                                    <span class="slds-form-element__label slds-m-bottom_none">Footer</span>
-                                    <input type="checkbox" data-name="footer" name="checkbox-toggle-18" value="checkbox-toggle-18" aria-describedby="checkbox-toggle-18" checked={footer} />
-                                    <span id="checkbox-toggle-21" class="slds-checkbox_faux_container">
-                                        <span class="slds-checkbox_faux"></span>
-                                        <span class="slds-checkbox_on">Copy</span>
-                                    </span>
-                                </label>
-                            </div>
-                            <div class="slds-form-element input-height">
-                                <label class="slds-checkbox_toggle slds-grid">
-                                    <span class="slds-form-element__label slds-m-bottom_none">Watermark</span>
-                                    <input type="checkbox" data-name="watermark" name="checkbox-toggle-18" value="checkbox-toggle-18" aria-describedby="checkbox-toggle-18" checked={watermark} />
-                                    <span id="checkbox-toggle-22" class="slds-checkbox_faux_container">
-                                        <span class="slds-checkbox_faux"></span>
-                                        <span class="slds-checkbox_on">Copy</span>
-                                    </span>
-                                </label>
-                            </div>
-                            <div class="slds-form-element input-height">
-                                <label class="slds-checkbox_toggle slds-grid">
-                                    <span class="slds-form-element__label slds-m-bottom_none">Page Configuration</span>
-                                    <input type="checkbox" data-name="pageConfiguration" name="checkbox-toggle-18" checked={pageConfiguration} />
-                                    <span id="checkbox-toggle-23" class="slds-checkbox_faux_container">
-                                        <span class="slds-checkbox_faux"></span>
-                                        <span class="slds-checkbox_on">Copy</span>
-                                    </span>
-                                </label>
-                            </div>
-                        </div>
-                        
-                        <div class="bt-cover">
-                            <button class="clone-bt" onclick={previousPage}>Previous</button>
-                            <button class="clone-bt" onclick={saveCloneTemp}>Clone</button>
-                        </div>
-                    </template>
-                    
+                    </template>                    
                 </div>
             </div>
         </section>

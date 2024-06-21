@@ -1,11 +1,13 @@
 import { LightningElement, track, wire } from 'lwc';
-import left_backimg from "@salesforce/resourceUrl/leftBackground";
-import right_backimg from "@salesforce/resourceUrl/rightBackground";
-import DocGeniusLogo from "@salesforce/resourceUrl/DocGeniusLogo";
+// import left_backimg from "@salesforce/resourceUrl/leftBackground";
+// import right_backimg from "@salesforce/resourceUrl/rightBackground";
+
+import homePageImgs from '@salesforce/resourceUrl/homePageImgs';
+import DocGeniusLogo from "@salesforce/resourceUrl/docGeniusLogoSvg";
 import integrationImages from "@salesforce/resourceUrl/integrationImages";
 import Dropablearea from "@salesforce/resourceUrl/dropAreaBackground";
-import googleDriveAuthorization from "@salesforce/apex/GoogleDriveAuthorizationController.authorize";
-import googleDriveRedirect from "@salesforce/apex/GoogleDriveAuthorizationController.redirectUrl";
+import authorizeGoogle from "@salesforce/apex/GoogleDriveAuthorizationController.authorizeGoogle";
+import getAuthCode from "@salesforce/apex/GoogleDriveAuthorizationController.getAuthCode";
 import dropboxRedirect from "@salesforce/apex/DropBoxAuthorizationController.redirectUrl";
 import onedriveRedirect from "@salesforce/apex/OneDriveAuthorizationController.redirectUrl";
 import Popupimg from "@salesforce/resourceUrl/popupImage";
@@ -27,8 +29,7 @@ import { NavigationMixin } from 'lightning/navigation';
 
 export default class IntegrationDashborad extends NavigationMixin(LightningElement) {
 
-    leftimg;
-    rightimg;
+    bgimg;
     logo;
     dropable;
     popupimg;
@@ -47,6 +48,7 @@ export default class IntegrationDashborad extends NavigationMixin(LightningEleme
     @track isDropBox = false;
     @track isOneDrive = false;
     @track draggedkey;
+    @track authcode;
     @track clientId;
     @track clientSecret;
     @track email;
@@ -88,25 +90,25 @@ export default class IntegrationDashborad extends NavigationMixin(LightningEleme
 
 
     get googledrive_(){
-        return integrationImages + '/googleDriveImage.png';
+        return integrationImages + '/googleDrive.png';
     }
 
     get onedrive_(){
-        return integrationImages + '/oneDriveImage.png';
+        return integrationImages + '/oneDrive.png';
     }
 
     get dropbox_(){
-        return integrationImages + '/dropboxImage.png';
+        return integrationImages + '/dropbox.png';
     }
 
     get aws_(){
-        return integrationImages + '/awsImage.png';
+        return integrationImages + '/aws.png';
     }
 
     
     connectedCallback() {
-        this.leftimg = left_backimg;
-        this.rightimg = right_backimg;
+        this.bgimg = homePageImgs + '/HomBg.png';
+        // this.rightimg = homePageImgs + '/HomBg.png';
         this.logo = DocGeniusLogo;
         this.dropable = Dropablearea;
         this.popupimg = Popupimg;
@@ -196,35 +198,24 @@ export default class IntegrationDashborad extends NavigationMixin(LightningEleme
                 // console.log(parseInt(result.bucket.length));
                 // console.log(result.name);
                 // console.log(result.email.length);
-                if(parseInt(result.name.length) > 14){
-                    var shortstringname = result.name.substring(0, 11) + "...";
-                    this.awsNickname = shortstringname;
-                    console.log(shortstringname);
-                }
-                else{
-                    this.awsNickname = result.name;
-                }
-                if(parseInt(result.bucket.length) > 18){
-                    var shortstringbucket = result.bucket.substring(0, 14) + "...";
-                    this.awsbucket = shortstringbucket;
-                }
-                else{
-                    this.awsbucket = result.bucket;
-
-                }
+                
+                this.awsNickname = result.name;
+                this.awsbucket = result.bucket;
                 this.isWorkingAwsAuth = result.active;
                 this.awslinkdate = result.linkdate;
                 // this.template.querySelector('.ac').style.opacity = '0.5';
+                const awsimg = this.template.querySelector('.ac img');
+                awsimg.style.opacity = '0.5';
                 const awsintegration = this.template.querySelector('.ac');
-                awsintegration.style.opacity = '0.5';
                 awsintegration.removeAttribute('draggable');
                 this.isActiveAwsAuth = true;
             }
             else{
                 this.isActiveAwsAuth = false;
                 // this.template.querySelector('.ac').style.opacity = '1';
+                const awsimg = this.template.querySelector('.ac img');
+                awsimg.style.opacity = '1';
                 const awsintegration = this.template.querySelector('.ac');
-                awsintegration.style.opacity = '1';
                 awsintegration.setAttribute('draggable', 'true');
             }
             this.loaded();
@@ -251,23 +242,9 @@ export default class IntegrationDashborad extends NavigationMixin(LightningEleme
     displaydetails(result, integrationname, cssname){
         if(result.name != null && result.linkdate != null && result.email != null) {
             if(result.name != null){
-                if(parseInt(result.name.length) > 20){
-                    var shortstringname = result.name.substring(0, 16) + "...";
-                    this[integrationname + 'name'] = shortstringname;
-                    console.log(shortstringname);
-                }
-                else{
-                    this[integrationname + 'name'] = result.name;
-                }
+                this[integrationname + 'name'] = result.name;
             }
-            if(parseInt(result.email.length) > 20){
-                var shortstringemail = result.email.substring(0, 16) + "...";
-                this[integrationname + 'email'] = shortstringemail;
-            }
-            else{
                 this[integrationname + 'email'] = result.email;
-
-            }
             if(integrationname == 'dropbox'){
                 this.isWorkingDropboxAuth = result.active;
                 this.isActiveDropboxAuth = true;
@@ -283,8 +260,9 @@ export default class IntegrationDashborad extends NavigationMixin(LightningEleme
             }
             this[integrationname + 'linkdate'] = result.linkdate;
             // this.template.querySelector('.'+cssname).style.opacity = '0.5';
+            const integrationimg = this.template.querySelector('.'+cssname + ' img');
+            integrationimg.style.opacity = '0.5';
             const integrations = this.template.querySelector('.'+cssname);
-            integrations.style.opacity = '0.5';
             integrations.removeAttribute('draggable');
         }
         else{
@@ -299,20 +277,21 @@ export default class IntegrationDashborad extends NavigationMixin(LightningEleme
 
             }
             // this.template.querySelector('.'+cssname).style.opacity = '1';
+            const integrationimg = this.template.querySelector('.'+cssname + ' img');
+            integrationimg.style.opacity = '1';
             const integrations = this.template.querySelector('.'+cssname);
-            integrations.style.opacity = '1';
             integrations.setAttribute('draggable', 'true');
         }
     }
     
 
-    fetchgoogledredirecturi(){
-        googleDriveRedirect()
-        .then(result =>{
-            this.redirectUri = result;
-            this.ispopup = true;
-        });
-    }
+    // fetchgoogledredirecturi(){
+    //     googleDriveRedirect()
+    //     .then(result =>{
+    //         this.redirectUri = result;
+    //         this.ispopup = true;
+    //     });
+    // }
 
     fetchdropboxredirecturi(){
         dropboxRedirect()
@@ -366,8 +345,11 @@ export default class IntegrationDashborad extends NavigationMixin(LightningEleme
             
         }
         else if(this.draggedkey == 'google'){
-            this.fetchgoogledredirecturi();
+            // this.fetchgoogledredirecturi();
+            this.clientId = '1074472660019-o1k9el6u5qfl1ct0nnvi4j3r78mterf8.apps.googleusercontent.com';
+            this.clientSecret = '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';
             this.isGoogle = true;
+            this.ispopup = true;
         }
         else if(this.draggedkey == 'dropbox'){
             this.fetchdropboxredirecturi();
@@ -446,64 +428,117 @@ export default class IntegrationDashborad extends NavigationMixin(LightningEleme
         this.isSpinner = false;
     }
 
-
-    handleGoogleAuthorization() {
-        const inputs = this.template.querySelectorAll('input');
-        inputs.forEach(input =>{
-            if(input.value == null || input.value == ''){
-                input.classList.add('error-border');
-            }
-            else{
-                input.classList.remove('error-border');
-            }
-        })
-        if (!this.clientId || !this.clientSecret) {
-            console.log('both client id and secret are compulsary');
+    handleGoogleAuthorization(){
+        try{
+        if (!this.authcode) {
+            console.log('All details are compulsory');
             return;
         }
         else{
-        console.log('Going for authorization');
-        this.ispopup = false;
-        this.isGoogle = false;
-        googleDriveAuthorization({clientId: this.clientId, clientSecret: this.clientSecret})
-        .then(durl => {
-            // Navigate to the authorization URL
-            // const windowWidth = 500;
-            // const windowHeight = 600;
-            // const screenWidth = window.screen.width;
-            // const screenHeight = window.screen.height;
-            // const left = Math.max(0, (screenWidth - windowWidth) / 2);
-            // const top = Math.max(0, (screenHeight - windowHeight) / 2);
-
-            window.location.href = durl;
-
-            // this[NavigationMixin.Navigate]({
-            //     type: 'standard__webPage',
-            //     attributes: {
-            //         url: durl
-            //     }
-            // }
-            // );
-
-            // Open a new window with the authorization URL
-            // const newWindow = window.open(durl, '_blank', `width=${windowWidth},height=${windowHeight},left=${left},top=${top},scrollbars=yes,resizable=yes`);
-
-            // Focus the new window
-            // if (newWindow) {
-            //     newWindow.focus();
-            // }
-        
-            // window.setTimeout(function(){
-            //     console.log('this is location-->'+newWindow.location.href);
-            // },2000);
-        
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
-        this.clientId = '';
-        this.clientSecret = '';
+            console.log('going for integration');
+            authorizeGoogle({ authcode: this.authcode })
+            .then(result =>{
+                if(result === 'success'){
+                    console.log('success');
+                    const messageContainer = this.template.querySelector('c-message-popup')
+                    messageContainer.showMessageToast({
+                        status: 'success',
+                        title: 'Success',
+                        message : 'Successfully connected to Google Drive',
+                    });
+                    
+                }
+                else{
+                    console.log('error');
+                    const messageContainer = this.template.querySelector('c-message-popup')
+                    messageContainer.showMessageToast({
+                        status: 'error',
+                        title: 'error',
+                        message : 'Error connecting to Google Drive',
+                    });
+                    }
+                })
+            }
         }
+        
+        catch(error){
+            console.log(error.getMessage);
+            console.error('this is error'+JSON.stringify(error));
+        }
+    }
+    
+
+
+    handleAuthCode(event) {
+        console.log('inside parent');
+        if(!this.clientId || !this.clientSecret){
+            console.log('both client id and secret are compulsary');
+        }
+        else{
+            getAuthCode({ clientId: this.clientId, clientSecret: this.clientSecret})
+            .then(durl =>{
+                window.open(durl, '_blank');
+            })
+            .catch(error =>{
+                console.error('Error:', error);
+            })
+        }
+    //     const inputs = this.template.querySelectorAll('input');
+    //     inputs.forEach(input =>{
+    //         if(input.value == null || input.value == ''){
+    //             input.classList.add('error-border');
+    //         }
+    //         else{
+    //             input.classList.remove('error-border');
+    //         }
+    //     })
+    //     if (!this.clientId || !this.clientSecret) {
+    //         console.log('both client id and secret are compulsary');
+    //         return;
+    //     }
+    //     else{
+    //     console.log('Going for authorization');
+    //     this.ispopup = false;
+    //     this.isGoogle = false;
+    //     googleDriveAuthorization({clientId: this.clientId, clientSecret: this.clientSecret})
+    //     .then(durl => {
+    //         // Navigate to the authorization URL
+    //         // const windowWidth = 500;
+    //         // const windowHeight = 600;
+    //         // const screenWidth = window.screen.width;
+    //         // const screenHeight = window.screen.height;
+    //         // const left = Math.max(0, (screenWidth - windowWidth) / 2);
+    //         // const top = Math.max(0, (screenHeight - windowHeight) / 2);
+
+    //         window.location.href = durl;
+
+    //         // this[NavigationMixin.Navigate]({
+    //         //     type: 'standard__webPage',
+    //         //     attributes: {
+    //         //         url: durl
+    //         //     }
+    //         // }
+    //         // );
+
+    //         // Open a new window with the authorization URL
+    //         // const newWindow = window.open(durl, '_blank', `width=${windowWidth},height=${windowHeight},left=${left},top=${top},scrollbars=yes,resizable=yes`);
+
+    //         // Focus the new window
+    //         // if (newWindow) {
+    //         //     newWindow.focus();
+    //         // }
+        
+    //         // window.setTimeout(function(){
+    //         //     console.log('this is location-->'+newWindow.location.href);
+    //         // },2000);
+        
+    //     })
+    //     .catch(error => {
+    //         console.error('Error:', error);
+    //     });
+    //     this.clientId = '';
+    //     this.clientSecret = '';
+    //     }
     }
 
     handleAwsAuthorization(){
@@ -818,12 +853,13 @@ export default class IntegrationDashborad extends NavigationMixin(LightningEleme
     handleAfterSave(event){
         console.log('parent1');
         this.ispopup = false
-        const { clientId, clientSecret, bucket, nickname, draggedkey } = event.detail;
+        const { clientId, clientSecret, bucket, nickname, draggedkey, authcode } = event.detail;
         this.clientId = clientId;
         this.clientSecret = clientSecret;
         this.bucket = bucket;
         this.nickname = nickname;
-        this.draggedkey = draggedkey;  
+        this.draggedkey = draggedkey; 
+        this.authcode = authcode; 
         if(this.isAws){
             console.log('1');
             this.handleAwsAuthorization();

@@ -55,7 +55,7 @@
             class="relatedObjSelection"
             options={options}
             value={selectedValue}
-            placeholder="Select Object..."
+            placeholder={objectComboPlaceHolder}
             onselect={handleOptionSelect}
             onfocus={handleComboboxFocus}
             onblur={handleComboboxFocus}
@@ -110,7 +110,24 @@
         </div>
       </template>
       <template lwc:if={relatedListFields}>
-        
+        <div class="relatedListSection">
+          <div class="relatedListTitle">
+            insert related list (child object) Record in tabular format.
+          </div>
+          <button class="selectFieldBtn" onclick={openChildSelection} disabled={setSelectFieldBtn}>
+            Generate Table fot Relate List 
+          </button>
+          <div class="relatedListInfoText">
+            <p>Options for Inserting Related List Fields in Tabular format:</p>
+            <ul>
+              <li>Select the columns to display in the table</li>
+              <li>Specify which records should be included in the table.</li>
+              <li>Apply filters based on field values.</li>
+              <li>Arrange the order of records based on field values.</li>
+              <li>Select the number of records to display in table.</li>
+            </ul>
+          </div>
+        </div>
       </template>
       <template lwc:if={generalFields}>
         <div class="mappingHeader">
@@ -188,13 +205,22 @@
     </div>
     <div class="buttonSection">
       <template lwc:if={cancelButtonLabel}>
-        <lightning-button variant="destructive" label={cancelButtonLabel} title="Cancel" onclick={handleClose} icon-name="utility:close" icon-position="left"></lightning-button>
+        <button class="footerBtn" title={cancelButtonLabel} onclick={handleClose}>
+          <svg viewBox="0 0 520 520" ><g><path d="M310 254l130-131c6-6 6-15 0-21l-20-21c-6-6-15-6-21 0L268 212a10 10 0 01-14 0L123 80c-6-6-15-6-21 0l-21 21c-6 6-6 15 0 21l131 131c4 4 4 10 0 14L80 399c-6 6-6 15 0 21l21 21c6 6 15 6 21 0l131-131a10 10 0 0114 0l131 131c6 6 15 6 21 0l21-21c6-6 6-15 0-21L310 268a10 10 0 010-14z"></path></g></svg>
+          {cancelButtonLabel}
+        </button>
       </template>
       <template lwc:if={previewButtonLabel}>
-        <lightning-button                    label={previewButtonLabel} title="Preview" onclick={handlePreview} icon-name="utility:preview" icon-position="left"></lightning-button>
+        <button class="footerBtn" title={previewButtonLabel} onclick={handlePreview}>
+          <svg viewBox="0 0 520 520"><g lwc-3pd22r3mk56=""><path d="M518 251a288 288 0 00-516 0 20 20 0 000 18 288 288 0 00516 0 20 20 0 000-18zM260 370c-61 0-110-49-110-110s49-110 110-110 110 49 110 110-49 110-110 110zm0-180c-39 0-70 31-70 70s31 70 70 70 70-31 70-70-31-70-70-70z" ></path></g></svg>
+          {previewButtonLabel}
+        </button>
       </template>
       <template lwc:if={saveButtonLabel}>
-        <lightning-button variant="brand" label={saveButtonLabel} onclick={handleSave} title="Save" icon-name="utility:save" icon-position="left"></lightning-button>
+        <button class="footerBtn" title={saveButtonLabel} onclick={handleSave}>
+          <svg viewBox="0 0 520 520" ><g><path d="M371 40v136c0 10-8 19-19 19H139c-10 0-19-8-19-19V40H80a40 40 0 00-40 40v360a40 40 0 0040 40h360a40 40 0 0040-40V112l-72-72zm70 381c0 10-8 19-19 19H99c-10 0-19-8-19-19V254c0-10 8-19 19-19h323c10 0 19 8 19 19zM248 136c0 10 8 19 19 19h46c10 0 19-8 19-19V40h-83z" ></path></g></svg>
+          {saveButtonLabel}
+        </button>
       </template>
     </div>
 
@@ -309,4 +335,5 @@
         </div>
     </div>
   </div>
+
 </template>

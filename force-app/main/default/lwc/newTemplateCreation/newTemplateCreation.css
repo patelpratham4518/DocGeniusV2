@@ -43,6 +43,7 @@ section {
     display: flex; 
     justify-content: center; 
     align-items: center; 
+    user-select: none;
 }
 
 .form-div {
@@ -55,11 +56,6 @@ section {
     align-items: center;
     gap: 1.25rem;
 }
-.firstRow{
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-}
 
 .title-div {
     width: 100%;
@@ -70,6 +66,7 @@ section {
     top: 3.125rem;
     left: 1.25rem;
     color: #00AEFF;
+    user-select: none;
 }
 
 .label-float,
@@ -83,7 +80,8 @@ section {
     border-radius: 0.5rem;
     outline: none;
     width: inherit;
-    padding: 0.9375rem 1.25rem;
+    height: 3rem;
+    padding-left: 0.9375rem;
     font-size: 1rem;
     transition: all 0.1s linear;
     -webkit-transition: all 0.1s linear;
@@ -97,61 +95,26 @@ section {
 }
 
 .label-float label {
-    /* font-size: 1rem; */
     pointer-events: none;
     position: absolute;
-    /* top: calc(50% - 1.1rem); */
+    z-index: 100;
     left: 0.9375rem;
     transition: all 0.1s linear;
     -webkit-transition: all 0.1s linear;
     -moz-transition: all 0.1s linear;
     background-color: white;
-    padding: 0.3125rem;
+    padding: 0 0.3125rem;
     box-sizing: border-box;
     border-radius: 50%;
     font-size: 0.8125rem;
-    top: -0.875rem;
+    top: -0.6rem;
     color: #00AEFF;
+    user-select: none;
 }
 
-/* .label-float input:focus + label,
-.label-float input:not(:placeholder-shown) + label {
-    font-size: 0.8125rem;
-    top: -0.875rem;
-    color: #00AEFF;
-} */
-
-.select-label-float select {
-    border: 0.0625rem solid black;
-    border-radius: 0.5rem;
-    outline: none;
-    width: 100%;
-    max-width: 100%;
-    padding: 0.8125rem 1.25rem;
-    font-size: 1rem;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    background-color: white;
-    background-image: url('data:image/svg+xml;utf8,<svg width="16" height="8" viewBox="0 0 16 8" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0 0L8 8L16 0L0 0Z" fill="black"/></svg>');
-    background-repeat: no-repeat;
-    background-position: calc(100% - 0.625rem) center;
-}
-
-.select-label-float select:focus {
-    border: 0.0625rem solid #00AEFF;
-}
-
-.select-label-float label {
-    pointer-events: none;
-    color: #00AEFF;
-    position: absolute;
-    left: 0.9375rem;
-    background-color: white;
-    padding: 0.3125rem;
-    box-sizing: border-box;
-    font-size: 0.8125rem;
-    top: -0.875rem;
-    border-radius: 50%;
+.error-combo-box{
+    --inputAreaBorderColor : red !important;
+    --labelColor : red !important;
 }
 
 .error-border {
@@ -187,6 +150,7 @@ section {
 
 .num-input{
     text-align: center;
+    padding: 0 !important;
 }
 
 .minus1, .plus1, .minus2, .plus2{
@@ -244,7 +208,7 @@ input[type=number]::-webkit-outer-spin-button {
     flex-wrap: wrap;
 }
 
-.tabel-cell {
+.table-cell {
     width: 25%;
     height: 1.125rem;
     border-radius: 0.125rem;
@@ -278,6 +242,23 @@ input[type=number]::-webkit-outer-spin-button {
 
 .save-btn:hover {
     background-color: #008eed;
+}
+
+
+.select-dropdown {
+    text-align: left;
+    --inputAreaBorderWidth: 1px;
+    --inputAreaBorderColor: black;
+    --inputOnFocusBorderColor: #00AEFF;
+    --inputAreaBorderRadius: 0.5rem;
+    --inputOnFocusShadow: none;
+    --inputAreaHeight: 3rem;
+
+    --labelBackgroundColor : white;
+    --labelLeft : 0.938rem;
+    --labelPosition : absolute;
+    --labelTop : -0.813rem;
+    --labelColor : #00AEFF;
 }
 
 @media only screen and (min-width: 48rem) and (max-width: 64rem) {

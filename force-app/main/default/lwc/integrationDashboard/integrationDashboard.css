@@ -1,4 +1,5 @@
 .container {
+    user-select: none;
     background-color: white;
     display: flex;
     width: calc(100% + 1.5rem);
@@ -26,9 +27,20 @@
 
 .backgroundimg img {
     height: 100%;
-    width: 50%;
+    width: 100%;
     z-index: -1;
 }
+
+
+
+.border .userdata p{
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    width: 100%;
+}
+
+
 
 .content-container {
     position: relative;
@@ -37,6 +49,7 @@
     width: 100%;
     box-sizing: border-box;
     padding: 30px;
+    
 }
 
 .left-child-container {
@@ -76,7 +89,8 @@
 .heading{
     text-align: center;
     background-image: linear-gradient(to right, rgb(205,239,255), rgb(205,255,241)  );
-    font-size: 2rem;
+    font-size: 25px;
+    letter-spacing: 1px;
     height: 4.5rem;
     font-family: Helvetica, sans-serif;
     display: flex;
@@ -94,7 +108,7 @@ h2{
     box-sizing: border-box;
     width: 100%;
     height: calc(100% - 4.5rem);
-    background-color: white;
+    /* background-color: white; */
     border-radius: 0px 0px 8px 8px;
     padding-top: 0.8rem;
 
@@ -111,18 +125,58 @@ h2{
 }
 
 .switch{
-    margin: 14% 0% 0% 12%;
+    position: fixed;
+    width: calc(20% - 12px);
+    box-sizing: border-box;
+    padding-top: 3%;
+    padding-left: 3%;
     height: 80%;
     overflow: hidden;
 }
 
-.switch p{
-    padding: 4% 10%;
+.switch a{
+    padding-block: 10px;
+    padding-left: 20px;
     font-size: 1.2rem;
     font-family: Helvetica, sans-serif;
+    height: 50px;
     text-align: left;
+    display: block;
+    text-decoration: none;
     font-weight: 550;
+    position: relative;
+    color: black;
 
+}
+
+.switch a::before {
+    top: auto;
+    bottom: -22px;
+    border-radius: 0 8px 0 0 !important;
+}
+
+
+.switch a::after, .switch a::before {
+    content: '';
+    width: 15px;
+    float: right;
+    height: 22px;
+    position: absolute;
+    z-index: 100;
+    right: 0;
+}
+
+.switch a::after{
+    border-radius: 0 0 8px 0;
+    top: -22px;
+}
+
+.text1::before{
+    box-shadow: 0 -8px 0 0 white;
+}
+
+.text1::after{
+    box-shadow: 0 8px 0 0 white;
 }
 
 .all-cards{
@@ -132,15 +186,14 @@ h2{
     padding-bottom: 0.8rem;
 }
 
-/* .all-cards img{
-    height: 14vh;
-    width: 10vw;
-} */
+.all-cards img{
+    height: 140px;
+    width: 200px;
+}
 
-.gc img{
+/* .gc img{
     height: 120px;
     width: 160px;
-    /* aspect-ratio: 1.307; */
 }
 
 .oc img{
@@ -156,7 +209,7 @@ h2{
 .dc img {
     height: 115px;
     width: 110px;
-}
+} */
 
 .card {
     box-sizing: border-box;
@@ -166,6 +219,7 @@ h2{
     border: 1px solid black;
     border-radius: 8px;
     width: calc(25% - 0.5rem);
+    background-color: white;
     align-items: center;
 }
 
@@ -203,7 +257,7 @@ h2{
 .dropandstatus{
     text-align: center;
     position: relative;
-    z-index: 2;
+    background-color: white;
     width: 100%;
     box-sizing: border-box;
 }
@@ -234,6 +288,7 @@ h2{
     border-radius: 8px;
     width: 100%;
     height: 23%;
+    background-color: white;
 }
 
 .status{
@@ -382,7 +437,7 @@ h2{
 }
 
 .googledrive img{
-    margin-inline: 24px !important;
+    margin-left: 10px !important;
 }
 
 .onedrive{
@@ -395,11 +450,7 @@ h2{
     align-items: center;
 }
 
-.dropbox img {
-    margin-inline: 27.5px !important;
-    height: 70px !important;
-    width: 55px !important;
-}
+
 
 .aws{
     display: flex;
@@ -410,20 +461,37 @@ h2{
     display: flex;
     align-items: center;
     justify-content: center;
+    width: 28%;
+    margin-right: 10px;
 }
 
-.border img{
-    margin-inline: 20px;
-    height: 60px;
-    width: 70px;
+.img-content{
+    width: 18%;
 }
+
+.img-content img{
+    margin-inline: 10px;
+    height: 70px;
+    width: 100px;
+}
+
+.dropbox img{
+    margin-inline: 0px !important;
+    height: 74px !important;
+    width: 120px !important;
+}
+
+
 
 .userdata {
-    margin-inline: 20px;
+    /* margin-inline: 20px; */
     font-size: medium;
     font-stretch: semi-expanded;
-    width: 70%;
+    width: 50%;
+    text-overflow: ellipsis;
 }
+
+
 
 .active {
     width: 90px;
@@ -431,6 +499,7 @@ h2{
     background-color: rgb(147,231,174);
     border-radius: 100px;
     margin-inline: 10px;
+    padding-block: 7.5px;
 }
 
 .active p{
@@ -477,8 +546,9 @@ h2{
 .unauthorize{
     background-color: rgba(255, 210, 210, 1);
     margin-inline: 10px;
-    padding: 10px;
+    padding: 7.5px;
     border-radius: 8px;
+    cursor: pointer;
 
     &:hover{
         box-shadow: 0px 0px 10px 0px rgb(142 142 142);
@@ -582,7 +652,7 @@ h2{
  
   
 
-@media screen and (min-width: 1460){
+/* @media screen and (min-width: 1460){
     .gc img{
         height: 130px;
         width: 165px;
@@ -604,18 +674,13 @@ h2{
         width: 110px;
     }
 
-    .border img{
+    .img-content img{
         margin-inline: 10px;
         height: 60px;
         width: 60px;
     }
 
-    .dropbox img {
-        margin-inline: 13.25px !important;
-        height: 66px !important;
-        width: 55px !important;
-    }
-
+    
     .userdata {
         margin-inline: 10px;
         font-size: small;
@@ -624,7 +689,7 @@ h2{
     }
     
 
-}
+} */
 
 .limitations {
     background-color: white;
@@ -638,13 +703,13 @@ h2{
     border-radius: 8px;
 }
 
-@media screen and (min-width: 1300px) and (max-width: 1440px) {
+@media screen and (min-width: 1300px) and (max-width: 1445px) {
 
     .popupwindow{
         width: 45rem;
     }
 
-    .gc img{
+    /* .gc img{
         height: 110px;
         width: 140px;
     }
@@ -657,36 +722,46 @@ h2{
     .ac img{
         height: 110px;
         width: 165px;
+    } */
+
+    .all-cards img{
+        height: 105px;
+        width: 150px;
     }
     
-    .dc img {
-        height: 105px;
-        width: 90px;
-    }
+    /* .dc img {
+        height: 84px;
+        width: 100px;
+    } */
 
-    .border img{
+    .img-content img{
         margin-inline: 10px;
-        height: 60px;
-        width: 60px;
+        height: 56px;
+        width: 80px;
     }
+    
+    .activeandunauthorize{
+        width: 28%;
+        margin-right: 10px;
 
+    }
     .dropbox img {
-        margin-inline: 14.25px !important;
-        height: 67px !important;
-        width: 53px !important;
+        margin-left: 0px !important;
+        height: 74px !important;
+        width: 100px !important;
     }
 
-    .googledrive img{
+    /* .googledrive img{
         margin-inline: 10px !important;
         height: 60px;
         width: 60px;
-    }
+    } */
 
     .userdata {
         margin-inline: 10px;
         font-size: small;
         font-stretch: normal;
-        width: 70%;
+        width: 50%;
     }
 
     .heading {
@@ -698,8 +773,10 @@ h2{
     }
 }
 
+
+
 @media screen and (min-width: 1100px) and (max-width: 1300px) {
-    .gc img{
+    /* .gc img{
         height: 90px;
         width: 115px;
     }
@@ -712,40 +789,41 @@ h2{
     .ac img{
         height: 85px;
         width: 115px;
-    }
+    } */
     
-    .dc img {
+    /* .dc img {
         height: 90px;
         width: 75px;
+    } */
+
+    .all-cards img{
+        height: 80.5px;
+        width: 115px;
     }
 
-    .border img{
-        margin-inline: 7px;
-        height: 60px;
+    .img-content img{
+        margin-inline: 7.5px;
+        height: 42px;
         width: 60px;
     }
 
     .dropbox img {
-        margin-inline: 11.25px !important;
-        height: 67px !important;
-        width: 53px !important;
-    }
-
-    .googledrive img {
-        margin-inline: 7px !important;
+        margin-left: 0px !important;
+        height: 50px !important;
+        width: 80px !important;
     }
 
     .userdata {
         margin-inline: 10px;
         font-size: smaller;
         font-stretch: normal;
-        width: 72%;
+        width: 60%;
     }
     .unauthorize{
         background-color: rgba(255, 210, 210, 1);
         margin-inline: 6px;
-        padding: 10px;
         border-radius: 8px;
+        cursor: pointer;
     }
 
     .active {
@@ -762,10 +840,33 @@ h2{
     .popupwindow{
         width: 35rem;
     }
+
+    .activeandunauthorize{
+        width: 35%;
+        margin-right: 10px;
+
+    }
+}
+
+
+
+@media screen and (min-width: 1600px) and (max-width: 2400px) {
+    .userdata {
+        width: 60%;
+    }
+
+    .activeandunauthorize{
+        justify-content: space-evenly;
+        height: 100%;
+        width: 25%;
+        margin-right: 10px;
+
+    }
+
 }
 
 @media screen and (max-width: 1100px) {
-    .gc img{
+    /* .gc img{
         height: 90px;
         width: 115px;
     }
@@ -783,23 +884,23 @@ h2{
     .dc img {
         height: 90px;
         width: 80px;
+    } */
+
+    .all-cards img{
+        height: 70px;
+        width: 100px;
     }
 
-    .border img{
-        margin-inline: 4px;
-        height: 50px;
+    .img-content img{
+        margin-inline: 5px;
+        height: 35px;
         width: 50px;
-
     }
 
     .dropbox img {
-        margin-inline: 8.275px !important;
-        height: 56.28px !important;
-        width: 44.52px !important;
-    }
-
-    .googledrive img {
-        margin-inline: 4px !important;
+        margin-left: 0px !important;
+        height: 42px !important;
+        width: 60px !important;
     }
 
     .active {
@@ -816,7 +917,7 @@ h2{
         margin-inline: 8px;
         font-size: smaller;
         font-stretch: normal;
-        width: 76%;
+        width: 50%;
     }
     .unauthorize{
         text-align: center;
@@ -825,6 +926,7 @@ h2{
         margin: 2px;
         padding: 4px;
         border-radius: 100px;
+        cursor: pointer;
 
     }
 
@@ -851,6 +953,9 @@ h2{
         flex-direction: column;
         justify-content: space-evenly;
         height: 100%;
+        width: 30%;
+        margin-right: 10px;
+
     }
 
     .company-info p{
@@ -864,6 +969,7 @@ h2{
     .switch p {
         font-size: 0.9rem;
     }
+
 
     
 }

@@ -36,9 +36,9 @@ public class EditCSVTemplateControllerTest {
         );
         insert tp;
 
-        List<Template_Fields__c> tf = new List<Template_Fields__c>();
+        List<Template_Data__c> tf = new List<Template_Data__c>();
         for (Integer i=0; i<2 ; i++) {
-            Template_Fields__c t = new Template_Fields__c();
+            Template_Data__c t = new Template_Data__c();
             t.Template__c = testT.Id;
             t.CSV_Fields__c = 'FirstName, LastName';
             t.Template_Page__c = tp.id;
@@ -83,9 +83,9 @@ public class EditCSVTemplateControllerTest {
         EditCSVTemplateController.saveTemplateFields(allFields, testT.Id, query, filter);
         EditCSVTemplateController.saveTemplateFields(allFields, testT2.Id, query, filter);
 
-        List<Template_Fields__c> tf = new List<Template_Fields__c>();
+        List<Template_Data__c> tf = new List<Template_Data__c>();
         for (Integer i=0; i<2 ; i++) {
-            Template_Fields__c t = new Template_Fields__c();
+            Template_Data__c t = new Template_Data__c();
             t.Template__c = testT.Id;
             t.CSV_Fields__c = 'FirstName, LastName';
             t.Template_Page__c = tp.id;

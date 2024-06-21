@@ -80,44 +80,25 @@ export default class CloneTemplate extends NavigationMixin(LightningElement) {
         this.dispatchEvent(closeModalEvent);
     }
 
-    nextPage(){
+    cloneTemplate(){
         try {
             this.templateName = this.template.querySelector(`[data-name="temp-name"]`).value;
             this.templateDescription = this.template.querySelector(`[data-name="temp-description"]`).value;
-            this.trmplateObject = this.template.querySelector(`[data-name="temp-object"]`).value;
-            this.templateType = this.template.querySelector(`[data-name="temp-type"]`).value;
-            this.showTempData = false;
-            this.showSelectData = true;
-        } catch (error) {
-            console.log('error in nextPage : ', error.stack);
-        }
-    }
-
-    previousPage(){
-        try {
             this.templateBody = this.template.querySelector(`[data-name="templateBody"]`).checked;
+            this.header = this.template.querySelector(`[data-name="header"]`).checked;
+            this.footer = this.template.querySelector(`[data-name="footer"]`).checked;
+            this.watermark = this.template.querySelector(`[data-name="watermark"]`).checked;
+            this.pageConfiguration = this.template.querySelector(`[data-name="pageConfiguration"]`).checked;
+            console.log('this.templateName *** : ',this.templateName);
+            console.log('this.templateDescription *** : ',this.templateDescription);
             console.log('this.templateBody *** : ',this.templateBody);
-            this.header = this.template.querySelector(`[data-name="header"]`).checked;
-            this.footer = this.template.querySelector(`[data-name="footer"]`).checked;
-            this.watermark = this.template.querySelector(`[data-name="watermark"]`).checked;
-            this.pageConfiguration = this.template.querySelector(`[data-name="pageConfiguration"]`).checked;
-            this.showTempData = true;
-            this.showSelectData = false;
+            console.log('this.header *** : ',this.header);
+            console.log('this.footer *** : ',this.footer);
+            console.log('this.watermark *** : ',this.watermark);
+            console.log('this.pageConfiguration *** : ',this.pageConfiguration);
         } catch (error) {
-            console.log('error in previousPage : ', error.stack);
-        }
-    }
-
-    saveCloneTemp(){
-        try {
-            this.templateBody = this.template.querySelector(`[data-name="templateBody"]`).checked;
-            this.header = this.template.querySelector(`[data-name="header"]`).checked;
-            this.footer = this.template.querySelector(`[data-name="footer"]`).checked;
-            this.watermark = this.template.querySelector(`[data-name="watermark"]`).checked;
-            this.pageConfiguration = this.template.querySelector(`[data-name="pageConfiguration"]`).checked;
-        } catch (error) {
-            console.log('error in saveCloneTemp : ', error.stack);
-        }
+                console.log('error in cloneTemplate : ', error.stack);
+            }
     }
 
 // -=-=- Used to navigate to the other Components -=-=-

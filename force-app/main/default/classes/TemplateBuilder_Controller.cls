@@ -4,21 +4,39 @@ public with sharing class TemplateBuilder_Controller {
     public static retrunWrapper getTemplateData(String templateId){
         RetrunWrapper retrunWrapper = new RetrunWrapper();
         try {
-            List<Template__c> temp = [SELECT Id, Name, Object_API_Name__c, Template_Name__c, Template_Type__c, Template_Status__c, Description__c, CreatedDate, LastModifiedDate, Column__c, Row__c, Don_t_show_Header_Footer_on_First_Page__c, Header_Text__c, Logo__c,  Type_of_Header__c, Watermark__c,
-                                (SELECT Id, Name, Template__c, Template_Value_Simple__c, Order_No_Simple__c FROM Template_Data__r ORDER BY Order_No_Simple__c ASC )
+            List<Template__c> temp = [SELECT Id, Name, Object_API_Name__c, Template_Name__c, Template_Type__c, Template_Status__c, Description__c, CreatedDate, LastModifiedDate, createdBy.Name, lastModifiedBy.Name, 
+                                (SELECT Id, Name, Template__c, Template_Value_Simple__c, Order_No_Simple__c FROM Template_Data__r ORDER BY Order_No_Simple__c ASC ),
+                                (SELECT Id, Name, Template__c, Page_Margin__c, Page_Orientation__c, Page_Size__c, unit_of_page_configs__c FROM Template_Pages__r ORDER BY Page_Number__c ASC)
                                 FROM Template__c WHERE Id =: templateId LIMIT 1];
 
             if(temp.size() > 0){
-                SYSTEM.debug('Template__c : ' + temp[0]);
                 if(temp[0].Template_Type__c == 'Simple Template'){
-                    retrunWrapper.template = temp[0];
-
+                    
                     Obj_Label_API objLabelAPI = new Obj_Label_API();
                     objLabelAPI.name = Schema.getGlobalDescribe().get(temp[0].Object_API_Name__c).getDescribe().getName();
                     objLabelAPI.label = Schema.getGlobalDescribe().get(temp[0].Object_API_Name__c).getDescribe().getLabel();
-
+                    
                     retrunWrapper.objectLabelAPI = objLabelAPI;
                     retrunWrapper.isSuccess = true;
+                    
+                    Template_Page__c pageConfigs = new Template_Page__c();
+                    if(temp[0].Template_Pages__r.size() == 0){
+                        Template_Page__c page = new Template_Page__c();
+                        page.Template__c = temp[0].Id;
+                        page.Page_Number__c = 1;
+                        page.Page_Margin__c = '1;1;1;1';        // [top;bottom;left;right]
+                        page.Page_Orientation__c = 'portrait';
+                        page.Page_Size__c = 'a4';
+                        page.unit_of_page_configs__c = 'in';
+                        insert page;
+                        pageConfigs = [SELECT Id, Name, Template__c, Page_Margin__c, Page_Orientation__c, Page_Size__c, unit_of_page_configs__c FROM Template_Page__c WHERE Id =: page.Id ORDER BY Page_Number__c ASC LIMIT 1];
+                    }
+                    else{
+                        pageConfigs = temp[0].Template_Pages__r[0];
+                    }
+                
+                    retrunWrapper.template = temp[0];
+                    retrunWrapper.pageConfigs = pageConfigs;
                 }
                 else{
                     retrunWrapper.returnMessage = 'Template Type Must Be Simple Template.';
@@ -42,12 +60,12 @@ public with sharing class TemplateBuilder_Controller {
     }
 
     @AuraEnabled
-    public static string saveTemplateApex(Template__c templateRecord, List<String> templateValues){
+    public static string saveTemplateApex(Template__c templateRecord, List<String> templateValues, Template_Page__c pageConfigs){
         try {
 
             List<Template__c> temp = [SELECT Id, Name, Object_API_Name__c, Template_Name__c, Template_Type__c, Template_Status__c, Description__c, CreatedDate, LastModifiedDate, Column__c, Row__c, Don_t_show_Header_Footer_on_First_Page__c, Header_Text__c, Logo__c,  Type_of_Header__c, Watermark__c,
                                                 (SELECT Id, Name, Template__c, Template_Value_Simple__c, Order_No_Simple__c FROM Template_Data__r ORDER BY Order_No_Simple__c),
-                                                (SELECT Id, Name,Page_Number__c, Template__c FROM Template_Pages__r)
+                                                (SELECT Id FROM Template_Pages__r)
                                                 FROM Template__c WHERE Id =: templateRecord.Id LIMIT 1];
 
             if(temp.size() > 0){
@@ -117,6 +135,8 @@ public with sharing class TemplateBuilder_Controller {
                 }
                 update templateToUpdate;
 
+                update pageConfigs;
+
                 return 'Temlpate Updated Successfully Success';
             }
             else{
@@ -135,6 +155,7 @@ public with sharing class TemplateBuilder_Controller {
         @AuraEnabled public String returnMessage;
         @AuraEnabled public Obj_Label_API objectLabelAPI;
         @auraEnabled public Template__c template;
+        @auraEnabled public Template_Page__c pageConfigs;
     }
 
     public class Obj_Label_API{

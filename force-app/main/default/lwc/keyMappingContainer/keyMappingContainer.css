@@ -1,6 +1,8 @@
 :host(){
-  --customFontFamily : Bahnschrift, 'Segoe UI', 'Segoe UI Web (West European)', -apple-system, BlinkMacSystemFont, Roboto, 'Helvetica Neue', sans-serif;
-
+  --ff_Bahnschrift : Bahnschrift, 'Segoe UI', 'Segoe UI Web (West European)', -apple-system, BlinkMacSystemFont, Roboto, 'Helvetica Neue', sans-serif;
+  --ff_SegoeUI : 'Segoe UI', 'Segoe UI Web (West European)', -apple-system, BlinkMacSystemFont, Roboto, 'Helvetica Neue', sans-serif;
+  --ff_Montserrat : "Montserrat";
+  --ff_Poppins : Poppins;
 }
 .key-container{
   width: 100%;
@@ -13,6 +15,31 @@
 }
   .toggleFieldMapping{
     display: none;
+    justify-content: center;
+    align-items: center;
+    gap: 0.25rem;
+
+    position: absolute;
+    top: 0.5rem;
+    right: 100%;
+    
+    width: 5.5rem;
+    padding: 0.25rem 0.5rem;
+    border: 1px solid #00000021;
+    border-top-left-radius: 6px;
+    border-bottom-left-radius: 6px;
+    background: white;
+    overflow: hidden;
+    transition: all linear 0.325s;
+    cursor: pointer;
+    user-select: none;
+
+    font-size: 14px;
+    font-family: var(--ff_Bahnschrift);
+
+  }
+  .toggleFieldMapping.show{
+    display: flex;
   }
   .mappingTopSection{
     width: 100%;
@@ -60,7 +87,7 @@
   .mappingHeaderTitle{
     flex-grow: 1;
     font-size: 16px;
-    font-family: 'Segoe UI', 'Segoe UI Web (West European)', -apple-system, BlinkMacSystemFont, Roboto, 'Helvetica Neue', sans-serif;
+    font-family: var(--ff_SegoeUI);
     letter-spacing: 1px;
     font-weight: 700;
     color: #009ae1;
@@ -223,38 +250,7 @@
     right: auto;
     left: 0%;
   }
-  /* .customToolTip::after{
-    width: 1rem;
-    height: 1rem;
-    position: absolute;
-    -webkit-transform: rotate(45deg);
-    transform: rotate(45deg);
-    content: "";
-    background-color: #f7f7f7d6;
-    bottom: -.5rem;
-    border: 0.5px solid #e7e7e7;
-    margin-left: -.5rem;
-    backdrop-filter: blur(39px);
-  } */
-  .customToolTip.top::after{
-    top: 100%;
-    margin-top: -.5rem;
-    border-top: none;
-    border-left: none;
-
-  }
-  .customToolTip.bottom::after{
-    bottom: 100%;
-    margin-bottom: -.5rem;
-    border-bottom: none;
-    border-right: none;
-  }
-  .customToolTip.left::after{
-    right: 1.5rem;
-  }
-  .customToolTip.right::after{
-    left: 1.5rem;
-  }
+  
   .headerText {
     width: 95%;
     border-radius: 8px;
@@ -669,6 +665,78 @@
     cursor: pointer;
   }
 
+  .relatedListSection{
+    width: 100%;
+    height: max-content;
+    margin-block: 1rem;
+    margin-inline: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 1rem;
+    font-family: var(--ff_Bahnschrift);
+
+  }
+  .relatedListTitle{
+    font-size: 15px;
+    color: #070707;
+    width: max-content;
+    text-align: center;
+    text-transform: capitalize;
+    padding-inline: 1rem;
+    margin-inline: auto;
+  }
+  .selectFieldBtn{
+    width: max-content;
+    padding-inline: 1rem;
+    padding-block: 0.25rem;
+    height: max-content;
+    margin-inline: auto;
+    border: none;
+    outline: none;
+    background: #02afff;
+    color: white;
+    border-radius: 4px;
+    font-size: 16px;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+    text-transform: capitalize;
+    user-select: none;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all linear 0.15s;
+  }
+
+  .selectFieldBtn:hover{
+    background: #0195da;
+    box-shadow: rgba(0, 0, 0, 0.085) 0px 1px 6px,rgba(0, 0, 0, 0.111) 0px 1px 6px;
+  }
+
+  .selectFieldBtn:disabled{
+    background: rgb(214 214 214);
+    box-shadow: none;
+    color: #323232;
+    cursor: not-allowed;
+    border: 1px solid #cacaca;
+  }
+
+  .relatedListInfoText{
+    font-size: 13px;
+    color: rgb(41, 41, 41);
+    text-transform: capitalize;
+    padding-inline: 3rem;
+  }
+  .relatedListInfoText p{
+    font-size: 14px;
+    color: black;
+    margin-bottom: 0.25rem;
+  }
+  .relatedListInfoText li{
+    list-style: disc outside none;
+  }
+  
   .generalFieldTypeSelection{
     width: 100%;
     display: flex;
@@ -725,7 +793,7 @@
   }
   .imgFileType, .imgName{
     font-size: 12px;
-    font-family: var(--customFontFamily);
+    font-family: var(--ff_Bahnschrift);
   }
   .imgName{
     font-weight: 600;
@@ -762,7 +830,31 @@
     --slds-c-button-brand-color-background-hover: var(--mainThemeColor);
     --slds-c-button-brand-color-border-hover: var(--mainThemeColor);
   }
-
+  .footerBtn{
+    width: max-content;
+    min-width: 6rem;
+    height: 2rem;
+    border: none;
+    outline: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--ff_Montserrat);
+    color: white;
+    background: #01aeff;
+    border-radius: 6px;
+    padding-inline: 1rem;
+    transition: all linear 0.1s;
+  }
+  .footerBtn:hover{
+    background: #0084c1;
+  }
+  .footerBtn svg{
+    width: 14px;
+    height: 14px;
+    margin-right: 0.5rem;
+    fill: white;
+  }
    /* ------ -------- KEY POPOVER CSS -- START -- ----- ------ -----  */
    .formattingKeyPopover{
       /* display: none; */
@@ -813,7 +905,7 @@
     height: fit-content;
     font-size: 16px;
     text-align: center;
-    font-family: var(--customFontFamily);
+    font-family: var(--ff_Bahnschrift);
     color: #009ae1;
     font-weight: 500;
     text-transform: uppercase;
@@ -841,7 +933,7 @@
    .helpText{
       width: 100%;
       font-size: 14px;
-      font-family: var(--customFontFamily);
+      font-family: var(--ff_Bahnschrift);
       color: #2b2b2b;
       font-weight: 700;
       text-align: center;
@@ -886,7 +978,7 @@
       position: relative;
     }
     .inputContainerText{
-      font-family: var(--customFontFamily);
+      font-family: var(--ff_Bahnschrift);
       color: #44aae6;
       font-size: 12px;
       position: absolute;
@@ -898,7 +990,7 @@
       z-index: 5;
     }
     .toggleLabel{
-      font-family: var(--customFontFamily);
+      font-family: var(--ff_Bahnschrift);
       color: #44aae6;
       font-size: 12px;
       text-transform: capitalize;
@@ -932,32 +1024,9 @@
 
 
   /* ====== ========= ========= ========== Media Query ======== ======== ======= ========= ========= ========= ======== ======= */
-@media only screen and (max-width: 1440px){
-    .fieldMappingContainer{
-      width: 30rem;
-    }
-    .tabSelection{
-      height: 1.5rem;
-      font-size: 11px;
-      border-radius: 4px;
-    }
-  }
   
   @media only screen and (max-width: 1350px){
-    .fieldMappingContainer{
-      position: absolute;
-      right: 0%;
-      width: 30rem;
-      margin-inline: 1rem 0rem;
-      border-top-right-radius: 0px;
-      border-bottom-right-radius: 0px;
-      transform: translateX(calc(100% + 0.5rem));
-      transition: all linear 0.325s;
-    }
-    .openFieldMapping{
-      transform: translateX(0px) !important;
-    }
-    .toggleFieldMapping{
+    /* .toggleFieldMapping{
       display: flex;
       justify-content: center;
       align-items: center;
@@ -979,9 +1048,9 @@
       user-select: none;
   
       font-size: 14px;
-      font-family: var(--customFontFamily);
+      font-family: var(--ff_Bahnschrift);
   
-    }
+    } */
   }
   @media only screen and (max-width: 1024px){
   

@@ -6,10 +6,94 @@ c-spinner{
     z-index: 100000;
 }
 
-.main-div{
+/* Tab Section */
+.tempToggle {
+    width: fit-content;
+    height: max-content;
+    position: relative;
+    overflow: hidden;
+    left: calc( 100% - 7rem );
+}
+.toggleDiv{
+    width: 7rem;
+    height: 1.75rem;
+    padding: 0.25rem;
+    border-radius: 32px;
+    /* background-color: #FF310B; */
+    background-color: #adadad;
+    transition: 0.4s cubic-bezier(0.18, 0.89, 0.35, 1.15) all;
+    cursor: pointer;
+}
+.toggleBtnBg{
+    height: 100%;
+    width: 100%;
+    position: relative;
+}
+.toggleBtnBg::before{
     position: absolute;
-    top: 0%;
-    left: 0%;
+    top: 0px;
+    left: auto;
+    transform: translateX(0%);
+    right: 0% !important;
+    content: "";
+    height: 100%;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background-color: #fff;
+    transition: 0.4s cubic-bezier(0.18, 0.89, 0.35, 1.15) all;
+}
+.StatusText{
+    width: 200%;
+    height: 100%;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    transform: translateX(-50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: 0.4s cubic-bezier(0.18, 0.89, 0.35, 1.15) all;
+}
+.StatusText span{
+    width: 45%;
+    height: 100%;
+    color: white;
+    font-size: 14px;
+    display: flex;
+    justify-content: center;
+    font-family: Bahnschrift, 'Segoe UI', 'Segoe UI Web (West European)', -apple-system, BlinkMacSystemFont, Roboto, 'Helvetica Neue', sans-serif;
+    user-select: none;
+    line-height: 22px;
+    letter-spacing: 0.5px;
+}
+.checkBox:checked + label .toggleBtnBg::before{
+    transform: translateX(100%);
+    right: 100% !important;
+}
+.checkBox:checked + label .StatusText{
+    transform: translateX(0%);
+}
+
+.checkBox:checked + label .toggleDiv{
+    /* background-color: #14AD00; */
+    background-color: #00aeff;
+}
+
+.homeBtn{
+    margin: 0 1rem;
+    cursor: pointer;
+}
+.homeBtn svg{
+    width: 20px;
+    height: 20px;
+}
+.homeBtn path{
+    fill: #003b57;
+}
+
+/* Edit Template Tab */
+
+.main-div{
     width: calc(100% + 1.5rem);
     height: calc(100% + 1.5rem);
     margin-left: -0.75rem;
@@ -17,9 +101,11 @@ c-spinner{
     background-color: white;
     padding: 1rem;
     overflow-y:scroll;
-    border-radius: 0.5rem;
     scrollbar-width: none;
     overflow-x: hidden;
+    background-image: url(/resource/homePageImgs/HomBg.png);
+    background-size: cover;
+    background-repeat: no-repeat;
 }
 
 .main-flex-div{
@@ -55,7 +141,7 @@ c-spinner{
     align-items: center;
     background: linear-gradient(269.86deg, rgb(173 229 255) 0%, rgb(174 255 233) 100%);
     position: relative;
-    border-radius: 8px 8px 0 0;
+    user-select: none;
 }
 
 .tabSection_sub{
@@ -118,18 +204,23 @@ c-spinner{
     position: absolute;
     /* background: linear-gradient(0deg, #00aeff 3%, #00aeff3b 0%, transparent 117%); */
     background: linear-gradient(0deg, #00aeff 3%, rgb(0 174 255 / 17%) 0%, rgb(0 255 186 / 20%) 100%);
-    border-bottom: 1px solid #00aeff;
+    border-bottom: 2px solid #00aeff;
     transition: all linear 0.2s;
   }
 
 .TemplateName {
-    flex-grow: 1;
     display: flex;
-    justify-content: end;
-    gap: 0.5rem;
     align-items: center;
     cursor: pointer;
-    padding-right: 1rem;
+    justify-content: flex-end;
+    gap: 0.4rem;
+    margin-right: 1rem;
+    padding: 0.3rem;
+    border-radius: 6px;
+    margin-left: auto;
+    backdrop-filter: blur(13px);
+    background: linear-gradient(93deg, rgb(199 255 242 / 57%) 0%, rgb(207 244 255) 100%);
+    box-shadow: rgb(0 49 81 / 22%) 0px 0px 3px 0px, rgb(148 148 148 / 15%) 0px 0px 0px 1px;
 }
   
 .main-fields-div{
@@ -174,6 +265,7 @@ c-spinner{
     font-size: 0.875rem;
     font-weight: 500;
     padding: 0.313rem;
+    user-select: none;
 }
 
 
@@ -187,17 +279,17 @@ c-spinner{
 
 
 .selection-div{
-    height: 13.125rem !important;
+    height: 13rem !important;
     /* height: calc( 100% - 5rem); */
     width: 100%;
     overflow-y: scroll;
     border-radius: 0.5rem;
     text-align: center;
     background-color: white;
-    background: #c2e2ff9e;
-    -webkit-box-shadow: 0 0 0.313rem 0.125rem #00000030;
-    -moz-box-shadow: 0 0 0.313rem 0.125rem #00000030;
-    box-shadow: 0 0 0.313rem 0.125rem #00000030;
+    /* background: #c2e2ff9e; */
+    -webkit-box-shadow: 0 0 5px 1px lightgray;
+    -moz-box-shadow: 0 0 5px 1px lightgray;
+    box-shadow: 0 0 5px 1px lightgray;
 }
 
 .selection-div-full-height{
@@ -205,21 +297,33 @@ c-spinner{
 }
 
 .selection-include-btn-div{
-    height: 13.125rem !important;
+    height: 13rem !important;
     margin-top: 0.625rem;
     display: flex;
     overflow-y: hidden;
     border-radius: 0.5rem;
     text-align: center;
     background-color: white;
-    background: #72c2ff12;
-    -webkit-box-shadow: 0 0 0.313rem 0.125rem #00000030;
-    -moz-box-shadow: 0 0 0.313rem 0.125rem #00000030;
-    box-shadow: 0 0 0.313rem 0.125rem #00000030;
+    background-color: #e5f4ff;
+    -webkit-box-shadow: 0 0 5px 1px lightgray;
+    -moz-box-shadow: 0 0 5px 1px lightgray;
+    box-shadow: 0 0 5px 1px lightgray;
+}
+
+.search-all-fields-div{
+    display: flex;
+    padding: 0 0 0.5rem 0;
+    gap: 0.5rem;
 }
 
 .search-field-div{
-    padding: 0 0 0.625rem 0;
+    flex-grow: 1;
+    position: relative;
+}
+
+.object-select-div{
+    border-radius: 0.5rem;
+    box-shadow: 0 0 5px 1px lightgray;
 }
 
 .field-search-input{
@@ -227,10 +331,10 @@ c-spinner{
     height: 2.5rem;
     border-radius: 0.5rem;
     border: none;
-    padding-left: 3.125rem;
-    -webkit-box-shadow: 0 0 0.313rem 0.125rem #00000030;
-    -moz-box-shadow: 0 0 0.313rem 0.125rem #00000030;
-    box-shadow: 0 0 0.313rem 0.125rem #00000030;
+    padding-left: 2.4rem;
+    -webkit-box-shadow: 0 0 5px 1px lightgray;
+    -moz-box-shadow: 0 0 5px 1px lightgray;
+    box-shadow: 0 0 5px 1px lightgray;
 }
 
 .field-search-input:focus{
@@ -243,7 +347,6 @@ c-spinner{
 
 .search-img{
     position: absolute;
-    background-color: #00AEFF;
     border-radius: 0.5rem 0 0 0.5rem;
     width: 2.5rem;
     height: 2.5rem;
@@ -260,8 +363,9 @@ li{
     align-items: center;
     cursor: pointer;
     background-color: white;
-    transition: all 0.1s ease-in-out;
+    transition: all 0.2s ease-in-out;
     height: 40px;
+    box-shadow: 0 0 5px 0 lightgray;
 }
 
 li:hover{
@@ -304,6 +408,7 @@ li:hover{
 
 .bold-text{
     font-weight: 700;
+    user-select: none;
     font-size: 1rem;
 }
 
@@ -316,6 +421,26 @@ li:hover{
     font-weight: 700;
     font-size: 1.1rem;
     color: white;
+    user-select: none;
+}
+
+.title-div button{
+    float: right;
+    background: white;
+    color: #00AEFF;
+    border: none;
+    box-shadow: inset 0 0 2px 0px gray;
+    width: fit-content;
+    font-size: 12px;
+    border-radius: 0.3rem;
+    margin: 3px;
+    font-weight: 500;
+}
+
+.title-div button svg{
+    width: 15px;
+    height: 15px;
+    padding: 0 0 3px 0;
 }
 
 .btn-div{
@@ -329,6 +454,10 @@ li:hover{
     gap: 2.5rem;
 }
 
+.basic-details-btn-div{
+    width: calc( 100% - 2rem );
+}
+
 .save-button, .cancel-button, .reset-button, .validate-button{
     display: flex;
     justify-content: center;
@@ -340,9 +469,20 @@ li:hover{
     border: none;
     align-items: center;
     color: white;
+    user-select: none;
 }
 button:hover{
     background-color: #008eed;
+}
+
+
+.disabled-button{
+    background-color: lightgray;
+    cursor: not-allowed;
+}
+
+.disabled-button:hover{
+    background-color: lightgray;
 }
 
 .delete-btn, .add-btn {
@@ -353,22 +493,23 @@ button:hover{
     border-radius: 0.5rem;
     display: flex;
     justify-content: center;
-    /* background-color: #c9c9c9; */
+    background-color: White;
     align-items: center;
     cursor: pointer;
+    user-select: none;
+    box-shadow: 0 0 5px 0 lightgray;
 }
 
 .add-btn{
-    background-color: #e8e8e8;
-    width: 100%;
-    margin-bottom: 1rem;
+    margin: 5px;
+    user-select: none;
 }
 
 .delete-btn:hover{
     background-color: #ff9d9dc6;
 }
 .add-btn:hover{
-    background-color: #c2e2ff9e;
+    background-color: #c2ffed9e;
 }
 
 .filter-div, .sort-div, .limit-main-div, .filter-logic-div{
@@ -382,13 +523,13 @@ button:hover{
     justify-content: flex-start;
     align-items: center;
     gap: 1.25rem;
-    background: #c2e2ff9e;
+    background-color: #d5ebff;
     padding: 0.313rem;
     border-radius: 0.5rem;
 }
 
 .all-filters-rows, .all-sorts-rows {
-    background: #c2e2ff9e;
+    background-color: #d5ebff;
     padding: 0.313rem;
     border-radius: 0.5rem;
     margin: 0.625rem 0;
@@ -455,10 +596,11 @@ button:hover{
     background-color: #00aeff6b;
     border-radius: 0.5rem;
     line-height: 2.5rem;
+    user-select: none;
 }
 
 .error-in-row{
-    background-color: red !important;
+    background-color: #ff9d9dc6 !important;
 }
 
 .error-in-input{
@@ -529,8 +671,48 @@ button:hover{
 }
 
 .picklist-input-div, .simple-input-div{
-    display: relative;
+    position: relative;
     width: 40%;
+}
+
+.select-predefined-option {
+    /* visibility: visible; */
+    position: absolute;
+    width: 100%;
+    background: white;
+    border-radius: 0.5rem;
+    z-index: 11;
+    margin: 2px 0 0 0;
+    overflow: auto;
+    box-shadow: 0 2px 3px 0 #d4d4d4;
+    padding: 0.125rem 0;
+    max-height: 15rem;
+}
+.select-predefined-option-li{
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    cursor: pointer;
+    background-color: white;
+    height: 2.25rem;
+    padding-left: 1.5rem;
+    margin: 0;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+.select-predefined-option-li:hover{
+    background: #00aeff2b !important;
+}
+
+.backDrop{
+    display: none;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    z-index: 10;
 }
 
 .dont-display-div{
@@ -548,17 +730,73 @@ button:hover{
 }
 
 .show-list-view-div{
-    width: 600px;
+    width: 60%;
     background-color: white;
     border-radius: 0.5rem;
     padding: 2rem;
+    background-image: url(/resource/homePageImgs/HomBg.png);
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.show-list-view-div .search-field-div{
+    margin: 0.5rem 0;
 }
 
 .list-view-selection-div{
-    background: #c2e2ff9e;
+    background-color: #d5ebff;
     border-radius: 0.5rem;
-    padding: 0.5rem;
-    margin: 1rem 0;
+    padding: 0.3rem 0.5rem;
+    margin: 0 0 1rem 0;
+    height: 17rem;
+}
+.list-view-selection-div .select-predefined-option{
+    position: unset;
+    margin: 0.3rem 0;
+    padding: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.list-view-selection-div .select-predefined-option-li{
+    display: block;
+    cursor: pointer;
+    background-color: white;
+    height: 2.25rem;
+    padding: 0.5rem 0 1.5rem 1.5rem;
+    margin: 0;
+    border-radius: 0;
+    box-shadow: none;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+.list-view-selection-div .select-predefined-option li:hover{
+    background: none !important;
+}
+.no-results {
+    text-align: center;
+}
+
+.list-view-selection-div button{
+    
+    background-color: white;
+    color: #00aeff;
+    border: 1px solid #00aeff;
+    width: fit-content;
+    font-size: 12px;
+    border-radius: 0.3rem;
+    margin: 0 2rem;
+    padding: .25rem .5rem;
+    font-weight: 500;
+}
+
+.list-view-selection-div button:hover{
+    background-color: #00AEFF;
+    color: white;
+    box-shadow: 0 0 2px 0 gray;
+    transition: 0.2s all;
 }
 
 .button-div{
@@ -571,23 +809,36 @@ button:hover{
 
 .list-view-button{
     display: flex;
+    flex-direction: column;
     justify-content: center;
     font-size: 1rem;
-    background-color: #00AEFF;
-    height: 2.5rem;
+    background-color: white;
+    /* height: 2.5rem; */
     border-radius: 0.5rem;
-    border: none;
+    border: 1px dashed gray;
     align-items: center;
-    color: white;
-    width: 50%;
+    color: gray;
+    flex-grow: 1;
+    padding: 0.5rem 0;
 }
 
+.list-view-button:hover{
+    background-color: #f3fbff;
+    border: 1px transparent solid;
+    box-shadow: 0 0 5px 0 lightgray;
+    transition: all 0.2s;
+    color: #00aeff;
+}
+
+.list-view-button:hover svg{
+    fill: #00aeff;
+}
 .slds-backdrop_open{
     z-index: 100;
 }
 
 
-/* Basic Details */
+/* Basic Details Tab*/
 
 .basic-main-div{
     display: flex;
@@ -595,7 +846,7 @@ button:hover{
     justify-content: flex-start;
     align-items: center;
     gap: 1.25rem;
-    background: #c2e2ff9e;
+    background-color: #d5ebff;
     padding: 1rem;
     border-radius: 0.5rem;
 }
@@ -610,22 +861,44 @@ button:hover{
 }
 
 
-.edit-detail-div .description-edit{
+.description-edit, .tempToggle{
     grid-column: 1 / span 2;
 }
 
-/* Custom Combobox Styling*/
+.List-view-div{
+    display: flex;
+    align-items: end;
+    gap: 0.5rem;
+}
+
+.list-view-select{
+    flex-grow: 1;
+}
+
+/* Custom Combo-box Styling*/
 
 .custom-combobox{
-    --inputAreaBorderWidth: 0;
+    --inputAreaBorderWidth: 1px;
+    --inputAreaBorderColor: transparent;
     --inputAreaHeight : 2.5rem;
     --inputAreaBorderRadius : 0.5rem;
     --dropDownWidth : 10rem;
+    flex-grow: 1;
+}
+
+.field-select{
+    --dropDownWidth : 15rem !important;
 }
 
 .error-in-custom-combobox{
     --inputAreaBorderWidth: 1px;
     --inputAreaBorderColor: red;
+}
+    
+    /* Specially for value inputs, because it can be both a combobox or a simple input field */
+.error-in-value-input{
+    border-radius: 8px;
+    border: 1px red solid;
 }
 
 

@@ -157,7 +157,6 @@ public class GoogleSuccessController {
         public static Map<String, String> generaterefreshtoken(String client_id, String client_secret, String REDIRECT_URI, String authcode){
             try {
                 String SCOPE = 'https://www.googleapis.com/auth/drive';
-                // String SCOPE = 'openid email profile https://www.googleapis.com/auth/drive.file';
                 String ENDPOINT = 'https://oauth2.googleapis.com/token';
                 HttpRequest request = new HttpRequest();
                 request.setEndpoint(ENDPOINT);

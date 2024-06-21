@@ -1,5 +1,5 @@
 import { LightningElement, api, track, wire } from "lwc";
-
+import previewModal_img from "@salesforce/resourceUrl/previewModal_img";
 
 export default class TemplatePreviewModal extends LightningElement {
 
@@ -8,27 +8,24 @@ export default class TemplatePreviewModal extends LightningElement {
     @api objectlabel;
     @api recordId;
 
+    @track previewModal_img = previewModal_img;
+    @track spinnerLabel = null;
+
+    @track objectRecordList = null;
+    @track selectedRecordId = null;
+
     @track isSpinner = false;
     @track vfPageSRC; 
+    @track vfGeneratePageSRC;
     @track errorDetail = {};
     
-    generateOptions = {};
-
-    displayInfo = {
-        primaryField: `Name`,
-        additionalFields: ['CreatedBy.Name'],
-    };
-    matchingInfo = {
-        primaryField: { fieldPath: 'Name' },
-        additionalFields: [{ fieldPath: 'CreatedBy.Name' }],
-    };
-
+    
     get label(){
         return `Select ${this.objectlabel} record`;
     }
 
     get placeHolder(){
-        return `Search ${this.objectlabel} by Name or Create User...`;
+        return `Search ${this.objectlabel} by Name or Id...`;
     }
 
     get helpText(){
@@ -40,30 +37,19 @@ export default class TemplatePreviewModal extends LightningElement {
     }
 
     get disableGenerateBtn(){
-        if(Object.keys(this.generateOptions).length > 0 && this.generateOptions.hasOwnProperty('selectedRecordId')){
-            return false;
-        }
-        else{
-            return true;
-        }
+        return this.selectedRecordId ? false : true;
     }
 
-    get spinnerLabel(){
-        return this.isSpinner == false ? 'Preview' : 'Loading...';
-    }
     get loadingInfo(){
-        return this.isSpinner == false ? `Please select the ${this.objectlabel} record for display preview.` : `Generating Preview...`
+        var info = `To generate a preview, please select any ${this.objectlabel} record first.`;
+        return this.isSpinner == false ? info : `Generating Preview...`
     }
 
     connectedCallback(){
         try {
             // Set pre-selected Record Id...
             if(this.recordId){
-                var generateOptions_temp = JSON.parse(JSON.stringify(this.generateOptions));
-                generateOptions_temp['selectedRecordId'] = this.recordId;
-                this.generateOptions = generateOptions_temp;
-
-                this.generatePreview();
+                this.selectedRecordId = this.recordId;
             }
 
         } catch (error) {
@@ -71,47 +57,50 @@ export default class TemplatePreviewModal extends LightningElement {
         }
     }
 
-    recordPickerLoaded(event){
+    onRecordSelect(event){
         try {
-
+            if(event.detail && event.detail.length){
+                this.selectedRecordId = event.detail[0].Id;
+            }
+            else{
+                this.selectedRecordId = null;
+            }
         } catch (error) {
-            console.log('error in TemplatePreviewModal > recordPickerLoaded', error.stack);
+            console.log('error in onRecordSelect > handleOnSearch', error.stack);
         }
     }
 
-    recordChange(event){
-        try {
-            var generateOptions_temp = JSON.parse(JSON.stringify(this.generateOptions));
-            if(event.detail.recordId != null){
-                generateOptions_temp['selectedRecordId'] = event.detail.recordId ;
-            }
-            else{
-                delete generateOptions_temp['selectedRecordId'];
-            }
-
-            this.generateOptions = generateOptions_temp;
-        } catch (error) {
-            console.log('error in TemplatePreviewModal > recordChange', error.stack);
-        }
+    handleRecordPickerError(event){
+        console.log('handleRecordPickerError : ', event.detail);
     }
 
     generatePreview(){
         try {
             this.isSpinner = true;
+            this.spinnerLabel = 'Generating Preview...';
+            this.updateSpinnerLabel('We are Almost There... Please wait a while...', 4000);
 
             var previousSRC = this.vfPageSRC;
 
             var paraData = {
                 'templateId' : this.templateid,
                 'Object_API_Name__c' : this.objectname,
-                'recordId' : this.generateOptions['selectedRecordId'],
-                'useMode' : 'preview',
+                'recordId' : this.selectedRecordId,
             }
             var paraDataStringify = JSON.stringify(paraData);
             console.log('vfPageSRC before : ', this.vfPageSRC);
 
-            var newSRC = '/apex/DocGeniusPDFGeneratorPage?paraData=' + paraDataStringify;
-            // var newSRC = '/apex/docGenerate?paraData=' + paraDataStringify;
+            var newSRC = '/apex/DocPreviewPage?paraData=' + paraDataStringify;
+
+            var paraData2 = {
+                'templateId' : this.templateid,
+                'Object_API_Name__c' : this.objectname,
+                'recordId' : this.selectedRecordId,
+                'docType' : 'DOC'
+            }
+            var paraDataStringify2 = JSON.stringify(paraData2);
+            this.vfGeneratePageSRC = '/apex/DocGeneratePage?paraData=' + paraDataStringify2;
+
             if(newSRC != previousSRC){
                 this.vfPageSRC = newSRC;
             }
@@ -119,8 +108,8 @@ export default class TemplatePreviewModal extends LightningElement {
                 // Fake Loading...
                 setTimeout(() => {
                     this.isSpinner = false;
+                    this.spinnerLabel = 'Ready to Preview...';
         
-                    this.resetGenerateOpt();
                 }, 500)
             }
             
@@ -135,36 +124,19 @@ export default class TemplatePreviewModal extends LightningElement {
             console.log('loaded');
 
             this.isSpinner = false;
-
-            this.resetGenerateOpt();
+            this.spinnerLabel = 'Ready to Preview...';
 
         } catch (error) {
             console.log('error in TemplatePreviewModal > vfPageLoaded', error.stack);
         }
     }
 
-    resetGenerateOpt(){
-        var generateOptions_temp = JSON.parse(JSON.stringify(this.generateOptions));
-        Object.keys(this.generateOptions).forEach(key => {
-            delete generateOptions_temp[key]
-        })
-        this.generateOptions = generateOptions_temp;
-    }
+    updateSpinnerLabel(labelToUpdate, updateOffset){
+        setTimeout(() => {
+            this.spinnerLabel = this.isSpinner ? labelToUpdate : this.spinnerLabel ;
+            this.isSpinner && this.updateSpinnerLabel('Your Document took a little long... Thank you for your penitence...', 4000);
+        }, updateOffset);
 
-    handleRecordPickerError(event){
-        try {
-            var error = event.detail.error;
-            console.warn('handleRecordPickerError : ', event.detail.error);
-            
-            this.errorDetail.title = 'Looks like there\'s a problem.';
-            this.errorDetail.message = `Unfortunately, ${error.output.message}. Ask an admin for help.`;
-
-            this.errorOccured = true;
-            this.vfPageSRC = undefined;
-
-        } catch (error) {
-            console.log('error in TemplatePreviewModal > handleRecordPickerError', error.stack);
-        }
     }
 
     closeTemplatePreview(){
@@ -177,7 +149,7 @@ export default class TemplatePreviewModal extends LightningElement {
 
 
     // ====== ======= ======== ======= ======= ====== GENERIC Method ====== ======= ======== ======= ======= ======
-     // Generetic Method to test Message Popup and Toast
+     // Generic Method to test Message Popup and Toast
      showMessagePopup(Status, Title, Message){
         const messageContainer = document.querySelector('c-message-popup');
         console.log('messageContainer : ', messageContainer);

@@ -1,10 +1,10 @@
 public with sharing class EditDragDropTemplateController {
-    @AuraEnabled
-    public static List<Template__c> getTemplate(String templateId){
-        List<Template__c> template = new List<Template__c>();
-        template = [SELECT Id, Name, Template_Name__c, Template_Type__c, Row__c, Column__c, Object_API_Name__c FROM Template__c WHERE Id =: templateId];
-        return template;
-    }
+    // @AuraEnabled
+    // public static List<Template__c> getTemplate(String templateId){
+    //     List<Template__c> template = new List<Template__c>();
+    //     template = [SELECT Id, Name, Template_Name__c, Template_Type__c, Row__c, Column__c, Object_API_Name__c FROM Template__c WHERE Id =: templateId];
+    //     return template;
+    // }
 
     @AuraEnabled
     public static pairWrapperNew getObjectSelectField(String ObjectName){
@@ -62,41 +62,41 @@ public with sharing class EditDragDropTemplateController {
         return pairWrapperObj;
     }
 
-    @AuraEnabled
-    public static List<Template_Fields__c> getFields(String templateId){
-        List<Template_Fields__c> template = new List<Template_Fields__c>();
-        try {
-            template = [SELECT Id, Name, Field_Label_D_D__c, Field_API_Name_D_D__c, Sr_Number_D_D__c, Sequence_Number_D_D__c FROM Template_Fields__c WHERE Template__c =: templateId];
-        } catch (Exception e) {
-            System.debug('Error in saving Template =>' + e.getMessage());
-            Log_Handler.store_Exception(e, 'NewTemplateCreationController', 'saveTemplate');
-        }
-        return template;
-    }
+    // @AuraEnabled
+    // public static List<Template_Fields__c> getFields(String templateId){
+    //     List<Template_Fields__c> template = new List<Template_Fields__c>();
+    //     try {
+    //         template = [SELECT Id, Name, Field_Label_D_D__c, Field_API_Name_D_D__c, Sr_Number_D_D__c, Sequence_Number_D_D__c FROM Template_Fields__c WHERE Template__c =: templateId];
+    //     } catch (Exception e) {
+    //         System.debug('Error in saving Template =>' + e.getMessage());
+    //         Log_Handler.store_Exception(e, 'NewTemplateCreationController', 'saveTemplate');
+    //     }
+    //     return template;
+    // }
 
-    @AuraEnabled
-    public static string saveFields(String templateId, String fieldName, String fieldAPI, String srNumber, String sequenceNumber){
-        try {
-            Template_Fields__c tempField = new Template_Fields__c();
-            System.debug('templateId *** : '+ templateId);
-            System.debug('fieldName *** : '+ fieldName);
-            System.debug('fieldAPI *** : '+ fieldAPI);
-            System.debug('srNumber *** : '+ srNumber);
-            System.debug('sequenceNumber *** : '+ sequenceNumber);
-            tempField.Template__c = templateId;
-            tempField.Field_Label_D_D__c = fieldName;
-            tempField.Field_API_Name_D_D__c = fieldAPI;
-            tempField.Sr_Number_D_D__c = srNumber;
-            tempField.Sequence_Number_D_D__c = sequenceNumber;
-            insert tempField;
-            return 'success';
-        } catch (Exception e) {
-            System.debug('Error in saving Template =>' + e.getMessage());
-            Log_Handler.store_Exception(e, 'NewTemplateCreationController', 'saveTemplate');
-            return 'e';
-        }
+    // @AuraEnabled
+    // public static string saveFields(String templateId, String fieldName, String fieldAPI, String srNumber, String sequenceNumber){
+    //     try {
+    //         Template_Fields__c tempField = new Template_Fields__c();
+    //         System.debug('templateId *** : '+ templateId);
+    //         System.debug('fieldName *** : '+ fieldName);
+    //         System.debug('fieldAPI *** : '+ fieldAPI);
+    //         System.debug('srNumber *** : '+ srNumber);
+    //         System.debug('sequenceNumber *** : '+ sequenceNumber);
+    //         tempField.Template__c = templateId;
+    //         tempField.Field_Label_D_D__c = fieldName;
+    //         tempField.Field_API_Name_D_D__c = fieldAPI;
+    //         tempField.Sr_Number_D_D__c = srNumber;
+    //         tempField.Sequence_Number_D_D__c = sequenceNumber;
+    //         insert tempField;
+    //         return 'success';
+    //     } catch (Exception e) {
+    //         System.debug('Error in saving Template =>' + e.getMessage());
+    //         Log_Handler.store_Exception(e, 'NewTemplateCreationController', 'saveTemplate');
+    //         return 'e';
+    //     }
         
-    }
+    // }
 
     public class pairWrapper{
         @AuraEnabled public String label{get; set;}
