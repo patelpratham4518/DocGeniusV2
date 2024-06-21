@@ -219,7 +219,9 @@ public with sharing class GoogleDocPreview {
                         continue;
                     }
                     Integer numberOfRecords = tableRecords.size();
-                    for (Integer i = 1; i <= numberOfRecords; i++) {
+
+                    for (Integer i = 2; i <= numberOfRecords+1; i++) {
+                    // for (Integer i = 1; i <= numberOfRecords; i++) {
 
                         Map<String, Object> insertTableRowRequest = new Map<String, Object>{
                             'insertTableRow' => new Map<String, Object>{
@@ -237,24 +239,26 @@ public with sharing class GoogleDocPreview {
                         tableRequests.add(insertTableRowRequest);
                     }
 
-                    //Delete first row containing keys
-                    Map<String,Object> deleteTableRowRequest = new Map<String,Object>{
-                        'deleteTableRow' => new Map<String,Object>{
-                            'tableCellLocation' => new Map<String, Object>{
-                                'tableStartLocation' => new Map<String, Object>{
-                                    'segmentId' => '',
-                                    'index' => tableStartLocation
-                                },
-                                'rowIndex' => 1, // The row index where the new row will be inserted (0-based index)
-                                'columnIndex' => 0 // This is required but can be 0 for row insertion
+                    List<Integer> rowsToDelete = new List<Integer>{1,2};
+                    for (Integer deleteIndex : rowsToDelete) {
+                         Map<String,Object> deleteTableRowRequest = new Map<String,Object>{
+                            'deleteTableRow' => new Map<String,Object>{
+                                'tableCellLocation' => new Map<String, Object>{
+                                    'tableStartLocation' => new Map<String, Object>{
+                                        'segmentId' => '',
+                                        'index' => tableStartLocation
+                                    },
+                                    'rowIndex' => 1, // The row index where the new row will be inserted (0-based index)
+                                    'columnIndex' => 0 // This is required but can be 0 for row insertion
+                                }
                             }
-                        }
-                    };
-                    tableRequests.add(deleteTableRowRequest);
+                        };
+                        tableRequests.add(deleteTableRowRequest);
+                    }
+
 
                     // Insert Text in empty table rows
                     Integer insertCellTextIndex = Integer.valueOf(firstRow.get('endIndex')) ;
-                    
                     
                     for (List<String> record : tableRecords) {
                         insertCellTextIndex++;
@@ -408,8 +412,7 @@ public with sharing class GoogleDocPreview {
             if ((crn == null)||(limitOfRecords == null)) {
                 return null;
             }
-            System.debug('CRN==>'+crn);
-            System.debug('limitOfRecords==>'+limitOfRecords);
+         
             
             List<String> keys  = new  List<String>();
             String keyString = '';
@@ -420,26 +423,18 @@ public with sharing class GoogleDocPreview {
             }
             
             String queryString = 'SELECT Name, (SELECT '+String.join(keys,',')+' FROM '+crn+' LIMIT '+limitOfRecords+') FROM '+objectApiName+' WHERE Id=:recordId';
-            // String queryString = 'SELECT (SELECT '+String.join(keys,',')+' FROM '+crn+' LIMIT '+limitOfRecords+') FROM '+objectApiName+' WHERE Id='+recordId;
+
             System.debug('Query String ==>'+queryString);
-            // List<String> columns = new List<String>{'Id','Name','MobilePhone','Email'};
-            // String queryString = 'SELECT Id,Name,MobilePhone,Email FROM Contact';
+         
 
             List<SObject> recordsMain = Database.query(queryString);
-            System.debug('recordsMain=>'+recordsMain);
-            // System.debug('Contacts ==>'+recordsMain[0].get(crn));
             List<Object> records = (List<Object>) recordsMain[0].getPopulatedFieldsAsMap().get(crn);
-            
-            // List<Object> records = (List<Object>) recordsMain[0].get(crn);
-            // System.debug('records=>'+records);
-            
-
             
             List<List<String>> tableRecords = new LiSt<List<String>>();
             for (Object record : records) {
                 List<String> row = new List<String>();
                 for (String column : keys) {
-                    row.add(String.valueOf(((Map<String,Object>) record).get(column)));
+                    row.add(String.valueOf(((Map<String,Object>) JSON.deserializeUntyped(JSON.serialize(record))).get(column)));
                 }
                 tableRecords.add(row);
             }

@@ -321,6 +321,8 @@ export default class NewTemplateCreation extends NavigationMixin(LightningElemen
             } else if (this.selectedTemplateType === 'Drag&Drop Template') {
                 console.log('Navigating to Drag&Drop template....... ');
                 this.navigateToComp(navigationComps.dNdTemplateBuilder, paramToPass);
+            } else if(this.selectedTemplateType === 'Google Doc Template'){
+                this.navigateToComp(navigationComps.googleDocTemplateEditor, paramToPass);
             }
         } catch (error) {
             console.error('Error in handleNavigate:', error.message);
