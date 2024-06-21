@@ -217,9 +217,9 @@ public with sharing class GoogleDocPreview {
         
                     
                     //Insert empty rows equal to number of records
-                    Map<String, Object> firstRow = (Map<String, Object>) originalTableRows[0];
-                    Map<String, Object> secondRow = (Map<String, Object>) originalTableRows[1];
-                    Map<String, Object> thirdRow = (Map<String, Object>) originalTableRows[2];
+                    Map<String, Object> firstRow = (Map<String, Object>) newTableRows[0];
+                    Map<String, Object> secondRow = (Map<String, Object>) newTableRows[1];
+                    Map<String, Object> thirdRow = (Map<String, Object>) newTableRows[2];
                     List<List<String>> tableRecords = getTableRecords(secondRow,thirdRow,recordId,objectApiName);
                     if (tableRecords == null) {
                         System.debug('Null Table records');
