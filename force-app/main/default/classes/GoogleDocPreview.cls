@@ -463,7 +463,7 @@ public with sharing class GoogleDocPreview {
             if (String.isNotBlank(filter)) {
                 whereClause += ' WHERE ' + filter;
             }
-            if (!String.isNotBlank(limitOfRecords)) {
+            if (String.isNotBlank(limitOfRecords)) {
                 whereClause += ' LIMIT ' + limitOfRecords;
             }
             queryString += whereClause + ') FROM ' + objectApiName + ' WHERE Id=:recordId';
