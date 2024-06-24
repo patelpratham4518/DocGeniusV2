@@ -26,8 +26,6 @@ public with sharing class GoogleDocPreview {
                 
                 List<Object> requests = formatContentForBatchUpdate(bodyContentNew,bodyContentOriginal,recordId,objectApiName);
                 updateGoogleDoc(newGoogleDocId, requests);
-                
-                getDocument(newGoogleDocId);
                 attachment.Body = getPDF(newGoogleDocId);
 
                 
@@ -156,7 +154,7 @@ public with sharing class GoogleDocPreview {
             return null;
         }
     }
-//Original
+
     public static List<Object> formatContentForBatchUpdate(List<Object> bodyContentNew, List<Object> bodyContentOriginal,String recordId,String objectApiName) {
         try {
             List<Object> requests = new List<Object>();
@@ -236,8 +234,8 @@ public with sharing class GoogleDocPreview {
                     }
                     Integer numberOfRecords = tableRecords.size();
 
-                    for (Integer i = 2; i <= numberOfRecords+1; i++) {
-                    // for (Integer i = 1; i <= numberOfRecords; i++) {
+                    // for (Integer i = 2; i <= numberOfRecords+1; i++) {
+                    for (Integer i = 1; i <= numberOfRecords; i++) {
 
                         Map<String, Object> insertTableRowRequest = new Map<String, Object>{
                             'insertTableRow' => new Map<String, Object>{
@@ -256,7 +254,7 @@ public with sharing class GoogleDocPreview {
 
                     }
 
-                    List<Integer> rowsToDelete = new List<Integer>{1,2};
+                    List<Integer> rowsToDelete = new List<Integer>{1,numberOfRecords+1};
                     for (Integer deleteIndex : rowsToDelete) {
                          Map<String,Object> deleteTableRowRequest = new Map<String,Object>{
                             'deleteTableRow' => new Map<String,Object>{
@@ -265,13 +263,16 @@ public with sharing class GoogleDocPreview {
                                         'segmentId' => '',
                                         'index' => tableStartLocation
                                     },
-                                    'rowIndex' => 1, // The row index where the new row will be inserted (0-based index)
+                                    'rowIndex' => deleteIndex, // The row index where the new row will be inserted (0-based index)
                                     'columnIndex' => 0 // This is required but can be 0 for row insertion
                                 }
                             }
                         };
                         tableRequests.add(deleteTableRowRequest);
 
+                        if (deleteIndex == (numberOfRecords+1)) {
+                            deleteIndex = 2;
+                        }
                         Map<String, Object> deletingRow = (Map<String, Object>) newTableRows[deleteIndex];
                         tableOffset -= (Integer.valueOf(deletingRow.get('endIndex')) - Integer.valueOf(deletingRow.get('startIndex')));
                         
@@ -312,8 +313,7 @@ public with sharing class GoogleDocPreview {
                 
                 originalIndex++;
             }
-            System.debug('Table offset ==> '+tableOffset);
-        
+            
             requests.addAll(tableRequests);
             return requests;
         } catch (Exception e) {
