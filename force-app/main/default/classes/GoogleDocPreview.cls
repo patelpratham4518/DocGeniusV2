@@ -15,7 +15,7 @@ public with sharing class GoogleDocPreview {
             String newGoogleDocId = copyGoogleDoc(googleDocId);
             try {
                 String sourceDocContent = getDocument(newGoogleDocId);
-
+                
                 String modiFiedDocContent = sourceDocContent;
                 modiFiedDocContent = KeyMappingController.mappingObjFieldsData(modiFiedDocContent, recordId, objectApiName);
                 modiFiedDocContent = KeyMappingController.mappingGeneralFieldData(modiFiedDocContent);
@@ -26,9 +26,9 @@ public with sharing class GoogleDocPreview {
                 
                 List<Object> requests = formatContentForBatchUpdate(bodyContentNew,bodyContentOriginal,recordId,objectApiName);
                 updateGoogleDoc(newGoogleDocId, requests);
-
+                
+                getDocument(newGoogleDocId);
                 attachment.Body = getPDF(newGoogleDocId);
-
 
                 
             } catch (Exception e) {
@@ -99,13 +99,13 @@ public with sharing class GoogleDocPreview {
             request.setHeader('Authorization','Bearer '+authProvider.access_token__c);
             Http http = new Http();
             HttpResponse response = http.send(request);
-            // System.debug('Response ==>'+response.getBody());
+            // System.debug('Response of get doc ==>'+response.getBody());
             if (response.getStatusCode() == 200) {
                 return response.getBody();
             } else if (response.getStatusCode() == 401) {
                 System.debug('Here is some error 401');
                 response = refreshAccessToken(authProvider,request);
-                // System.debug('Response ==>'+response.getBody());
+                // System.debug('Response of get doc ==>'+response.getBody());
                 return response.getBody();
              }
              return null;
@@ -156,14 +156,17 @@ public with sharing class GoogleDocPreview {
             return null;
         }
     }
-
+//Original
     public static List<Object> formatContentForBatchUpdate(List<Object> bodyContentNew, List<Object> bodyContentOriginal,String recordId,String objectApiName) {
         try {
             List<Object> requests = new List<Object>();
             List<Object> tableRequests = new List<Object>();
         
             Integer originalIndex = 0;
-        
+            Integer tableOffset = 0;
+            Integer currentTableOffset = 0;
+
+
             for (Object newElement : bodyContentNew) {
                 Map<String, Object> newElementMap = (Map<String, Object>) newElement;
                 Map<String, Object> originalElementMap = (Map<String, Object>) bodyContentOriginal[originalIndex];
@@ -216,6 +219,7 @@ public with sharing class GoogleDocPreview {
                     Integer columns =Integer.valueOf(originalTable.get('columns')) ;
                   
                     Integer tableStartLocation = (Integer) originalElementMap.get('startIndex');
+                    tableStartLocation += tableOffset;
                     List<Object> originalTableRows = (List<Object>) originalTable.get('tableRows');
                     List<Object> newTableRows = (List<Object>) newTable.get('tableRows');
         
@@ -249,6 +253,7 @@ public with sharing class GoogleDocPreview {
                             }
                         };
                         tableRequests.add(insertTableRowRequest);
+
                     }
 
                     List<Integer> rowsToDelete = new List<Integer>{1,2};
@@ -266,14 +271,20 @@ public with sharing class GoogleDocPreview {
                             }
                         };
                         tableRequests.add(deleteTableRowRequest);
+
+                        Map<String, Object> deletingRow = (Map<String, Object>) newTableRows[deleteIndex];
+                        tableOffset -= (Integer.valueOf(deletingRow.get('endIndex')) - Integer.valueOf(deletingRow.get('startIndex')));
+                        
                     }
 
 
                     // Insert Text in empty table rows
                     Integer insertCellTextIndex = Integer.valueOf(firstRow.get('endIndex')) ;
+                    insertCellTextIndex += currentTableOffset;
                     
                     for (List<String> record : tableRecords) {
                         insertCellTextIndex++;
+                        tableOffset ++;
                         for (String columnText : record) {
                             if (columnText != null) {
                                 String insertionText = columnText;
@@ -288,15 +299,20 @@ public with sharing class GoogleDocPreview {
                                 };
                                 tableRequests.add(insertTextRequest);
                                 insertCellTextIndex += insertionText.length();          
+                                tableOffset += insertionText.length();          
                             }
                             insertCellTextIndex += 2;
+                            tableOffset += 2;
                         }
                     }
+
+                    currentTableOffset = tableOffset;
                     // End table
                 }
-        
+                
                 originalIndex++;
             }
+            System.debug('Table offset ==> '+tableOffset);
         
             requests.addAll(tableRequests);
             return requests;
@@ -514,8 +530,8 @@ public with sharing class GoogleDocPreview {
                 }
             }
 
-            Integer index = 1;
             if (isIndexing == true) {
+                Integer index = 1;
                 for (List<String> record : tableRecords) {
                     record[0] = String.valueOf(index);
                     index++;
