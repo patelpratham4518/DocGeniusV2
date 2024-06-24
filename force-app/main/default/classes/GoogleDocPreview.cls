@@ -164,6 +164,8 @@ public with sharing class GoogleDocPreview {
             Integer tableOffset = 0;
             Integer currentTableOffset = 0;
 
+            formatTableRecords(bodyContentNew,recordId,objectApiName);
+
 
             for (Object newElement : bodyContentNew) {
                 Map<String, Object> newElementMap = (Map<String, Object>) newElement;
@@ -554,5 +556,139 @@ public with sharing class GoogleDocPreview {
             return null;
         }
       }
-    
+ 
+    public static void formatTableRecords(List<Object> bodyContentNew,String recordId,String objectApiName) {
+        try {
+            List<Table> tables = new List<Table>();
+            List<String> childQueries = new List<String>();
+            for (Object newElement : bodyContentNew) {
+                Map<String, Object> newElementMap = (Map<String, Object>) newElement;
+                if (newElementMap.containsKey('table')) {
+                    Map<String, Object> newTable = (Map<String, Object>) newElementMap.get('table');
+                    List<Object> newTableRows = (List<Object>) newTable.get('tableRows');
+                    Map<String, Object> secondRow = (Map<String, Object>) newTableRows[1];
+                    Map<String, Object> thirdRow = (Map<String, Object>) newTableRows[2];
+                    Table table = getChildQuery(secondRow, thirdRow, recordId, objectApiName);
+                    if (table != null) {
+                        tables.add(table);
+                        childQueries.add(table.childQuery);
+                    }else {
+                        tables.add(new Table());
+                    }
+                    
+                }
+                
+            }
+            
+            String queryString = 'SELECT '+String.join(childQueries, ',')+' FROM ' + objectApiName + ' WHERE Id=:recordId';
+            SObject mainObject = Database.query(queryString);
+
+            setTableRecordsFromMainRecord(mainObject, tables);
+            
+        } catch (Exception e) {
+            System.debug('Error In formatTableRecords ==> '+e.getMessage());
+        }
+
+    }
+
+    public static Table getChildQuery(Map<String,Object> secondRow,Map<String,Object> thirdRow,String recordId,String objectApiName) {
+        try {
+            String crn = JSON.serialize(thirdRow).substringBetween('$childRelation:', '$');
+            String limitOfRecords  = JSON.serialize(thirdRow).substringBetween('$limit:', '$');
+            String filter  = JSON.serialize(thirdRow).substringBetween('$filter:', '$');
+            Boolean isIndexing = JSON.serialize(secondRow).contains('{{No.Index}}');
+
+            String childObjApi = JSON.serialize(thirdRow).substringBetween('$objApi:', '$');
+        
+            if ((crn == null) || (childObjApi == null)) {
+                System.debug('return null from getChildQuery because  childRelation or objApi  is missing');
+                return null;
+            }
+
+            List<String> validFields = new List<String>();
+            for (Schema.SObjectField field : Schema.getGlobalDescribe().get(childObjApi).getDescribe().fields.getMap().values()){
+                validFields.add(field.getDescribe().getName());            
+            } 
+            
+            List<String> keys  = new  List<String>();
+            Map<Integer,String> absolutes = new Map<Integer,String>();
+            String keyString = '';
+            List<Object> cells = (List<Object>) secondRow.get('tableCells');
+            Integer columnNumber = 0;
+
+            for (Object cell : cells) {
+                String key = JSON.serialize(cell).substringBetween('{{!', '}}');
+                if (key != null) {
+                    if (validFields.contains(key)) {
+                        keys.add(key);
+                    } else {
+                        absolutes.put(columnNumber, key);
+                    }
+                } else {
+                    Map<String,Object> cellMap = (Map<String,Object>) JSON.deserializeUntyped(JSON.serialize(cell));
+                    List<Object> content = (List<Object>) cellMap.get('content');
+                    
+                    for (Object c : content) {
+                        Map<String,Object> cMap = (Map<String,Object>) JSON.deserializeUntyped(JSON.serialize(c));
+                        Map<String,Object> paragraph = (Map<String,Object>) cMap.get('paragraph');
+                        List<Object> elements =(List<Object>) paragraph.get('elements');
+                        for (Object element : elements) {
+                            Map<String,Object> elementMap = (Map<String,Object>) JSON.deserializeUntyped(JSON.serialize(element));
+                            if (elementMap.containsKey('textRun')) {
+                                Map<String,Object> textRun = (Map<String,Object>) JSON.deserializeUntyped(JSON.serialize(elementMap.get('textRun')));
+                                String absoluteText = String.valueOf(textRun.get('content'));
+                                absoluteText =  absoluteText.trim();
+                                if (String.isNotBlank(absoluteText)) {                                    
+                                    absolutes.put(columnNumber, absoluteText);
+                                }
+                            }
+                        }
+                    }
+                }
+                columnNumber++;
+            }
+
+            String queryString = '(SELECT ' + String.join(keys, ',') + ' FROM ' + crn;
+            String whereClause = '';
+            if (String.isNotBlank(filter)) {
+                whereClause += ' WHERE ' + filter;
+            }
+            if (String.isNotBlank(limitOfRecords)) {
+                whereClause += ' LIMIT ' + limitOfRecords;
+            }
+            queryString += whereClause + ')';
+            Table table = new Table();
+            table.childQuery = queryString;
+            table.crn = crn;
+            table.absolutes = absolutes;
+            table.isIndexing = isIndexing;
+            table.keys = keys;
+            return table;
+
+        } catch (Exception e) {
+            System.debug('Error In getChildQuery ==> '+e.getMessage());
+            return null;
+        }
+    }
+
+    public class Table {
+        public String childQuery;
+        public String crn;
+        public Map<Integer,String> absolutes;
+        public Boolean isIndexing;
+        public List<String>keys;
+        public List<List<String>> tableRecords;
+    }
+
+    public static void setTableRecordsFromMainRecord(Object mainObject,List<Table> tables) {
+        List<List<List<String>>> allTableRecords = new List<List<List<String>>>();
+        for (Table table : tables) {
+            if (table.crn != null) {
+                
+            } else {
+                allTableRecords.add(null);
+            }
+        } 
+    }
+
 }
