@@ -38,15 +38,15 @@ public with sharing class GoogleDocPreview {
                 
                 Boolean googleDocDeleted = deleteGoogleDoc(newGoogleDocId);
                 System.debug('Result of Google Doc Deleted ==>'+googleDocDeleted);
-                insert attachment;
                 upsert authProvider;
+                insert attachment;
                 
             }
            
 
         } catch (Exception e) {
             System.debug('Error In doPreview ==> '+e.getMessage());
-            // Log_Handler.store_Exception(e,'GoogleDocPreview','doPreview');
+            Log_Handler.store_Exception(e,'GoogleDocPreview','doPreview');
         }
     }
 
@@ -430,10 +430,12 @@ public with sharing class GoogleDocPreview {
     public static List<List<String>> getTableRecords(Map<String,Object> secondRow,Map<String,Object> thirdRow,String recordId,String objectApiName) {
         
         try {
-            
-            String crn = JSON.serialize(thirdRow).substringBetween('$crn:', '$');
+            String crn = JSON.serialize(thirdRow).substringBetween('$childRelation:', '$');
+            // String crn = JSON.serialize(thirdRow).substringBetween('$crn:', '$');
             String limitOfRecords  = JSON.serialize(thirdRow).substringBetween('$limit:', '$');
             String filter  = JSON.serialize(thirdRow).substringBetween('$filter:', '$');
+            Boolean isIndexing = JSON.serialize(secondRow).contains('{{No.Index}}');
+            
 
             if (crn == null) {
                 System.debug('return null from getTableRecords because  crn  is missing');
@@ -447,7 +449,8 @@ public with sharing class GoogleDocPreview {
             Integer columnNumber = 0;
 
             for (Object cell : cells) {
-                String key = JSON.serialize(cell).substringBetween('{{$', '}}');
+                String key = JSON.serialize(cell).substringBetween('{{!', '}}');
+                // String key = JSON.serialize(cell).substringBetween('{{$', '}}');
                 if (key != null) {
                     keys.add(key);
                 } else {
@@ -508,6 +511,14 @@ public with sharing class GoogleDocPreview {
                     }else {
                         record.add(absoluteText);
                     }
+                }
+            }
+
+            Integer index = 1;
+            if (isIndexing == true) {
+                for (List<String> record : tableRecords) {
+                    record[0] = String.valueOf(index);
+                    index++;
                 }
             }
             
