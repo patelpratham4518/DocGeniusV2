@@ -451,12 +451,18 @@ public with sharing class GoogleDocPreview {
             String limitOfRecords  = JSON.serialize(thirdRow).substringBetween('$limit:', '$');
             String filter  = JSON.serialize(thirdRow).substringBetween('$filter:', '$');
             Boolean isIndexing = JSON.serialize(secondRow).contains('{{No.Index}}');
-            
 
-            if (crn == null) {
+            String childObjApi = JSON.serialize(thirdRow).substringBetween('$objApi:', '$');
+        
+            if ((crn == null) || (childObjApi == null)) {
                 System.debug('return null from getTableRecords because  crn  is missing');
                 return null;
             }
+
+            List<String> validFields = new List<String>();
+            for (Schema.SObjectField field : Schema.getGlobalDescribe().get(childObjApi).getDescribe().fields.getMap().values()){
+                validFields.add(field.getDescribe().getName());            
+            } 
             
             List<String> keys  = new  List<String>();
             Map<Integer,String> absolutes = new Map<Integer,String>();
@@ -466,9 +472,12 @@ public with sharing class GoogleDocPreview {
 
             for (Object cell : cells) {
                 String key = JSON.serialize(cell).substringBetween('{{!', '}}');
-                // String key = JSON.serialize(cell).substringBetween('{{$', '}}');
                 if (key != null) {
-                    keys.add(key);
+                    if (validFields.contains(key)) {
+                        keys.add(key);
+                    } else {
+                        absolutes.put(columnNumber, key);
+                    }
                 } else {
                     Map<String,Object> cellMap = (Map<String,Object>) JSON.deserializeUntyped(JSON.serialize(cell));
                     List<Object> content = (List<Object>) cellMap.get('content');
